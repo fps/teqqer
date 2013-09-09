@@ -2,6 +2,10 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 
 import sys
+import carla_backend
+
+carla_host = carla_backend.Host("/usr/local/lib/carla/libcarla_standalone.so")
+print (carla_host.get_engine_driver_count())
 
 class song:
 	def __init__(self):
@@ -14,8 +18,8 @@ class main_window(QMainWindow):
 		QMainWindow.__init__(self)
 		settings = QSettings()
 		
-		self.resize(settings.value("size", QSize(400, 400)))
-		self.move(settings.value("pos", QPoint(200, 200)))
+		self.resize(settings.value("size", QSize(400, 400)).toSize())
+		self.move(settings.value("pos", QPoint(200, 200)).toPoint())
 		
 		menu_bar = QMenuBar()
 		file_menu = QMenu()
