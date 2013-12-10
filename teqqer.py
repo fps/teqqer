@@ -1,44 +1,104 @@
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
-
 import sys
-import carla_backend
+import urwid
+import teq
 
-carla_host = carla_backend.Host("/usr/local/lib/carla/libcarla_standalone.so")
-print (carla_host.get_engine_driver_count())
+#import carla_backend
 
-class song:
-	def __init__(self):
-		self.tempo = 250
-		self.loop_range = (0, 1)
-		
+#carla_host = carla_backend.Host("/usr/local/lib/carla/libcarla_standalone.so")
+#print (carla_host.get_engine_driver_count())
 
-class main_window(QMainWindow):
-	def __init__(self):
-		QMainWindow.__init__(self)
-		settings = QSettings()
-		
-		self.resize(settings.value("size", QSize(400, 400)).toSize())
-		self.move(settings.value("pos", QPoint(200, 200)).toPoint())
-		
-		menu_bar = QMenuBar()
-		file_menu = QMenu()
-		
-	def closeEvent(self, e):
-		settings = QSettings()
-		settings.setValue("size", self.size())
-		settings.setValue("pos", self.pos())
+#teq_engine = teq.teq()
+#teq_engine.insert_midi_track("midi0", 0)
+#teq_engine.insert_midi_track("midi1", 1)
+#teq_engine.insert_midi_track("midi2", 2)
+#teq_engine.insert_pattern(0, 128)
+#
 
-app = QApplication(sys.argv)
+help_text = u"""teqqer - a simple midi tracker
 
-app.setOrganizationName("fps.io")
-app.setOrganizationDomain("fps.io")
-app.setApplicationName("teqqer")
+F1 - Show this help
 
-the_main_window = main_window()
-the_main_window.show()
+ESC - Enter global menu | Leave global menu | Leave this help | 
 
-table_view = QTableView()
-the_main_window.setCentralWidget(table_view)
+TAB - Next sequence | Go to arrangement (if on last sequence)
 
-app.exec_()
+SHIFT-TAB - Previous sequence | Go to arrangement (if on first equence)
+
+UP/DOWN - Move up/down in arrangement | move to next/previous tick in sequence
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+LEFT/RIGHT - Move left/right in arrangement | Move from note to octave/from octave to note
+"""
+
+help_text_widget = urwid.Text(help_text)
+help_text_fill = urwid.Filler(help_text_widget, 'top')
+loop = urwid.MainLoop(help_text_fill)
+loop.run()
