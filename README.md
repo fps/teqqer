@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 # teqqer - a simple midi tracker
+
+An ncurses/terminal based midi and CV signal tracker/sequencer.
 
 # Requirements
 
