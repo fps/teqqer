@@ -13,14 +13,14 @@ import urwid
 import teq
 
 teq_engine = teq.teq()
-teq_engine.insert_midi_track("bd", 0)
-teq_engine.insert_midi_track("snare", 0)
-teq_engine.insert_midi_track("bd2", 0)
-teq_engine.insert_midi_track("snare2", 0)
-teq_engine.insert_midi_track("bd3", 0)
-teq_engine.insert_midi_track("snare3", 0)
-teq_engine.insert_midi_track("bd4", 0)
-teq_engine.insert_midi_track("snare4", 0)
+teq_engine.insert_midi_track("bd", teq_engine.number_of_tracks())
+teq_engine.insert_midi_track("snare", teq_engine.number_of_tracks())
+teq_engine.insert_midi_track("bd2", teq_engine.number_of_tracks())
+teq_engine.insert_midi_track("snare2", teq_engine.number_of_tracks())
+teq_engine.insert_midi_track("bd3", teq_engine.number_of_tracks())
+teq_engine.insert_midi_track("snare3", teq_engine.number_of_tracks())
+teq_engine.insert_midi_track("bd4", teq_engine.number_of_tracks())
+teq_engine.insert_midi_track("snare4", teq_engine.number_of_tracks())
 p = teq_engine.create_pattern(64)
 teq_engine.insert_pattern(0, p)
 
