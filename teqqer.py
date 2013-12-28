@@ -12,11 +12,6 @@ else:
 import urwid
 import teq
 
-#import carla_backend
-
-#carla_host = carla_backend.Host("/usr/local/lib/carla/libcarla_standalone.so")
-#print (carla_host.get_engine_driver_count())
-
 teq_engine = teq.teq()
 teq_engine.insert_midi_track("bd", 0)
 teq_engine.insert_midi_track("snare", 0)
@@ -29,6 +24,20 @@ teq_engine.insert_midi_track("snare4", 0)
 p = teq_engine.create_pattern(64)
 teq_engine.insert_pattern(0, p)
 
+# These are the default options that can be overriden by a user's config
+# file and/or specific settings in a song.
+options = {
+	"center_line_fraction": 0.3, # At what fraction of the screen to display the edit cursor
+	"highlighted_rows": 4,       # Highlight every highlight_row'th row
+	"palette": [                 # The color palette (see urwid documentation)
+		(None, "dark gray", "black"),
+		("weak", "light gray", "black"),
+		("strong", "light gray", "dark gray"),
+		("mega", "black", "white")
+	],
+	"cv_precision": 3,           # The number of digits used for displaying cv values
+	"control_precision": 3       # The number of digits used for displaying control values
+}
 
 class ui(urwid.Widget):
 	def __init__(self):
@@ -72,14 +81,15 @@ class ui(urwid.Widget):
 		
 		event_rows = size[1] - 2
 		
-		split = int(round(event_rows * self.center_line_fraction))
+		split = int(round(event_rows * options["center_line_fraction"]))
+		
 		for n in range(0, event_rows):
 			displayed_tick = (self.cursor_tick + n) - split
 			if displayed_tick >= 0 and displayed_tick < pattern.length():
 				line = "   " + 	"%0.3x" % displayed_tick + " --- -- " * teq_engine.number_of_tracks()
 				line = self.fill_line(line, size[0])
 				line_attr = [(None, len(line))]
-				if displayed_tick % self.highlighted_rows == 0:
+				if displayed_tick % options["highlighted_rows"] == 0:
 					line_attr = [("weak", len(line))]
 				if displayed_tick == self.cursor_tick:
 					line_attr = [("strong", len(line))]
@@ -97,28 +107,5 @@ class ui(urwid.Widget):
 		t = urwid.TextCanvas(text, attr, maxcol = size[0]) 
 		return t
 
-#header_prefix_text = u"ar tk"
-#header_text = ""
-#for n in range(0, teq_engine.number_of_tracks()):
-#	print(teq_engine.track_name(n))
-#	header_text = header_text + " " + teq_engine.track_name(n) 
-
-#print(header_text)
-
-#header = urwid.Text(header_prefix_text + header_text)
-#body = urwid.Filler(urwid.Text(u"00 00 c-4"), 'top')
-#footer = urwid.Text(u"ESC menu F1 help")
-
-#frame = urwid.Frame(body, header, footer)
-
-the_ui = ui()
-
-palette = [
-	(None, "dark gray", "black"),
-	("weak", "light gray", "black"),
-	("strong", "light gray", "dark gray"),
-	("mega", "black", "white")
-]
-
-loop = urwid.MainLoop(the_ui, palette)
+loop = urwid.MainLoop(ui(), options["palette"])
 loop.run()
