@@ -20,7 +20,13 @@ import teq
 teq_engine = teq.teq()
 teq_engine.insert_midi_track("bd", 0)
 teq_engine.insert_midi_track("snare", 0)
-p = teq_engine.create_pattern(32)
+teq_engine.insert_midi_track("bd2", 0)
+teq_engine.insert_midi_track("snare2", 0)
+teq_engine.insert_midi_track("bd3", 0)
+teq_engine.insert_midi_track("snare3", 0)
+teq_engine.insert_midi_track("bd4", 0)
+teq_engine.insert_midi_track("snare4", 0)
+p = teq_engine.create_pattern(64)
 teq_engine.insert_pattern(0, p)
 
 
@@ -46,6 +52,9 @@ class ui(urwid.Widget):
 
 		self._invalidate()
 		
+	def fill_line(self, line, n):
+		return (line + " " * n)[0:n]
+	
 	def render(self, size, focus):
 		pattern = teq_engine.get_pattern(0)
 		
@@ -56,6 +65,8 @@ class ui(urwid.Widget):
 		for n in range(0, teq_engine.number_of_tracks()):
 			header = header + " " + '{0:<7.7}'.format(teq_engine.track_name(n))
 
+		header = self.fill_line(header, size[0])
+		
 		text.append(header)
 		attr.append([('strong', len(header))])
 		
@@ -66,6 +77,7 @@ class ui(urwid.Widget):
 			displayed_tick = (self.cursor_tick + n) - split
 			if displayed_tick >= 0 and displayed_tick < pattern.length():
 				line = "   " + 	"%0.3x" % displayed_tick + " --- -- " * teq_engine.number_of_tracks()
+				line = self.fill_line(line, size[0])
 				line_attr = [(None, len(line))]
 				if displayed_tick % self.highlighted_rows == 0:
 					line_attr = [("weak", len(line))]
@@ -78,7 +90,7 @@ class ui(urwid.Widget):
 				attr.append([(None, len(""))])
 				
 		
-		menu = "esc: menu>  f1: help  space: play"
+		menu = self.fill_line("esc: menu>  f1: help  space: play", size[0])
 		text.append(menu)
 		attr.append([("strong", len(menu))])
 		
