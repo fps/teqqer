@@ -117,8 +117,10 @@ class main(urwid.Widget):
 	
 	def toggle_playback(self):
 		if self.playing == True:
+			self.playing = False
 			pyteq.stop(self.teq_engine)
 		else:
+			self.playing = True
 			pyteq.start(self.teq_engine)
 		pass
 	
