@@ -42,6 +42,8 @@ default_options = {
 	
 	"menu_exit_key": "esc",
 	
+	"menu_yes_key": "y",
+	
 	"root_menu_key": "esc",
 	"root_help_key": "f1",
 	"root_menu_play_stop_key": " ",
@@ -82,19 +84,28 @@ class main(urwid.Widget):
 		
 		self.menu = [
 			(options["menu_file_key"], "file", self.show_file_menu),
-			(options["menu_quit_key"], "quit", self.quit),
+			(options["menu_quit_key"], "quit", self.show_quit_menu),
 			(options["menu_song_key"], "song", self.show_song_menu)
 		]
 		
+		self.quit_menu = [
+			(options["menu_yes_key"], "yes, really quit", self.quit)
+		]
+			
 		self.current_menu = self.root_menu
 	
 	def show_help(self):
 		pass
 	
+	def show_root_menu(self):
+		self.current_menu = self.root_menu
+	
 	def show_menu(self):
 		self.current_menu = self.menu
-		pass
 	
+	def show_quit_menu(self):
+		self.current_menu = self.quit_menu
+
 	def show_song_menu(self):
 		pass
 	
