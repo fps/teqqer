@@ -18,7 +18,7 @@ if (len(sys.argv) != 2):
 	sys.exit()
 
 # These are the default options that can be overriden by a user's config
-# file and/or specific settings in a song.
+# file and/or specific settings in a song [not implemented yet]
 default_options = {
 	"palette": [                 # The color palette (see urwid documentation)
 		(None, "dark gray", "black"),
