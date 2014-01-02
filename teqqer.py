@@ -11,7 +11,7 @@ The filename argument is required so the author doesn't have to
 implement file selection dialogs. The file will only be written 
 when explicitly saved.
 
-The naming convention is to use the extension .teq for teqqer files.
+A naming convention is to use the extension .teq for teqqer files.
 """
 
 if (len(sys.argv) != 2):
@@ -51,6 +51,8 @@ default_options = {
 	
 	"cursor_up_key": "up",
 	"cursor_down_key": "down",
+	"cursor_right_key": "right",
+	"cursor_left_key": "left",
 	
 	"menu_exit_key": "esc",
 	
@@ -162,13 +164,22 @@ class main(urwid.Widget):
 				pattern = self.teq_engine.get_pattern(0)
 			
 				if key == self.options["cursor_up_key"]:
-					self.cursor_tick = max(0, self.cursor_tick - 1)
+					self.cursor_tick = (self.cursor_tick - 1) % pattern.length()
 					self._invalidate()
 					return
 				if key == self.options["cursor_down_key"]:
-					self.cursor_tick = min(pattern.length() - 1, self.cursor_tick + 1)
+					self.cursor_tick = (self.cursor_tick + 1) % pattern.length()
 					self._invalidate()
 					return
+				if key == self.options["cursor_left_key"]:
+					self.cursor_track = (self.cursor_track - 1) % self.teq_engine.number_of_tracks()
+					self._invalidate()
+					return
+				if key == self.options["cursor_right_key"]:
+					self.cursor_track = (self.cursor_track + 1) % self.teq_engine.number_of_tracks() 
+					self._invalidate()
+					return
+			
 				
 		self.handle_menu_key(key)
 		
@@ -193,10 +204,10 @@ class main(urwid.Widget):
 		return 6
 	
 	def control_track_render_size(self):
-		return self.options["control_integer_precision"] + 1 + self.options["control_fraction_precision"]
+		return 4 + self.options["control_integer_precision"] + 1 + self.options["control_fraction_precision"]
 	
 	def cv_track_render_size(self):
-		return self.options["control_integer_precision"] + 1 + self.options["control_fraction_precision"]
+		return 4 + self.options["control_integer_precision"] + 1 + self.options["control_fraction_precision"]
 		pass
 	
 	def render_midi_event(self, event):
@@ -211,10 +222,10 @@ class main(urwid.Widget):
 		return "--- --"
 	
 	def render_cv_event(self, event):
-		return "0" * self.options["cv_integer_precision"] + "." + "0" * self.options["cv_fraction_precision"]
+		return "---" + " " + "-" * self.options["cv_integer_precision"] + "." + "-" * self.options["cv_fraction_precision"]
 	
 	def render_control_event(self, event):
-		return "0" * self.options["control_integer_precision"] + "." + "0" * self.options["control_fraction_precision"]
+		return "---" + " " + "-" * self.options["control_integer_precision"] + "." + "-" * self.options["control_fraction_precision"]
 	
 	def render_track_name(self, name, maxlength):
 		if len(name) > maxlength:
@@ -299,7 +310,6 @@ class main(urwid.Widget):
 		else:
 			attr.append([("strong", len(menu))])
 		
-				
 		t = urwid.TextCanvas(text, attr, maxcol = size[0]) 
 
 		return t
