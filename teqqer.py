@@ -205,6 +205,9 @@ class main(urwid.Widget):
 			note = ["C ", "Db", "E ", "F ", "Gb", "G ", "Ab", "A ", "Bb", "B "][event.value1 % 12]
 			return note + "%0.1x" % octave + " " + "%0.2x" % event.value2
 		
+		if event.type == teq.midi_event_type.OFF:
+			return "OFF --"
+		
 		return "--- --"
 	
 	def render_cv_event(self, event):
@@ -314,6 +317,7 @@ teq_engine.insert_midi_track("bd4", teq_engine.number_of_tracks())
 teq_engine.insert_midi_track("snare4", teq_engine.number_of_tracks())
 p = teq_engine.create_pattern(64)
 p.set_midi_event(0, 0, teq.midi_event(teq.midi_event_type.ON, 64, 127))
+p.set_midi_event(0, 4, teq.midi_event(teq.midi_event_type.OFF, 64, 127))
 teq_engine.insert_pattern(0, p)
 
 
