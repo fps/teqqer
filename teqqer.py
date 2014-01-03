@@ -361,21 +361,24 @@ class main(urwid.Widget):
 					pattern_name = "." * 3
 				pattern_line = self.render_name(pattern_name, 8)
 				if displayed_pattern == self.cursor_pattern:
-					pattern_line_attr = ("mega", len(pattern_line))
+					pattern_line_attr = ("strong", len(pattern_line))
 
 			line = line + pattern_line
 			line_attr.append(pattern_line_attr)
 			
 			line = line + column_separator
-			line_attr.append((None, len(column_separator)))
+			if displayed_pattern == self.cursor_pattern:
+				line_attr.append(("strong", len(column_separator)))
+			else:
+				line_attr.append((None, len(column_separator)))
 			
 			if displayed_tick >= 0 and displayed_tick < pattern.length():
 				pattern_line = self.render_pattern_line(pattern, displayed_tick)
 				pattern_line_attr = (None, len(pattern_line))
 				if displayed_tick % self.options["highlighted_rows"] == 0:
-					pattern_line_attr = ("weak", len(line))
+					pattern_line_attr = ("weak", len(pattern_line))
 				if displayed_tick == self.cursor_tick:
-					pattern_line_attr = ("strong", len(line))
+					pattern_line_attr = ("strong", len(pattern_line))
 				line = line + pattern_line
 				line_attr.append(pattern_line_attr)
 
