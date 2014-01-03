@@ -382,11 +382,12 @@ class main(urwid.Widget):
 				line = line + pattern_line
 				line_attr.append(pattern_line_attr)
 
-			remainder_line = " " * (size[0] - len(line))
-			remainder_attr = (None, size[0] - len(line))
-			
-			line = line + remainder_line
-			line_attr.append(remainder_attr)
+			if len(line) < size[0]:
+				remainder_line = " " * (size[0] - len(line))
+				remainder_attr = (None, size[0] - len(line))
+				
+				line = line + remainder_line
+				line_attr.append(remainder_attr)
 			
 			text.append(line)
 			attr.append(line_attr)
