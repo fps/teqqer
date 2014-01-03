@@ -348,33 +348,45 @@ class main(urwid.Widget):
 			displayed_tick = (self.cursor_tick + n) - split
 			displayed_pattern = (self.cursor_pattern + n) - split
 
-			line = " " * len("patterns")
+			# Initialize with an empty line and attributes
+			line = ""
+			line_attr = []
+			
+			pattern_line = " " * len("patterns")
+			pattern_line_attr = (None, len(pattern_line))
+			
 			if displayed_pattern >= 0 and displayed_pattern < self.teq_engine.number_of_patterns():
 				pattern_name = self.teq_engine.get_pattern(displayed_pattern).name
 				if pattern_name == "":
 					pattern_name = "." * 3
-				line = self.render_name(pattern_name, 8)
-				
+				pattern_line = self.render_name(pattern_name, 8)
+				if displayed_pattern == self.cursor_pattern:
+					pattern_line_attr = ("mega", len(pattern_line))
 
+			line = line + pattern_line
+			line_attr.append(pattern_line_attr)
+			
+			line = line + column_separator
+			line_attr.append((None, len(column_separator)))
+			
 			if displayed_tick >= 0 and displayed_tick < pattern.length():
-				#line = ""
-				#if displayed_tick < self.info.loop_range.end:
-				#	line = "|" + line
-					
-				#line = "    " + "%0.3x" % displayed_tick + column_separator + "--- --"
-				
-				line = line + column_separator + self.render_pattern_line(pattern, displayed_tick)
-				line = self.fill_line(line, size[0])
-				line_attr = [(None, len(line))]
+				pattern_line = self.render_pattern_line(pattern, displayed_tick)
+				pattern_line_attr = (None, len(pattern_line))
 				if displayed_tick % self.options["highlighted_rows"] == 0:
-					line_attr = [("weak", len(line))]
+					pattern_line_attr = ("weak", len(line))
 				if displayed_tick == self.cursor_tick:
-					line_attr = [("strong", len(line))]
-				text.append(line)
-				attr.append(line_attr)
-			else:
-				text.append("")
-				attr.append([(None, len(""))])
+					pattern_line_attr = ("strong", len(line))
+				line = line + pattern_line
+				line_attr.append(pattern_line_attr)
+
+			remainder_line = " " * (size[0] - len(line))
+			remainder_attr = (None, size[0] - len(line))
+			
+			line = line + remainder_line
+			line_attr.append(remainder_attr)
+			
+			text.append(line)
+			attr.append(line_attr)
 		
 		menu = self.fill_line(self.render_menu(), size[0])
 		text.append(menu)
