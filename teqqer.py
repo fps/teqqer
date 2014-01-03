@@ -49,7 +49,7 @@ default_options = {
 	
 	"mouse_interaction": True,
 	
-	"ui_update_interval": 0.01,
+	"ui_update_interval": 0.1,
 	
 	"cursor_up_key": "up",
 	"cursor_down_key": "down",
@@ -114,19 +114,23 @@ class main(urwid.Widget):
 		if self.info == None:
 			try:
 				self.info = teq_engine.get_state_info()
-			except:
+			except Exception as e:
+				# print(e)
 				pass
-		else:
-			try:
-				info = teq_engine.get_state_info()
-				
-				if info.transport_position.tick != self.info.transport_position.tick:
-					self.cursor_tick = info.transport_position.tick
-					self._invalidate()
-				
-				self.info = info
-			except:
-				pass
+			
+			return
+		
+		try:
+			info = teq_engine.get_state_info()
+			
+			if info.transport_position.tick != self.info.transport_position.tick:
+				self.cursor_tick = info.transport_position.tick
+				self._invalidate()
+
+			self.info = info
+			
+		except:
+			pass
 	
 	def show_help(self):
 		pass
@@ -151,6 +155,7 @@ class main(urwid.Widget):
 	
 	def toggle_playback(self):
 		if self.info == None:
+			print(":(")
 			return
 		
 		if self.info.transport_state == teq.transport_state.PLAYING:
@@ -275,6 +280,13 @@ class main(urwid.Widget):
 
 	
 	def render(self, size, focus):
+		#if self.info == None:
+		#	text = [" " * size[0]] * size[1]
+		#	t = urwid.TextCanvas(text) 
+
+		#	return t
+
+			
 		text = []
 		attr = []
 		
@@ -310,7 +322,12 @@ class main(urwid.Widget):
 			# Note: This might be negative
 			displayed_tick = (self.cursor_tick + n) - split
 			if displayed_tick >= 0 and displayed_tick < pattern.length():
+				#line = ""
+				#if displayed_tick < self.info.loop_range.end:
+				#	line = "|" + line
+					
 				#line = "    " + "%0.3x" % displayed_tick + column_separator + "--- --"
+				
 				line = self.render_pattern_line(pattern, displayed_tick)
 				line = self.fill_line(line, size[0])
 				line_attr = [(None, len(line))]
@@ -350,13 +367,16 @@ p = teq_engine.create_pattern(64)
 p.set_midi_event(0, 0, teq.midi_event(teq.midi_event_type.ON, 64, 127))
 p.set_midi_event(0, 4, teq.midi_event(teq.midi_event_type.OFF, 64, 127))
 teq_engine.insert_pattern(0, p)
+teq_engine.insert_pattern(0, p)
 teq_engine.set_global_tempo(16)
-pyteq.set_loop_range(teq_engine, 0, 0, 1, 0, True)
+pyteq.set_transport_position(teq_engine, 0, 0)
+pyteq.set_loop_range(teq_engine, 0, 0, 2, 0, True)
 
 # TODO: merge in user options
 options = default_options
 
 def handle_alarm(main_loop, the_main):
+	#print("alarm")
 	the_main.get_state_info_and_update()
 	main_loop.set_alarm_in(the_main.options["ui_update_interval"], handle_alarm, the_main)
 
