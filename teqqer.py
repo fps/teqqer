@@ -49,6 +49,8 @@ default_options = {
 	
 	"mouse_interaction": True,
 	
+	"ui_update_interval": 0.01,
+	
 	"cursor_up_key": "up",
 	"cursor_down_key": "down",
 	"cursor_right_key": "right",
@@ -87,8 +89,8 @@ class main(urwid.Widget):
 		self.cursor_column = 0
 		self.center_line_fraction = 0.3
 		self.highlighted_rows = 4
-		
-		self.playing = False
+
+		self.info = None
 		
 		self.root_menu = [ 
 			(options["root_menu_key"], "menu", self.show_menu),
@@ -107,6 +109,24 @@ class main(urwid.Widget):
 		]
 			
 		self.current_menu = self.root_menu
+	
+	def get_state_info_and_update(self):
+		if self.info == None:
+			try:
+				self.info = teq_engine.get_state_info()
+			except:
+				pass
+		else:
+			try:
+				info = teq_engine.get_state_info()
+				
+				if info.transport_position.tick != self.info.transport_position.tick:
+					self.cursor_tick = info.transport_position.tick
+					self._invalidate()
+				
+				self.info = info
+			except:
+				pass
 	
 	def show_help(self):
 		pass
@@ -130,12 +150,13 @@ class main(urwid.Widget):
 		pass
 	
 	def toggle_playback(self):
-		if self.playing == True:
-			self.playing = False
+		if self.info == None:
+			return
+		
+		if self.info.transport_state == teq.transport_state.PLAYING:
 			pyteq.stop(self.teq_engine)
 		else:
-			self.playing = True
-			pyteq.start(self.teq_engine)
+			pyteq.play(self.teq_engine)
 		pass
 	
 	def selectable(self):
@@ -329,7 +350,20 @@ p = teq_engine.create_pattern(64)
 p.set_midi_event(0, 0, teq.midi_event(teq.midi_event_type.ON, 64, 127))
 p.set_midi_event(0, 4, teq.midi_event(teq.midi_event_type.OFF, 64, 127))
 teq_engine.insert_pattern(0, p)
+teq_engine.set_global_tempo(16)
+pyteq.set_loop_range(teq_engine, 0, 0, 1, 0, True)
 
+# TODO: merge in user options
+options = default_options
 
-loop = urwid.MainLoop(main(teq_engine, default_options), default_options["palette"])
+def handle_alarm(main_loop, the_main):
+	the_main.get_state_info_and_update()
+	main_loop.set_alarm_in(the_main.options["ui_update_interval"], handle_alarm, the_main)
+
+the_main = main(teq_engine, options)
+
+loop = urwid.MainLoop(the_main, options["palette"])
+
+loop.set_alarm_in(the_main.options["ui_update_interval"], handle_alarm, the_main)
+
 loop.run()
