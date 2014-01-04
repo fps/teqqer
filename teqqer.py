@@ -59,8 +59,8 @@ default_options = {
 	"cursor_right_key": "right",
 	"cursor_left_key": "left",
 	
-	# These can be either "wrap" or "advance"
-	"cursor_wrap_mode": "advance",
+	# These can be either "pattern" or "song"
+	"cursor_wrap_mode": "song",
 	
 	# What key to press with the cursor keys to select stuff
 	"selection_modifier": "meta",
@@ -338,6 +338,7 @@ class main(urwid.Widget):
 		text.append(header)
 		attr.append([('strong', len(header))])
 		
+		
 		pattern = self.teq_engine.get_pattern(self.cursor_pattern)
 		
 		event_rows = size[1] - 2
@@ -418,18 +419,18 @@ teq_engine.insert_midi_track("snare4", teq_engine.number_of_tracks())
 p = teq_engine.create_pattern(32)
 p.name = "intro"
 p.set_midi_event(0, 0, teq.midi_event(teq.midi_event_type.ON, 64, 127))
-p.set_midi_event(0, 4, teq.midi_event(teq.midi_event_type.OFF, 64, 127))
+p.set_midi_event(0, 4, teq.midi_event(teq.midi_event_type.OFF, 60, 127))
 teq_engine.insert_pattern(0, p)
 
 p = teq_engine.create_pattern(32)
 p.set_midi_event(0, 0, teq.midi_event(teq.midi_event_type.ON, 60, 127))
-p.set_midi_event(0, 4, teq.midi_event(teq.midi_event_type.OFF, 60, 127))
+p.set_midi_event(0, 4, teq.midi_event(teq.midi_event_type.OFF, 62, 127))
 teq_engine.insert_pattern(teq_engine.number_of_patterns(), p)
 
 p = teq_engine.create_pattern(32)
 p.name = "something"
 p.set_midi_event(0, 0, teq.midi_event(teq.midi_event_type.ON, 60, 127))
-p.set_midi_event(0, 4, teq.midi_event(teq.midi_event_type.OFF, 60, 127))
+p.set_midi_event(0, 4, teq.midi_event(teq.midi_event_type.OFF, 62, 127))
 teq_engine.insert_pattern(teq_engine.number_of_patterns(), p)
 
 teq_engine.set_global_tempo(16)
