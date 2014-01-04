@@ -299,13 +299,30 @@ class main(urwid.Widget):
 		
 		return line
 
+	# Returns a tuple (text, attr) containing a line of text
+	# and a list of attributes
 	def render_header(self):
 		column_separator = self.options["column_separator"]
+		column_separator_len = len(column_separator)
+		
+		text = []
+		attr = []
+	
+		text.append("patterns")
+		attr.append(("strong", len("patterns")))
+		
+		text.append(column_separator)
+		attr.append(("strong", column_separator_len))
+		
+		text.append("tick")
+		attr.append(("strong", len("tick")))
 		
 		header = "patterns" + column_separator + "tick"
 		
-		for n in range(0, self.teq_engine.number_of_tracks()):
-			track_name = self.teq_engine.track_name(n)
+		for n in xrange(self.teq_engine.number_of_tracks()):
+			text.append(column_separator)
+			attr.append(("strong", column_separator_len))
+			
 			render_size = None
 			
 			if self.teq_engine.track_type(n) == teq.track_type.MIDI:
@@ -314,10 +331,57 @@ class main(urwid.Widget):
 				render_size = self.control_track_render_size()
 			if self.teq_engine.track_type(n) == teq.track_type.CV:
 				render_size = self.cv_track_render_size()
-				
-			header = header + column_separator + self.render_name(track_name, render_size)
+			
+			track_name = self.teq_engine.track_name(n)
 
-		return header
+			text.append(self.render_name(track_name, render_size))
+			if self.cursor_track == n:
+				attr.append(("mega", render_size))
+			else:
+				attr.append(("strong", render_size))
+
+		return (''.join(text), attr)
+	
+	# Returns a tuple (text, attr)
+	def render_pattern_view(self):
+		pattern = self.teq_engine.get_pattern(self.cursor_pattern)
+		
+		column_separator = self.options["column_separator"]
+		column_separator_len = len(column_separator)
+		
+		text = []
+		attr =[]
+		
+		for tick_index in xrange(pattern.length()):
+			events = []
+			event_attrs = []
+			for track_index in xrange(self.teq_engine.number_of_tracks()):
+				event = None
+				
+				if self.teq_engine.track_type(n) == teq.track_type.MIDI:
+					event = self.render_midi_event(pattern.get_midi_event(track_index, tick_index))
+				if self.teq_engine.track_type(n) == teq.track_type.CONTROL:
+					event = self.render_control_event(pattern.get_control_event(track_index, tick_index))
+				if self.teq_engine.track_type(n) == teq.track_type.CV:
+					event = self.render_cv_event(pattern.get_cv_event(track_index, tick_index))
+				
+				events.append(column_separator)
+				events.append(event)
+				
+				if self.cursor_tick == tick_index:
+					event_attrs.append(("strong", column_separator_len))
+					if self.cursor_track == track_index:
+						event_attrs.append(("mega", len(event)))
+					else:
+						event_attrs.append(("strong", len(event)))
+				else:
+					event_attrs.append(("strong", column_separator_len))
+					event_attrs.append((None, len(event)))
+			
+			text.append(''.join(events))
+			attr.append(event_attrs)
+			
+		return (text, attr)
 	
 	def render(self, size, focus):
 		if self.info == None:
@@ -332,12 +396,16 @@ class main(urwid.Widget):
 		
 		column_separator = self.options["column_separator"]
 		
-
-		header = self.fill_line(self.render_header(), size[0])
+		header = self.render_header()
 		
-		text.append(header)
-		attr.append([('strong', len(header))])
+		header_text = header[0]
+		header_attr = header[1]
 		
+		header_text += "x" * 5#(size[0] - len(header_text))
+		header_attr.append(("strong", size[0] - len(header_text)))
+		
+		text.append(header_text)
+		attr.append(header_attr)
 		
 		pattern = self.teq_engine.get_pattern(self.cursor_pattern)
 		
