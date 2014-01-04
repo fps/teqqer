@@ -21,8 +21,9 @@ if (len(sys.argv) != 2):
 # These are the default options that can be overriden by a user's config
 # file and/or specific settings in a song [not implemented yet]
 default_options = {
-	# The color palette (see urwid documentation)
-	"palette": [                 
+	# The color palette (see urwid documentation for color
+	# codes, etc.)
+	"palette": [
 		(None, "dark gray", "black"),
 		("weak", "light gray", "black"),
 		("strong", "light gray", "dark gray"),
@@ -401,8 +402,12 @@ class main(urwid.Widget):
 		header_text = header[0]
 		header_attr = header[1]
 		
-		header_text += "x" * 5#(size[0] - len(header_text))
-		header_attr.append(("strong", size[0] - len(header_text)))
+		# Find out how much space to fill after the header
+		remainder_len = size[0] - len(header_text)
+	
+		# And fill it
+		header_text += " " * (remainder_len)
+		header_attr.append(("strong", remainder_len))
 		
 		text.append(header_text)
 		attr.append(header_attr)
