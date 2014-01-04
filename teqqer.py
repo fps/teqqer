@@ -212,11 +212,28 @@ class main(urwid.Widget):
 				pattern = self.teq_engine.get_pattern(0)
 			
 				if key == self.options["cursor_up_key"]:
-					self.cursor_tick = (self.cursor_tick - 1) % pattern.length()
+					self.cursor_tick -= 1
+					if self.cursor_tick < 0:
+						if self.options["cursor_wrap_mode"] == "pattern":
+							self.cursor_tick = pattern.length() - 1
+						if self.options["cursor_wrap_mode"] == "song":
+							self.cursor_pattern -= 1
+							if self.cursor_pattern < 0:
+								self.cursor_pattern = self.teq_engine.number_of_patterns() - 1
+							new_pattern = self.teq_engine.get_pattern(self.cursor_pattern)
+							self.cursor_tick = new_pattern.length() - 1
 					self._invalidate()
 					return
 				if key == self.options["cursor_down_key"]:
-					self.cursor_tick = (self.cursor_tick + 1) % pattern.length()
+					self.cursor_tick += 1
+					if self.cursor_tick >= pattern.length():
+						if self.options["cursor_wrap_mode"] == "pattern":
+							self.cursor_tick = 0
+						if self.options["cursor_wrap_mode"] == "song":
+							self.cursor_tick = 0
+							self.cursor_pattern += 1
+							if self.cursor_pattern >= self.teq_engine.number_of_patterns():
+								self.cursor_pattern = 0
 					self._invalidate()
 					return
 				if key == self.options["cursor_left_key"]:
@@ -300,8 +317,6 @@ class main(urwid.Widget):
 		
 		return line
 
-	# Returns a tuple (text, attr) containing a line of text
-	# and a list of attributes
 	def render_header(self):
 		column_separator = self.options["column_separator"]
 		column_separator_len = len(column_separator)
@@ -343,7 +358,6 @@ class main(urwid.Widget):
 
 		return (''.join(text), attr)
 	
-	# Returns a tuple (text, attr)
 	def render_pattern_view(self):
 		pattern = self.teq_engine.get_pattern(self.cursor_pattern)
 		
