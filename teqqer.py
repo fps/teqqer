@@ -183,6 +183,7 @@ class main(urwid.Widget):
 		if self.info.transport_state == teq.transport_state.PLAYING:
 			pyteq.stop(self.teq_engine)
 		else:
+			pyteq.set_transport_position(self.teq_engine, self.cursor_pattern, self.cursor_tick)
 			pyteq.play(self.teq_engine)
 		pass
 	
