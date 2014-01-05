@@ -225,6 +225,7 @@ class main(urwid.Widget):
 							self.cursor_tick = new_pattern.length() - 1
 					self._invalidate()
 					return
+				
 				if key == self.options["cursor_down_key"]:
 					self.cursor_tick += 1
 					if self.cursor_tick >= pattern.length():
@@ -237,10 +238,12 @@ class main(urwid.Widget):
 								self.cursor_pattern = 0
 					self._invalidate()
 					return
+				
 				if key == self.options["cursor_left_key"]:
 					self.cursor_track = (self.cursor_track - 1) % self.teq_engine.number_of_tracks()
 					self._invalidate()
 					return
+				
 				if key == self.options["cursor_right_key"]:
 					self.cursor_track = (self.cursor_track + 1) % self.teq_engine.number_of_tracks() 
 					self._invalidate()
