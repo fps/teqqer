@@ -62,6 +62,7 @@ default_options = {
 	
 	# These can be either "pattern" or "song"
 	"cursor_wrap_mode": "song",
+	"cursor_wrap_enabled": True,
 	
 	# What key to press with the cursor keys to select stuff
 	"selection_modifier": "meta",
