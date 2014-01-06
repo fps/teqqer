@@ -424,9 +424,10 @@ class main(urwid.Widget):
 		# Find out how much space to fill after the header
 		remainder_len = size[0] - len(header_text)
 	
-		# And fill it
-		header_text += " " * (remainder_len)
-		header_attr.append(("strong", remainder_len))
+		if remainder_len > 0:
+			# And fill it
+			header_text += " " * (remainder_len)
+			header_attr.append(("strong", remainder_len))
 		
 		text.append(header_text)
 		attr.append(header_attr)
@@ -543,4 +544,17 @@ loop = urwid.MainLoop(the_main, options["palette"])
 
 loop.set_alarm_in(the_main.options["ui_update_interval"], handle_alarm, the_main)
 
-loop.run()
+quit = False
+
+while not quit == True:
+	try:
+		print("Starting up...")
+		loop.run()
+	except Exception as e:
+		print("It seems we crashed.", e, " Maybe we can recover.")
+		try:
+			i = input("Press any key to continue except press q to quit...")
+			if i == 'q':
+				sys.exit(1)
+		except:
+			pass
