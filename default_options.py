@@ -20,6 +20,9 @@ options = {
 		"meta +": lambda x: x.change_note_edit_base(1),
 		"meta -": lambda x: x.change_note_edit_base(-1),
 		
+		"N": lambda x: x.change_edit_step(-1),
+		"M": lambda x: x.change_edit_step(1),
+
 		"esc": lambda x: x.toggle_edit_mode(),
 		
 		" ": lambda x: x.toggle_playback(),
@@ -58,7 +61,7 @@ options = {
 	"control_fraction_precision": 3, 
 	"control_integer_precision": 1, 
 	
-	"column_separator": "  ", 
+	"column_separator": " | ", 
 	
 	# Whether the cursor follows transport 
 	"follow_transport": True, 
@@ -124,9 +127,9 @@ options = {
 		"Ab",  "A ",  "Bb",  "B "
 	],
 	
-	"transport_indicator_stopped": " ",
+	"transport_indicator_stopped": "|",
 	"transport_indicator_playing": ">",
 	
 	"edit_mode_indicator_enabled": "!",
-	"edit_mode_indicator_disabled": " "
+	"edit_mode_indicator_disabled": "_"
 }

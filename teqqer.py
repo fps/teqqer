@@ -330,9 +330,8 @@ class main(urwid.Widget):
 		return note + "%0.1x" % octave + " " + "%0.2x" % value2
 	
 	def render_menu(self):
-		ret =  ((self.info.transport_state == teq.transport_state.PLAYING) and self.options["transport_indicator_playing"] or self.options["transport_indicator_stopped"]) + " " + (self.edit_mode and self.options["edit_mode_indicator_enabled"] or self.options["edit_mode_indicator_disabled"]) + " " + self.render_note_on(self.options["note_edit_base"], self.options["note_edit_velocity"]) + " " + str(self.teq_engine.get_global_tempo()) + " " + str(self.options["edit_step"]) + " "
-		if self.current_menu != self.root_menu:
-			ret = ret + self.options["menu_exit_key"] + ":exit menu "
+		ret =  "[" + ((self.info.transport_state == teq.transport_state.PLAYING) and self.options["transport_indicator_playing"] or self.options["transport_indicator_stopped"]) + " " + (self.edit_mode and self.options["edit_mode_indicator_enabled"] or self.options["edit_mode_indicator_disabled"]) + "] [" + self.render_note_on(self.options["note_edit_base"], self.options["note_edit_velocity"]) + " " + str(self.teq_engine.get_global_tempo()) + " " + str(self.options["edit_step"]) + "] ["
+
 		for item in self.current_menu:
 			ret = ret + self.render_key(item[0]) + ":" + item[1] + " "
 		return ret
@@ -570,27 +569,32 @@ teq_engine.insert_control_track("control",  teq_engine.number_of_tracks())
 teq_engine.insert_midi_track("bd2",  teq_engine.number_of_tracks())
 teq_engine.insert_midi_track("snare2",  teq_engine.number_of_tracks())
 teq_engine.insert_cv_track("cv",  teq_engine.number_of_tracks())
-#teq_engine.insert_midi_track("bd3",  teq_engine.number_of_tracks())
-#teq_engine.insert_midi_track("snare3",  teq_engine.number_of_tracks())
-#teq_engine.insert_midi_track("bd4",  teq_engine.number_of_tracks())
-#teq_engine.insert_midi_track("snare4",  teq_engine.number_of_tracks())
+teq_engine.insert_midi_track("bd3",  teq_engine.number_of_tracks())
+teq_engine.insert_midi_track("snare3",  teq_engine.number_of_tracks())
+teq_engine.insert_midi_track("bd4",  teq_engine.number_of_tracks())
+teq_engine.insert_midi_track("snare4",  teq_engine.number_of_tracks())
 
-p = teq_engine.create_pattern(32)
-p.name = "intro"
-p.set_midi_event(0,  0,  teq.midi_event(teq.midi_event_type.ON,  63,  127))
-p.set_midi_event(0,  4,  teq.midi_event(teq.midi_event_type.OFF,  60,  127))
-teq_engine.insert_pattern(0,  p)
+for n in xrange(4):
+	p = teq_engine.create_pattern(32)
+	p.name = "part" + str(n)
+	p.set_midi_event(0,  0,  teq.midi_event(teq.midi_event_type.ON,  63,  127))
+	p.set_midi_event(0,  4,  teq.midi_event(teq.midi_event_type.OFF,  60,  127))
+	teq_engine.insert_pattern(teq_engine.number_of_patterns(),  p)
 
-p = teq_engine.create_pattern(32)
-p.set_midi_event(0,  0,  teq.midi_event(teq.midi_event_type.ON,  60,  127))
-p.set_midi_event(0,  4,  teq.midi_event(teq.midi_event_type.OFF,  62,  127))
-teq_engine.insert_pattern(teq_engine.number_of_patterns(),  p)
+	p = teq_engine.create_pattern(32)
+	p.set_midi_event(0,  0,  teq.midi_event(teq.midi_event_type.ON,  60,  127))
+	p.set_midi_event(0,  4,  teq.midi_event(teq.midi_event_type.OFF,  62,  127))
+	teq_engine.insert_pattern(teq_engine.number_of_patterns(),  p)
 
-p = teq_engine.create_pattern(32)
-p.name = "something"
-p.set_midi_event(0,  0,  teq.midi_event(teq.midi_event_type.ON,  60,  127))
-p.set_midi_event(0,  4,  teq.midi_event(teq.midi_event_type.OFF,  62,  127))
-teq_engine.insert_pattern(teq_engine.number_of_patterns(),  p)
+	p = teq_engine.create_pattern(32)
+	p.set_midi_event(0,  0,  teq.midi_event(teq.midi_event_type.ON,  60,  127))
+	p.set_midi_event(0,  4,  teq.midi_event(teq.midi_event_type.OFF,  62,  127))
+	teq_engine.insert_pattern(teq_engine.number_of_patterns(),  p)
+
+	p = teq_engine.create_pattern(32)
+	p.set_midi_event(0,  0,  teq.midi_event(teq.midi_event_type.ON,  60,  127))
+	p.set_midi_event(0,  4,  teq.midi_event(teq.midi_event_type.OFF,  62,  127))
+	teq_engine.insert_pattern(teq_engine.number_of_patterns(),  p)
 
 teq_engine.set_global_tempo(16)
 pyteq.set_transport_position(teq_engine,  0,  0)
