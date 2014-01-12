@@ -15,9 +15,26 @@ options = {
 	
 	"keys": {
 		"+": lambda x: x.change_note_edit_base(12),
-		"-": lambda x: x.change_note_edit_base(-12)
+		"-": lambda x: x.change_note_edit_base(-12),
+		
 		"meta +": lambda x: x.change_note_edit_base(1),
-		"meta -": lambda x: x.change_note_edit_base(-1)
+		"meta -": lambda x: x.change_note_edit_base(-1),
+		
+		"esc": lambda x: x.toggle_edit_mode(),
+		
+		" ": lambda x: x.toggle_playback(),
+		
+		"up": lambda x: x.change_cursor_tick(-1),
+		"down": lambda x: x.change_cursor_tick(1),
+		"ctrl up": lambda x: x.change_cursor_tick(-x.options["edit_step"]),
+		"ctrl down": lambda x: x.change_cursor_tick(x.options["edit_step"]),
+		
+		"left": lambda x: x.change_cursor_track(-1),
+		"right": lambda x: x.change_cursor_track(1),
+		
+		"shift up": lambda x: x.change_cursor_patterm(-1),
+		"shift down": lambda x: x.change_cursor_pattern(1),
+
 	},
 	
 	# At what fraction of the screen to display the edit cursor

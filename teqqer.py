@@ -114,6 +114,55 @@ class main(urwid.Widget):
 	
 	def change_note_edit_base(self, amount):
 		self.options["note_edit_base"] += amount
+		
+	def change_edit_step(self, amount):
+		self.options["edit_step"] += amount
+	
+	# Only the sign of amount is important
+	def change_cursor_tick_by_one(self, amount):
+		if 0 == amount:
+			return
+		
+		the_amount = 0
+		
+		if amount > 0:
+			self.cursor_tick += 1
+		else:
+			self.cursor_tick -= 1
+		
+		pattern = self.teq_engine.get_pattern(self.cursor_pattern)
+		
+		if self.cursor_tick < 0:
+			if self.options["cursor_wrap_mode"] == "pattern":
+				self.cursor_tick = pattern.length() - 1
+			if self.options["cursor_wrap_mode"] == "song":
+				self.cursor_pattern -= 1
+				if self.cursor_pattern < 0:
+					self.cursor_pattern = self.teq_engine.number_of_patterns() - 1
+				new_pattern = self.teq_engine.get_pattern(self.cursor_pattern)
+				self.cursor_tick = new_pattern.length() - 1
+				
+		if self.cursor_tick >= pattern.length():
+			if self.options["cursor_wrap_mode"] == "pattern":
+				self.cursor_tick = 0
+			if self.options["cursor_wrap_mode"] == "song":
+				self.cursor_tick = 0
+				self.cursor_pattern += 1
+				if self.cursor_pattern >= self.teq_engine.number_of_patterns():
+					self.cursor_pattern = 0
+		
+	
+	def change_cursor_tick(self, amount):
+		for n in xrange(abs(amount)):
+			self.change_cursor_tick_by_one(amount)
+		
+	
+	def change_cursor_track(self, amount):
+		self.cursor_track += amount
+		self.cursor_track = self.cursor_track % self.teq_engine.number_of_tracks()
+	
+	def change_cursor_pattern(self, amount):
+		pass
 	
 	def show_help(self):
 		pass
@@ -150,7 +199,8 @@ class main(urwid.Widget):
 		else:
 			pyteq.set_transport_position(self.teq_engine,  self.cursor_pattern,  self.cursor_tick)
 			pyteq.play(self.teq_engine)
-		pass
+		
+		self._invalidate()
 	
 	def selectable(self):
 		return True
@@ -190,7 +240,8 @@ class main(urwid.Widget):
 			self.options["keys"][key](self)
 			self._invalidate()
 			return
-		
+	
+	def foo(self):
 		if key == self.options["edit_mode_key"]:
 			self.toggle_edit_mode()
 			return
@@ -255,7 +306,7 @@ class main(urwid.Widget):
 				
 			if key in self.options["note_keys"]:
 				if True == self.edit_mode:
-					self.set_midi_event_action(self.cursor_track, self.cursor_pattern, self.cursor_tick, teq.midi_event_type.ON, self.note_edit_base + self.options["note_keys"][key], self.note_edit_velocity)
+					self.set_midi_event_action(self.cursor_track, self.cursor_pattern, self.cursor_tick, teq.midi_event_type.ON, self.options["note_edit_base"] + self.options["note_keys"][key], self.options["note_edit_velocity"])
 					self._invalidate()
 					return
 				
