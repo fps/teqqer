@@ -38,6 +38,20 @@ options = {
 	"note_edit_base": 48,
 	"note_edit_velocity": 127,
 	
+	"increase_octave_key": "+",
+	"decrease_octave_key": "-",
+	
+	"increase_velocity_key": "meta +",
+	"decrease_velocity_key": "meta -",
+	
+	"increase_tempo_key": ">",
+	"decrease_tempo_key": "<",
+	
+	"tempo_increment": 1,
+	
+	"increase_edit_step_key": "M",
+	"decrease_edit_step_key": "N",
+	
 	# The numbers are relative to the C of the current octave. This layout
 	# needs to be changed for non US keyboards.
 	"note_keys": {

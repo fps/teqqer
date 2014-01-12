@@ -59,6 +59,8 @@ class main(urwid.Widget):
 		self.note_edit_base = self.options["note_edit_base"]
 		self.note_edit_velocity = self.options["note_edit_velocity"]
 		
+		self.edit_step = self.options["edit_step"]
+		
 		self.history = history()
 
 		self.info = None
@@ -180,6 +182,47 @@ class main(urwid.Widget):
 		)
 	
 	def keypress(self,  size,  key):
+		if key == self.options["increase_edit_step_key"]:
+			self.edit_step += 1
+			self._invalidate()
+			return
+
+		if key == self.options["decrease_edit_step_key"]:
+			self.edit_step -= 1
+			self._invalidate()
+			return
+		
+		if key == self.options["increase_octave_key"]:
+			self.note_edit_base += 12
+			self._invalidate()
+			return
+
+		if key == self.options["decrease_octave_key"]:
+			self.note_edit_base -= 12
+			self._invalidate()
+			return
+		
+		if key == self.options["increase_velocity_key"]:
+			self.note_edit_velocity += 1
+			self._invalidate()
+			return
+
+		if key == self.options["decrease_velocity_key"]:
+			self.note_edit_velocity -= 1
+			self._invalidate()
+			return
+
+		if key == self.options["increase_tempo_key"]:
+			self.teq_engine.set_global_tempo(self.teq_engine.get_global_tempo() + self.options["tempo_increment"])
+			self._invalidate()
+			return
+
+		if key == self.options["decrease_tempo_key"]:
+			self.teq_engine.set_global_tempo(self.teq_engine.get_global_tempo() - self.options["tempo_increment"])
+			self._invalidate()
+			return
+		
+
 		# If we are in the root menu we have to do some extra key
 		# processing
 		track_type = self.teq_engine.track_type(self.cursor_track)
@@ -260,7 +303,7 @@ class main(urwid.Widget):
 		return note + "%0.1x" % octave + " " + "%0.2x" % value2
 	
 	def render_menu(self):
-		ret = self.render_note_on(self.note_edit_base, self.note_edit_velocity) + " "
+		ret = self.render_note_on(self.note_edit_base, self.note_edit_velocity) + " " + str(self.teq_engine.get_global_tempo()) + " " + str(self.edit_step) + " " 
 		if self.current_menu != self.root_menu:
 			ret = ret + self.options["menu_exit_key"] + ":exit menu "
 		for item in self.current_menu:
