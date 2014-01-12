@@ -63,6 +63,18 @@ class main(urwid.Widget):
 		self.edit_mode = False
 		
 		self.current_menu = self.options["menu"]
+		for key in self.current_menu.keys():
+			print ("fixing up", self.current_menu[key])
+			self.fixup_menu(self.current_menu[key])
+	
+	def fixup_menu(self, menu):
+		if 0 == len(menu[2]):
+			return
+		
+		menu[2]["exit menu"] = ["x", lambda x: x.exit_menu(), {}]
+		
+		for key in menu[2].keys():
+			self.fixup_menu(menu[2][key])
 	
 	def change_menu(self, menu):
 		self.current_menu = menu
@@ -234,6 +246,14 @@ class main(urwid.Widget):
 		)
 	
 	def keypress(self,  size,  key):
+		# The menu MUST be processed first. This way even
+		# submenu entries without modifiers get priority.
+		for k in self.current_menu.keys():
+			if self.current_menu[k][0] ==  key:
+				self.current_menu[k][1](self)
+				self._invalidate()
+				return
+		
 		if key in self.options["keys"].keys():
 			self.options["keys"][key](self)
 			self._invalidate()
@@ -323,8 +343,9 @@ class main(urwid.Widget):
 	def render_menu(self):
 		ret =  "[" + ((self.info.transport_state == teq.transport_state.PLAYING) and self.options["transport_indicator_playing"] or self.options["transport_indicator_stopped"]) + " " + (self.edit_mode and self.options["edit_mode_indicator_enabled"] or self.options["edit_mode_indicator_disabled"]) + "] [" + self.render_note_on(self.options["note_edit_base"], self.options["note_edit_velocity"]) + " " + str(self.teq_engine.get_global_tempo()) + " " + str(self.options["edit_step"]) + "] ["
 
-		for item in self.current_menu:
-			ret = ret + self.render_key(item[0]) + ":" + item[1] + " "
+		for key in self.current_menu.keys():
+			item = self.current_menu[key]
+			ret = ret + self.render_key(item[0]) + ":" + key + " "
 		return ret
 	
 	def midi_track_render_size(self):
