@@ -186,23 +186,8 @@ class main(urwid.Widget):
 	def show_help(self):
 		pass
 	
-	def show_root_menu(self):
-		self.current_menu = self.root_menu
-	
-	def show_menu(self):
-		self.current_menu = self.menu
-	
-	def show_quit_menu(self):
-		self.current_menu = self.quit_menu
-
-	def show_song_menu(self):
-		pass
-	
 	def quit(self):
 		raise urwid.ExitMainLoop()
-	
-	def show_file_menu(self):
-		pass
 	
 	def toggle_edit_mode(self):
 		self.edit_mode = not self.edit_mode
