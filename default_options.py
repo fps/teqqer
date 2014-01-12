@@ -26,6 +26,7 @@ options = {
 		
 		"up": lambda x: x.change_cursor_tick(-1),
 		"down": lambda x: x.change_cursor_tick(1),
+		
 		"ctrl up": lambda x: x.change_cursor_tick(-x.options["edit_step"]),
 		"ctrl down": lambda x: x.change_cursor_tick(x.options["edit_step"]),
 		

@@ -123,8 +123,6 @@ class main(urwid.Widget):
 		if 0 == amount:
 			return
 		
-		the_amount = 0
-		
 		if amount > 0:
 			self.cursor_tick += 1
 		else:
@@ -163,6 +161,14 @@ class main(urwid.Widget):
 	def change_cursor_pattern(self, amount):
 		pass
 	
+	def delete_event(self):
+		if False == self.edit_mode:
+			return
+
+		self.set_midi_event_action(self.cursor_track, self.cursor_pattern, self.cursor_tick, teq.midi_event_type.NONE, 0, 127)
+		self._invalidate()
+		return	
+		
 	def show_help(self):
 		pass
 	
@@ -245,12 +251,6 @@ class main(urwid.Widget):
 		track_type = self.teq_engine.track_type(self.cursor_track)
 		
 		if track_type == teq.track_type.MIDI:
-			if key == self.options["delete_event_key"]:
-				if True == self.edit_mode:
-					self.set_midi_event_action(self.cursor_track, self.cursor_pattern, self.cursor_tick, teq.midi_event_type.NONE, 0, 127)
-					self._invalidate()
-					return
-
 			if key == self.options["note_off_key"]:
 				if True == self.edit_mode:
 					self.set_midi_event_action(self.cursor_track, self.cursor_pattern, self.cursor_tick, teq.midi_event_type.OFF, 0, 127)
