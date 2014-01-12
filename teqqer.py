@@ -150,7 +150,6 @@ class main(urwid.Widget):
 				self.cursor_pattern += 1
 				if self.cursor_pattern >= self.teq_engine.number_of_patterns():
 					self.cursor_pattern = 0
-		
 	
 	def change_cursor_tick(self, amount):
 		for n in xrange(abs(amount)):
@@ -240,6 +239,30 @@ class main(urwid.Widget):
 			self.options["keys"][key](self)
 			self._invalidate()
 			return
+
+		# If we are in the root menu we have to do some extra key
+		# processing
+		track_type = self.teq_engine.track_type(self.cursor_track)
+		
+		if track_type == teq.track_type.MIDI:
+			if key == self.options["delete_event_key"]:
+				if True == self.edit_mode:
+					self.set_midi_event_action(self.cursor_track, self.cursor_pattern, self.cursor_tick, teq.midi_event_type.NONE, 0, 127)
+					self._invalidate()
+					return
+
+			if key == self.options["note_off_key"]:
+				if True == self.edit_mode:
+					self.set_midi_event_action(self.cursor_track, self.cursor_pattern, self.cursor_tick, teq.midi_event_type.OFF, 0, 127)
+					self._invalidate()
+					return
+				
+			if key in self.options["note_keys"]:
+				if True == self.edit_mode:
+					self.set_midi_event_action(self.cursor_track, self.cursor_pattern, self.cursor_tick, teq.midi_event_type.ON, self.options["note_edit_base"] + self.options["note_keys"][key], self.options["note_edit_velocity"])
+					self.change_cursor_tick(self.options["edit_step"])
+					self._invalidate()
+					return
 	
 	def foo(self):
 		if key == self.options["edit_mode_key"]:
@@ -287,71 +310,7 @@ class main(urwid.Widget):
 			return
 		
 
-		# If we are in the root menu we have to do some extra key
-		# processing
-		track_type = self.teq_engine.track_type(self.cursor_track)
-		
-		if track_type == teq.track_type.MIDI:
-			if key == self.options["delete_event_key"]:
-				if True == self.edit_mode:
-					self.set_midi_event_action(self.cursor_track, self.cursor_pattern, self.cursor_tick, teq.midi_event_type.NONE, 0, 127)
-					self._invalidate()
-					return
-
-			if key == self.options["note_off_key"]:
-				if True == self.edit_mode:
-					self.set_midi_event_action(self.cursor_track, self.cursor_pattern, self.cursor_tick, teq.midi_event_type.OFF, 0, 127)
-					self._invalidate()
-					return
-				
-			if key in self.options["note_keys"]:
-				if True == self.edit_mode:
-					self.set_midi_event_action(self.cursor_track, self.cursor_pattern, self.cursor_tick, teq.midi_event_type.ON, self.options["note_edit_base"] + self.options["note_keys"][key], self.options["note_edit_velocity"])
-					self._invalidate()
-					return
-				
 			
-		if self.teq_engine.number_of_patterns  > 0:
-			pattern = self.teq_engine.get_pattern(0)
-		
-			if key == self.options["cursor_up_key"]:
-				self.cursor_tick -= 1
-				if self.cursor_tick < 0:
-					if self.options["cursor_wrap_mode"] == "pattern":
-						self.cursor_tick = pattern.length() - 1
-					if self.options["cursor_wrap_mode"] == "song":
-						self.cursor_pattern -= 1
-						if self.cursor_pattern < 0:
-							self.cursor_pattern = self.teq_engine.number_of_patterns() - 1
-						new_pattern = self.teq_engine.get_pattern(self.cursor_pattern)
-						self.cursor_tick = new_pattern.length() - 1
-				self._invalidate()
-				return
-			
-			if key == self.options["cursor_down_key"]:
-				self.cursor_tick += 1
-				if self.cursor_tick >= pattern.length():
-					if self.options["cursor_wrap_mode"] == "pattern":
-						self.cursor_tick = 0
-					if self.options["cursor_wrap_mode"] == "song":
-						self.cursor_tick = 0
-						self.cursor_pattern += 1
-						if self.cursor_pattern >= self.teq_engine.number_of_patterns():
-							self.cursor_pattern = 0
-				self._invalidate()
-				return
-			
-			if key == self.options["cursor_left_key"]:
-				self.cursor_track = (self.cursor_track - 1) % self.teq_engine.number_of_tracks()
-				self._invalidate()
-				return
-			
-			if key == self.options["cursor_right_key"]:
-				self.cursor_track = (self.cursor_track + 1) % self.teq_engine.number_of_tracks() 
-				self._invalidate()
-				return
-		
-				
 		self.handle_menu_key(key)
 		
 	def fill_line(self,  line,  n):
