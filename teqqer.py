@@ -442,7 +442,7 @@ class main(urwid.Widget):
 		if remainder_len > 0:
 			# And fill it
 			header_text += " " * (remainder_len)
-			header_attr.append(("strong", remainder_len))
+			header_attr.append(("stronger", remainder_len))
 		
 		text.append(header_text)
 		attr.append(header_attr)

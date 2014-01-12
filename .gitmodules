@@ -1,0 +1,3 @@
+[submodule "teq"]
+	path = teq
+	url = https://github.com/fps/teq.git

@@ -10,7 +10,7 @@ options = {
 		("strong",  "light gray",  "dark gray"), 
 		("stronger", "white", "dark gray"),
 		("mega",  "black",  "white"),
-		("editing", "black", "light red")
+		("editing", "black", "dark red")
 	], 
 	
 	# The parameter x will be bound to an instance of
