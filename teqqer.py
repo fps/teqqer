@@ -65,6 +65,8 @@ class main(urwid.Widget):
 
 		self.info = None
 		
+		self.edit_mode = False
+		
 		self.root_menu = [ 
 			(options["root_menu_key"],  "menu",  self.show_menu), 
 			(options["root_help_key"],  "help",  self.show_help), 
@@ -136,6 +138,10 @@ class main(urwid.Widget):
 	def show_file_menu(self):
 		pass
 	
+	def toggle_edit_mode(self):
+		self.edit_mode = not self.edit_mode
+		self._invalidate()
+	
 	def toggle_playback(self):
 		if self.info == None:
 			print(":(")
@@ -182,6 +188,10 @@ class main(urwid.Widget):
 		)
 	
 	def keypress(self,  size,  key):
+		if key == self.options["edit_mode_key"]:
+			self.toggle_edit_mode()
+			return
+		
 		if key == self.options["increase_edit_step_key"]:
 			self.edit_step += 1
 			self._invalidate()
@@ -227,19 +237,21 @@ class main(urwid.Widget):
 		# processing
 		track_type = self.teq_engine.track_type(self.cursor_track)
 		
-		if (self.current_menu == self.root_menu):
-			if track_type == teq.track_type.MIDI:
-				if key == self.options["delete_event_key"]:
+		if track_type == teq.track_type.MIDI:
+			if key == self.options["delete_event_key"]:
+				if True == self.edit_mode:
 					self.set_midi_event_action(self.cursor_track, self.cursor_pattern, self.cursor_tick, teq.midi_event_type.NONE, 0, 127)
 					self._invalidate()
 					return
 
-				if key == self.options["note_off_key"]:
+			if key == self.options["note_off_key"]:
+				if True == self.edit_mode:
 					self.set_midi_event_action(self.cursor_track, self.cursor_pattern, self.cursor_tick, teq.midi_event_type.OFF, 0, 127)
 					self._invalidate()
 					return
-					
-				if key in self.options["note_keys"]:
+				
+			if key in self.options["note_keys"]:
+				if True == self.edit_mode:
 					self.set_midi_event_action(self.cursor_track, self.cursor_pattern, self.cursor_tick, teq.midi_event_type.ON, self.note_edit_base + self.options["note_keys"][key], self.note_edit_velocity)
 					self._invalidate()
 					return
@@ -303,7 +315,7 @@ class main(urwid.Widget):
 		return note + "%0.1x" % octave + " " + "%0.2x" % value2
 	
 	def render_menu(self):
-		ret = self.render_note_on(self.note_edit_base, self.note_edit_velocity) + " " + str(self.teq_engine.get_global_tempo()) + " " + str(self.edit_step) + " " 
+		ret =  ((self.info.transport_state == teq.transport_state.PLAYING) and "PLAY" or "STOP") + " " + (self.edit_mode and "EDIT" or "    ") + " " + self.render_note_on(self.note_edit_base, self.note_edit_velocity) + " " + str(self.teq_engine.get_global_tempo()) + " " + str(self.edit_step) + " "
 		if self.current_menu != self.root_menu:
 			ret = ret + self.options["menu_exit_key"] + ":exit menu "
 		for item in self.current_menu:
@@ -317,7 +329,7 @@ class main(urwid.Widget):
 		return 4 + self.options["control_integer_precision"] + 1 + self.options["control_fraction_precision"]
 	
 	def cv_track_render_size(self):
-		return 4 + self.options["control_integer_precision"] + 1 + self.options["control_fraction_precision"]
+		return 4 + self.options["cv_integer_precision"] + 1 + self.options["cv_fraction_precision"]
 		pass
 	
 	def render_midi_event(self,  event):
@@ -526,8 +538,9 @@ class main(urwid.Widget):
 		
 		menu = self.fill_line(self.render_menu(),  size[0])
 		text.append(menu)
-		if self.current_menu != self.root_menu:
-			attr.append([("mega",  len(menu))])
+		
+		if self.edit_mode == True:
+			attr.append([("editing", len(menu))])
 		else:
 			attr.append([("strong",  len(menu))])
 		
@@ -549,7 +562,7 @@ teq_engine.insert_midi_track("snare4",  teq_engine.number_of_tracks())
 
 p = teq_engine.create_pattern(32)
 p.name = "intro"
-p.set_midi_event(0,  0,  teq.midi_event(teq.midi_event_type.ON,  64,  127))
+p.set_midi_event(0,  0,  teq.midi_event(teq.midi_event_type.ON,  63,  127))
 p.set_midi_event(0,  4,  teq.midi_event(teq.midi_event_type.OFF,  60,  127))
 teq_engine.insert_pattern(0,  p)
 

@@ -9,7 +9,8 @@ options = {
 		("medium", "white", "black"),
 		("strong",  "light gray",  "dark gray"), 
 		("stronger", "white", "dark gray"),
-		("mega",  "black",  "white")
+		("mega",  "black",  "white"),
+		("editing", "black", "light red")
 	], 
 	
 	# At what fraction of the screen to display the edit cursor
@@ -71,7 +72,7 @@ options = {
 	
 	"undo_key": "ctrl u",
 	
-	"cursor_up_key": "up", 
+	"cursor_up_key": "up",
 	"cursor_down_key": "down", 
 	"cursor_right_key": "right", 
 	"cursor_left_key": "left", 
@@ -90,6 +91,8 @@ options = {
 	
 	"next_track_key": "ctrl right", 
 	"previous_track_key": "ctrl left", 
+	
+	"edit_mode_key": "esc",
 	
 	"menu_exit_key": "esc", 
 	
