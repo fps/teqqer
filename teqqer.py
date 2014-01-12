@@ -205,7 +205,7 @@ class main(urwid.Widget):
 	
 	def render_note_on(self, value1, value2):
 		octave = math.floor(value1 / 12)
-		note = ["C ",  "Db",  "D ", "Eb", "E ",  "F ",  "Gb",  "G ",  "Ab",  "A ",  "Bb",  "B "][value1 % 12]
+		note = self.options["note_names"][value1 % 12]
 		return note + "%0.1x" % octave + " " + "%0.2x" % value2
 	
 	def render_menu(self):

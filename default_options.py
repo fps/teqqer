@@ -79,5 +79,7 @@ options = {
 	
 	"menu_song_add_midi_track_key": "m", 
 	"menu_song_add_control_track_key": "c", 
-	"menu_song_add_cv_track_key": "v"
+	"menu_song_add_cv_track_key": "v",
+	
+	"note_names": ["C ",  "Db",  "D ", "Eb", "E ",  "F ",  "Gb",  "G ",  "Ab",  "A ",  "Bb",  "B "]
 }
