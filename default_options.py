@@ -6,7 +6,9 @@ options = {
 	"palette": [
 		(None,  "dark gray",  "black"), 
 		("weak",  "light gray",  "black"), 
+		("medium", "white", "black"),
 		("strong",  "light gray",  "dark gray"), 
+		("stronger", "white", "dark gray"),
 		("mega",  "black",  "white")
 	], 
 	
@@ -47,7 +49,7 @@ options = {
 	"increase_tempo_key": ">",
 	"decrease_tempo_key": "<",
 	
-	"tempo_increment": 1,
+	"tempo_increment": 1.0/32,
 	
 	"increase_edit_step_key": "M",
 	"decrease_edit_step_key": "N",

@@ -395,7 +395,7 @@ class main(urwid.Widget):
 
 			text.append(self.render_name(track_name,  render_size))
 			if self.cursor_track == n:
-				attr.append(("mega",  render_size))
+				attr.append(("stronger",  render_size))
 			else:
 				attr.append(("strong",  render_size))
 
