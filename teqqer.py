@@ -56,8 +56,8 @@ class main(urwid.Widget):
 		self.cursor_track = 0
 		self.cursor_column = 0
 		
-		self.note_edit_base = 48
-		self.note_edit_velocity = 127
+		self.note_edit_base = self.options["note_edit_base"]
+		self.note_edit_velocity = self.options["note_edit_velocity"]
 		
 		self.history = history()
 
@@ -129,7 +129,7 @@ class main(urwid.Widget):
 		pass
 	
 	def quit(self):
-		sys.exit(0)
+		raise urwid.ExitMainLoop()
 	
 	def show_file_menu(self):
 		pass

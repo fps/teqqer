@@ -35,6 +35,9 @@ options = {
 	# Reduce this time to make the UI more smooth at the expense of cpu power
 	"ui_update_interval": 0.1, 
 	
+	"note_edit_base": 48,
+	"note_edit_velocity": 127,
+	
 	# The numbers are relative to the C of the current octave. This layout
 	# needs to be changed for non US keyboards.
 	"note_keys": {
@@ -59,6 +62,9 @@ options = {
 	
 	# These can be either "pattern" or "song"
 	"cursor_wrap_mode": "song", 
+	
+	# How many ticks to skip down after editing an event
+	"edit_step": 4, 
 	
 	# What key to press with the cursor keys to select stuff
 	"selection_modifier": "meta", 
@@ -87,5 +93,9 @@ options = {
 	"menu_song_add_control_track_key": "c", 
 	"menu_song_add_cv_track_key": "v",
 	
-	"note_names": ["C ",  "Db",  "D ", "Eb", "E ",  "F ",  "Gb",  "G ",  "Ab",  "A ",  "Bb",  "B "]
+	"note_names": [
+		"C ",  "Db",  "D ", "Eb", 
+		"E ",  "F ",  "Gb",  "G ",  
+		"Ab",  "A ",  "Bb",  "B "
+	]
 }
