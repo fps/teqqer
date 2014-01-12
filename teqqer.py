@@ -29,11 +29,13 @@ class history:
 		
 	def add(self, action, inverse_action):
 		self.actions.append((action, inverse_action))
+		self.last += 1
 		action()
 		
 	def undo(self):
 		try:
 			action = self.actions.pop()[1]
+			self.last -= 1
 			action()
 		except:
 			pass
@@ -169,6 +171,14 @@ class main(urwid.Widget):
 		self.teq_engine.gc()
 		
 	
+	def set_midi_event_action(self, track_index, pattern_index, tick_index, event_type, value1, value2):
+		pattern = self.teq_engine.get_pattern(pattern_index)
+		event = pattern.get_midi_event(track_index, tick_index)
+		self.history.add(
+			lambda: self.set_midi_event(track_index, pattern_index, tick_index, event_type, value1, value2), 
+			lambda: self.set_midi_event(track_index, pattern_index, tick_index, event.type, event.value1, event.value2)
+		)
+	
 	def keypress(self,  size,  key):
 		# If we are in the root menu we have to do some extra key
 		# processing
@@ -177,25 +187,17 @@ class main(urwid.Widget):
 		if (self.current_menu == self.root_menu):
 			if track_type == teq.track_type.MIDI:
 				if key == self.options["delete_event_key"]:
-					pattern = self.teq_engine.get_pattern(self.cursor_pattern)
-					event = pattern.get_midi_event(self.cursor_track, self.cursor_tick)
-					self.history.add(lambda: self.set_midi_event(self.cursor_track, self.cursor_pattern, self.cursor_tick, teq.midi_event_type.NONE, 0, 127), lambda: self.set_midi_event(self.cursor_track, self.cursor_pattern, self.cursor_tick, event.type, event.value1, event.value2))
+					self.set_midi_event_action(self.cursor_track, self.cursor_pattern, self.cursor_tick, teq.midi_event_type.NONE, 0, 127)
 					self._invalidate()
 					return
 
 				if key == self.options["note_off_key"]:
-					pattern = self.teq_engine.get_pattern(self.cursor_pattern)
-					pattern.set_midi_event(self.cursor_track, self.cursor_tick, teq.midi_event(teq.midi_event_type.OFF, 0, 127))
-					self.teq_engine.set_pattern(self.cursor_pattern, pattern)
-					self.teq_engine.gc()
+					self.set_midi_event_action(self.cursor_track, self.cursor_pattern, self.cursor_tick, teq.midi_event_type.OFF, 0, 127)
 					self._invalidate()
 					return
 					
 				if key in self.options["note_keys"]:
-					pattern = self.teq_engine.get_pattern(self.cursor_pattern)
-					pattern.set_midi_event(self.cursor_track, self.cursor_tick, teq.midi_event(teq.midi_event_type.ON, self.note_edit_base + self.options["note_keys"][key], self.note_edit_velocity))
-					self.teq_engine.set_pattern(self.cursor_pattern, pattern)
-					self.teq_engine.gc()
+					self.set_midi_event_action(self.cursor_track, self.cursor_pattern, self.cursor_tick, teq.midi_event_type.ON, self.note_edit_base + self.options["note_keys"][key], self.note_edit_velocity)
 					self._invalidate()
 					return
 				
