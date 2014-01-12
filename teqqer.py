@@ -19,6 +19,27 @@ if (len(sys.argv) != 2):
 	print(usage_text)
 	sys.exit()
 
+class history:
+	def __init__(self):
+		# A list of tuples of lambdas where the first
+		# entry in each tuple is the action and the second
+		# is the action with the inverse effect.
+		self.actions = []
+		self.last = -1
+		
+	def add(self, action, inverse_action):
+		self.actions.append((action, inverse_action))
+		action()
+		
+	def undo(self):
+		try:
+			action = self.actions.pop()[1]
+			action()
+		except:
+			pass
+	
+	def redo(self):
+		pass
 
 class main(urwid.Widget):
 	def __init__(self,  teq_engine,  options):
@@ -35,13 +56,16 @@ class main(urwid.Widget):
 		
 		self.note_edit_base = 48
 		self.note_edit_velocity = 127
+		
+		self.history = history()
 
 		self.info = None
 		
 		self.root_menu = [ 
 			(options["root_menu_key"],  "menu",  self.show_menu), 
 			(options["root_help_key"],  "help",  self.show_help), 
-			(options["root_menu_play_stop_key"],  "play/stop",  self.toggle_playback)
+			(options["root_menu_play_stop_key"],  "play/stop",  self.toggle_playback),
+			(options["undo_key"], "undo", self.undo)
 		]
 		
 		self.menu = [
@@ -55,6 +79,9 @@ class main(urwid.Widget):
 		]
 			
 		self.current_menu = self.root_menu
+	
+	def undo(self):
+		self.history.undo()
 	
 	def get_state_info_and_update(self):
 		# The first time we get some info we are in the game
@@ -135,6 +162,13 @@ class main(urwid.Widget):
 			self._invalidate()
 			return
 	
+	def set_midi_event(self, track_index, pattern_index, tick_index, event_type, value1, value2):
+		pattern = self.teq_engine.get_pattern(pattern_index)
+		pattern.set_midi_event(track_index, tick_index, teq.midi_event(event_type, value1, value2))
+		self.teq_engine.set_pattern(self.cursor_pattern, pattern)
+		self.teq_engine.gc()
+		
+	
 	def keypress(self,  size,  key):
 		# If we are in the root menu we have to do some extra key
 		# processing
@@ -144,9 +178,8 @@ class main(urwid.Widget):
 			if track_type == teq.track_type.MIDI:
 				if key == self.options["delete_event_key"]:
 					pattern = self.teq_engine.get_pattern(self.cursor_pattern)
-					pattern.set_midi_event(self.cursor_track, self.cursor_tick, teq.midi_event(teq.midi_event_type.NONE, 0, 127))
-					self.teq_engine.set_pattern(self.cursor_pattern, pattern)
-					self.teq_engine.gc()
+					event = pattern.get_midi_event(self.cursor_track, self.cursor_tick)
+					self.history.add(lambda: self.set_midi_event(self.cursor_track, self.cursor_pattern, self.cursor_tick, teq.midi_event_type.NONE, 0, 127), lambda: self.set_midi_event(self.cursor_track, self.cursor_pattern, self.cursor_tick, event.type, event.value1, event.value2))
 					self._invalidate()
 					return
 

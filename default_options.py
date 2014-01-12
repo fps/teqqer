@@ -50,6 +50,8 @@ options = {
 	
 	"delete_event_key": "delete",
 	
+	"undo_key": "ctrl u",
+	
 	"cursor_up_key": "up", 
 	"cursor_down_key": "down", 
 	"cursor_right_key": "right", 
