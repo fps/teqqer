@@ -117,6 +117,9 @@ class main(urwid.Widget):
 		except:
 			pass
 	
+	def change_note_edit_base(self, amount):
+		self.options["note_edit_base"] += amount
+	
 	def show_help(self):
 		pass
 	
@@ -315,7 +318,7 @@ class main(urwid.Widget):
 		return note + "%0.1x" % octave + " " + "%0.2x" % value2
 	
 	def render_menu(self):
-		ret =  ((self.info.transport_state == teq.transport_state.PLAYING) and "PLAY" or "STOP") + " " + (self.edit_mode and "EDIT" or "    ") + " " + self.render_note_on(self.note_edit_base, self.note_edit_velocity) + " " + str(self.teq_engine.get_global_tempo()) + " " + str(self.edit_step) + " "
+		ret =  ((self.info.transport_state == teq.transport_state.PLAYING) and self.options["transport_indicator_playing"] or self.options["transport_indicator_stopped"]) + " " + (self.edit_mode and self.options["edit_mode_indicator_enabled"] or self.options["edit_mode_indicator_disabled"]) + " " + self.render_note_on(self.note_edit_base, self.note_edit_velocity) + " " + str(self.teq_engine.get_global_tempo()) + " " + str(self.edit_step) + " "
 		if self.current_menu != self.root_menu:
 			ret = ret + self.options["menu_exit_key"] + ":exit menu "
 		for item in self.current_menu:
@@ -555,10 +558,10 @@ teq_engine.insert_control_track("control",  teq_engine.number_of_tracks())
 teq_engine.insert_midi_track("bd2",  teq_engine.number_of_tracks())
 teq_engine.insert_midi_track("snare2",  teq_engine.number_of_tracks())
 teq_engine.insert_cv_track("cv",  teq_engine.number_of_tracks())
-teq_engine.insert_midi_track("bd3",  teq_engine.number_of_tracks())
-teq_engine.insert_midi_track("snare3",  teq_engine.number_of_tracks())
-teq_engine.insert_midi_track("bd4",  teq_engine.number_of_tracks())
-teq_engine.insert_midi_track("snare4",  teq_engine.number_of_tracks())
+#teq_engine.insert_midi_track("bd3",  teq_engine.number_of_tracks())
+#teq_engine.insert_midi_track("snare3",  teq_engine.number_of_tracks())
+#teq_engine.insert_midi_track("bd4",  teq_engine.number_of_tracks())
+#teq_engine.insert_midi_track("snare4",  teq_engine.number_of_tracks())
 
 p = teq_engine.create_pattern(32)
 p.name = "intro"

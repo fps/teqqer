@@ -13,6 +13,10 @@ options = {
 		("editing", "black", "light red")
 	], 
 	
+	"keys": {
+		"+": lambda x: x.change_note_edit_base(12)
+	},
+	
 	# At what fraction of the screen to display the edit cursor
 	"center_line_fraction": 0.3,  
 	
@@ -116,5 +120,11 @@ options = {
 		"C ",  "Db",  "D ", "Eb", 
 		"E ",  "F ",  "Gb",  "G ",  
 		"Ab",  "A ",  "Bb",  "B "
-	]
+	],
+	
+	"transport_indicator_stopped": " ",
+	"transport_indicator_playing": ">",
+	
+	"edit_mode_indicator_enabled": "!",
+	"edit_mode_indicator_disabled": " "
 }
