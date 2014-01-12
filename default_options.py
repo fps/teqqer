@@ -16,6 +16,8 @@ options = {
 	"keys": {
 		"+": lambda x: x.change_note_edit_base(12),
 		"-": lambda x: x.change_note_edit_base(-12)
+		"meta +": lambda x: x.change_note_edit_base(1),
+		"meta -": lambda x: x.change_note_edit_base(-1)
 	},
 	
 	# At what fraction of the screen to display the edit cursor
