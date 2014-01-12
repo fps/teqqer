@@ -475,7 +475,7 @@ pyteq.set_transport_position(teq_engine,  0,  0)
 pyteq.set_loop_range(teq_engine,  0,  0,  2,  0,  True)
 
 # TODO: merge in user options
-options = default_options.default_options
+options = default_options.options
 
 def handle_alarm(main_loop,  the_main):
 	#print("alarm")

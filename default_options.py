@@ -1,6 +1,6 @@
 # These are the default options that can be overriden by a user's config
 # file and/or specific settings in a song [not implemented yet]
-default_options = {
+options = {
 	# The color palette (see urwid documentation for color
 	# codes,  etc.)
 	"palette": [
@@ -37,7 +37,14 @@ default_options = {
 	
 	# The numbers are relative to the C of the current octave. This layout
 	# needs to be changed for non US keyboards.
-	"note_keys": {'z': 0, 's': 1, 'x': 2, 'd': 3, 'c': 4, 'v': 5, 'g': 6, 'b': 7, 'h': 8, 'n': 9, 'j': 10, 'm': 11, ': ': 12, 'l': 13, '.': 14, '/': 15, 'q': 12, '2': 13, 'w': 14, '3': 15, 'e': 16, 'r': 17, '5': 18, 't': 19, '6': 20, 'y': 21, '7': 22, 'u': 23, '8': 24, 'i': 25, '9': 26, 'o': 27, 'p': 28, '[':  29}, 
+	"note_keys": {
+		'z': 0, 's': 1, 'x': 2, 'd': 3, 'c': 4, 'v': 5, 'g': 6,
+		'b': 7, 'h': 8, 'n': 9, 'j': 10, 'm': 11, ': ': 12,
+		'l': 13, '.': 14, '/': 15, 'q': 12, '2': 13, 'w': 14,
+		'3': 15, 'e': 16, 'r': 17, '5': 18, 't': 19, '6': 20,
+		'y': 21, '7': 22, 'u': 23, '8': 24, 'i': 25, '9': 26,
+		'o': 27, 'p': 28, '[':  29
+	}, 
 	
 	"cursor_up_key": "up", 
 	"cursor_down_key": "down", 
