@@ -64,17 +64,18 @@ class main(urwid.Widget):
 		
 		self.current_menu = self.options["menu"]
 		for menu in self.current_menu:
-			print ("fixing up", menu)
 			self.fixup_menu(menu)
 	
 	def fixup_menu(self, menu):
+		print ("fixing up", menu)
 		if 0 == len(menu[3]):
 			return
 		
-		menu.append(["x", lambda x: x.exit_menu(), []])
-		
 		for submenu in menu[3]:
 			self.fixup_menu(submenu)
+
+		menu[3].append(["exit menu", "x", lambda x: x.exit_menu(), []])
+		
 	
 	def change_menu(self, menu):
 		self.current_menu = menu
@@ -280,7 +281,7 @@ class main(urwid.Widget):
 		return note + "%0.1x" % octave + " " + "%0.2x" % value2
 	
 	def render_menu(self):
-		ret =  "[" + ((self.info.transport_state == teq.transport_state.PLAYING) and self.options["transport_indicator_playing"] or self.options["transport_indicator_stopped"]) + " " + (self.edit_mode and self.options["edit_mode_indicator_enabled"] or self.options["edit_mode_indicator_disabled"]) + "] [" + self.render_note_on(self.options["note_edit_base"], self.options["note_edit_velocity"]) + " " + str(self.teq_engine.get_global_tempo()) + " " + str(self.options["edit_step"]) + "] ["
+		ret =  ((self.info.transport_state == teq.transport_state.PLAYING) and self.options["transport_indicator_playing"] or self.options["transport_indicator_stopped"]) + " " + (self.edit_mode and self.options["edit_mode_indicator_enabled"] or self.options["edit_mode_indicator_disabled"]) + " | " + self.render_note_on(self.options["note_edit_base"], self.options["note_edit_velocity"]) + " " + str(self.teq_engine.get_global_tempo()) + " " + str(self.options["edit_step"]) + " | "
 
 		for entry in self.current_menu:
 			ret = ret + self.render_key(entry[0]) + ":" + entry[1] + " "

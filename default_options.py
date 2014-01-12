@@ -13,6 +13,8 @@ options = {
 		("editing", "black", "light red")
 	], 
 	
+	# The parameter x will be bound to an instance of
+	# the class teqqer.main.
 	"keys": {
 		"+": lambda x: x.change_note_edit_base(12),
 		"-": lambda x: x.change_note_edit_base(-12),
@@ -63,8 +65,9 @@ options = {
 				["control", "c", lambda x: x.add_control_track(), []],
 				["cv", "v", lambda x: x.add_cv_track(), []]
 			]],
-			["remove track", "r", lambda x: x.remove_track(), []],
-			["add pattern", "p", lambda x: x.add_pattern(), []]
+			["remove track", "T", lambda x: x.remove_track(), []],
+			["add pattern", "p", lambda x: x.add_pattern(), []],
+			["remove pattern", "P", lambda x: x.add_pattern(), []],
 		]]
 	],
 	
