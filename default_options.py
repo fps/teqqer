@@ -52,21 +52,21 @@ options = {
 	# Aach submenu gets an additional entry: exit_menu_key, "exit menu".
 	# Also each submenu's action is modified to exit the menu after
 	# performing it.
-	"menu": {
-		"file": ["ctrl f", lambda x: x.change_menu(x.current_menu["file"][2]), {
-			"save": ["s", lambda x: x.save(), {}],
-			"quit": ["q", lambda x: x.quit(), {}]
-		}],
-		"song": ["ctrl o", lambda x: x.change_menu(x.current_menu["song"][2]), {
-			"add track": ["t", lambda x: x.change_menu(x.current_menu["add track"][2]), {
-				"midi": ["m", lambda x: x.add_midi_track(), {}],
-				"control": ["c", lambda x: x.add_control_track(), {}],
-				"cv": ["v", lambda x: x.add_cv_track(), {}]
-			}],
-			"remove track": ["r", lambda x: x.remove_track(), {}],
-			"add pattern": ["p", lambda x: x.add_pattern(), {}]
-		}]
-	},
+	"menu": [
+		["file", "ctrl f", lambda x: x.change_menu(x.current_menu[0][3]), [
+			["save", "s", lambda x: x.save(), []],
+			["quit", "q", lambda x: x.quit(), []]
+		]],
+		["song", "ctrl o", lambda x: x.change_menu(x.current_menu[1][3]), [
+			["add track", "t", lambda x: x.change_menu(x.current_menu[0][3]), [
+				["midi", "m", lambda x: x.add_midi_track(), []],
+				["control", "c", lambda x: x.add_control_track(), []],
+				["cv", "v", lambda x: x.add_cv_track(), []]
+			]],
+			["remove track", "r", lambda x: x.remove_track(), []],
+			["add pattern", "p", lambda x: x.add_pattern(), []]
+		]]
+	],
 	
 	# At what fraction of the screen to display the edit cursor
 	"center_line_fraction": 0.3,  
