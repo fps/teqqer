@@ -44,7 +44,11 @@ options = {
 		'3': 15, 'e': 16, 'r': 17, '5': 18, 't': 19, '6': 20,
 		'y': 21, '7': 22, 'u': 23, '8': 24, 'i': 25, '9': 26,
 		'o': 27, 'p': 28, '[':  29
-	}, 
+	},
+	
+	"note_off_key": '`',
+	
+	"delete_event_key": "delete",
 	
 	"cursor_up_key": "up", 
 	"cursor_down_key": "down", 

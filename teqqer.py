@@ -142,6 +142,22 @@ class main(urwid.Widget):
 		
 		if (self.current_menu == self.root_menu):
 			if track_type == teq.track_type.MIDI:
+				if key == self.options["delete_event_key"]:
+					pattern = self.teq_engine.get_pattern(self.cursor_pattern)
+					pattern.set_midi_event(self.cursor_track, self.cursor_tick, teq.midi_event(teq.midi_event_type.NONE, 0, 127))
+					self.teq_engine.set_pattern(self.cursor_pattern, pattern)
+					self.teq_engine.gc()
+					self._invalidate()
+					return
+
+				if key == self.options["note_off_key"]:
+					pattern = self.teq_engine.get_pattern(self.cursor_pattern)
+					pattern.set_midi_event(self.cursor_track, self.cursor_tick, teq.midi_event(teq.midi_event_type.OFF, 0, 127))
+					self.teq_engine.set_pattern(self.cursor_pattern, pattern)
+					self.teq_engine.gc()
+					self._invalidate()
+					return
+					
 				if key in self.options["note_keys"]:
 					pattern = self.teq_engine.get_pattern(self.cursor_pattern)
 					pattern.set_midi_event(self.cursor_track, self.cursor_tick, teq.midi_event(teq.midi_event_type.ON, self.note_edit_base + self.options["note_keys"][key], self.note_edit_velocity))
@@ -488,17 +504,5 @@ loop = urwid.MainLoop(the_main,  options["palette"])
 
 loop.set_alarm_in(the_main.options["ui_update_interval"],  handle_alarm,  the_main)
 
-quit = False
-
-while not quit == True:
-	try:
-		print("Starting up...")
-		loop.run()
-	except Exception as e:
-		print("It seems we crashed.", e, " Maybe we can recover.")
-		try:
-			i = input("Press any key to continue except press q to quit...")
-			if i == 'q':
-				sys.exit(1)
-		except:
-			pass
+print("Starting up...")
+loop.run()
