@@ -59,15 +59,24 @@ options = {
 			["save", "s", lambda x: x.save(), []],
 			["quit", "q", lambda x: x.quit(), []]
 		]],
-		["song", "ctrl o", lambda x: x.change_menu(x.current_menu[1][3]), [
-			["add track", "t", lambda x: x.change_menu(x.current_menu[0][3]), [
-				["midi", "m", lambda x: x.add_midi_track(), []],
-				["control", "c", lambda x: x.add_control_track(), []],
-				["cv", "v", lambda x: x.add_cv_track(), []]
+		["properties", "ctrl p", lambda x: x.change_menu(x.current_menu[1][3]), [
+			["track", "t", lambda x: x.change_menu(x.current_menu[0][3]), [
+				["add track", "a", lambda x: x.change_menu(x.current_menu[0][3]), [
+					["midi", "m", lambda x: x.add_midi_track(), []],
+					["control", "c", lambda x: x.add_control_track(), []],
+					["cv", "v", lambda x: x.add_cv_track(), []],
+				]],
+				["remove track", "r", lambda x: x.remove_track(), []]
 			]],
-			["remove track", "T", lambda x: x.remove_track(), []],
-			["add pattern", "p", lambda x: x.add_pattern(), []],
-			["remove pattern", "P", lambda x: x.add_pattern(), []],
+			["pattern", "p", lambda x: x.change_menu(x.current_menu[1][3]), [
+				["add pattern", "a", lambda x: x.remove_track(), []],
+				["remove pattern", "r", lambda x: x.remove_track(), []]
+			]]
+		]],
+		["help", "f1", lambda x: x.change_menu(x.current_menu[2][3]), [
+			["about", "a", lambda x: x.show_about(), []],
+			["license", "l", lambda x: x.show_license(), []],
+			["help", "f1", lambda x: x.show_help(), []]
 		]]
 	],
 	

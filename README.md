@@ -30,7 +30,7 @@ cd ../..
 # Running
 
 Run teqqer from the root of the source tree with the 
-provided script <code>teqqer</code>
+provided script <code>teqqer</code>:
 
 <pre>
 ./teqqer foo.teq

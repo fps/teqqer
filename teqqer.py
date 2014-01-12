@@ -66,6 +66,15 @@ class main(urwid.Widget):
 		for menu in self.current_menu:
 			self.fixup_menu(menu)
 	
+	def show_about(self):
+		pass
+	
+	def show_license(self):
+		pass
+	
+	def show_help(self):
+		pass
+	
 	def fixup_menu(self, menu):
 		print ("fixing up", menu)
 		if 0 == len(menu[3]):
@@ -82,7 +91,6 @@ class main(urwid.Widget):
 	
 	def exit_menu(self):
 		self.current_menu = self.options["menu"]
-		pass
 	
 	def undo(self):
 		self.history.undo()
@@ -284,7 +292,7 @@ class main(urwid.Widget):
 		ret =  ((self.info.transport_state == teq.transport_state.PLAYING) and self.options["transport_indicator_playing"] or self.options["transport_indicator_stopped"]) + " " + (self.edit_mode and self.options["edit_mode_indicator_enabled"] or self.options["edit_mode_indicator_disabled"]) + " | " + self.render_note_on(self.options["note_edit_base"], self.options["note_edit_velocity"]) + " " + str(self.teq_engine.get_global_tempo()) + " " + str(self.options["edit_step"]) + " | "
 
 		for entry in self.current_menu:
-			ret = ret + self.render_key(entry[0]) + ":" + entry[1] + " "
+			ret = ret + self.render_key(entry[1]) + ":" + entry[0] + " "
 		return ret
 	
 	def midi_track_render_size(self):
@@ -507,7 +515,7 @@ class main(urwid.Widget):
 		if self.edit_mode == True:
 			attr.append([("editing", len(menu))])
 		else:
-			attr.append([("strong",  len(menu))])
+			attr.append([("stronger",  len(menu))])
 		
 		t = urwid.TextCanvas(text,  attr,  maxcol = size[0]) 
 
