@@ -65,8 +65,7 @@ class main(urwid.Widget):
 		self.root_menu = [ 
 			(options["root_menu_key"],  "menu",  self.show_menu), 
 			(options["root_help_key"],  "help",  self.show_help), 
-			(options["root_menu_play_stop_key"],  "play/stop",  self.toggle_playback),
-			(options["undo_key"], "undo", self.undo)
+			(options["root_menu_play_stop_key"],  "play/stop",  self.toggle_playback)
 		]
 		
 		self.menu = [
@@ -111,6 +110,9 @@ class main(urwid.Widget):
 			
 		except:
 			pass
+	
+	def change_tempo(self, amount):
+		self.teq_engine.set_global_tempo(self.teq_engine.get_global_tempo() + amount)
 	
 	def change_note_edit_base(self, amount):
 		self.options["note_edit_base"] += amount

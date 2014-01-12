@@ -36,6 +36,12 @@ options = {
 		"shift up": lambda x: x.change_cursor_patterm(-1),
 		"shift down": lambda x: x.change_cursor_pattern(1),
 
+		"delete": lambda x: x.delete_event(),
+		
+		"ctrl u": lambda x: x.undo(),
+		
+		">": lambda x: x.change_tempo(1.0/8.0),
+		"<": lambda x: x.change_tempo(-1.0/8.0)
 	},
 	
 	# At what fraction of the screen to display the edit cursor
@@ -66,14 +72,8 @@ options = {
 	"note_edit_base": 48,
 	"note_edit_velocity": 127,
 	
-	"increase_octave_key": "+",
-	"decrease_octave_key": "-",
-	
 	"increase_velocity_key": "meta +",
 	"decrease_velocity_key": "meta -",
-	
-	"increase_tempo_key": ">",
-	"decrease_tempo_key": "<",
 	
 	"tempo_increment": 1.0/32,
 	
@@ -93,15 +93,6 @@ options = {
 	
 	"note_off_key": '`',
 	
-	"delete_event_key": "delete",
-	
-	"undo_key": "ctrl u",
-	
-	"cursor_up_key": "up",
-	"cursor_down_key": "down", 
-	"cursor_right_key": "right", 
-	"cursor_left_key": "left", 
-	
 	# These can be either "pattern" or "song"
 	"cursor_wrap_mode": "song", 
 	
@@ -110,16 +101,6 @@ options = {
 	
 	# What key to press with the cursor keys to select stuff
 	"selection_modifier": "meta", 
-	
-	"next_pattern_key": "ctrl down", 
-	"previous_pattern_key": "ctrl up", 
-	
-	"next_track_key": "ctrl right", 
-	"previous_track_key": "ctrl left", 
-	
-	"edit_mode_key": "esc",
-	
-	"menu_exit_key": "esc", 
 	
 	"menu_yes_key": "y", 
 	
