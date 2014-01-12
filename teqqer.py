@@ -80,6 +80,9 @@ class main(urwid.Widget):
 			
 		self.current_menu = self.root_menu
 	
+	def change_menu(self, menu):
+		pass
+	
 	def undo(self):
 		self.history.undo()
 	
