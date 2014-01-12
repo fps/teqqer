@@ -265,55 +265,6 @@ class main(urwid.Widget):
 					self._invalidate()
 					return
 	
-	def foo(self):
-		if key == self.options["edit_mode_key"]:
-			self.toggle_edit_mode()
-			return
-		
-		if key == self.options["increase_edit_step_key"]:
-			self.edit_step += 1
-			self._invalidate()
-			return
-
-		if key == self.options["decrease_edit_step_key"]:
-			self.edit_step -= 1
-			self._invalidate()
-			return
-		
-		if key == self.options["increase_octave_key"]:
-			self.options["note_edit_base"] += 12
-			self._invalidate()
-			return
-
-		if key == self.options["decrease_octave_key"]:
-			self.options["note_edit_base"] -= 12
-			self._invalidate()
-			return
-		
-		if key == self.options["increase_velocity_key"]:
-			self.options["note_edit_velocity"] += 1
-			self._invalidate()
-			return
-
-		if key == self.options["decrease_velocity_key"]:
-			self.options["note_edit_velocity"] -= 1
-			self._invalidate()
-			return
-
-		if key == self.options["increase_tempo_key"]:
-			self.teq_engine.set_global_tempo(self.teq_engine.get_global_tempo() + self.options["tempo_increment"])
-			self._invalidate()
-			return
-
-		if key == self.options["decrease_tempo_key"]:
-			self.teq_engine.set_global_tempo(self.teq_engine.get_global_tempo() - self.options["tempo_increment"])
-			self._invalidate()
-			return
-		
-
-			
-		self.handle_menu_key(key)
-		
 	def fill_line(self,  line,  n):
 		return (line + " " * n)[0:n]
 	
