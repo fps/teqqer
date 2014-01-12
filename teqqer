@@ -1,0 +1,1 @@
+PYTHONPATH=teq/build/:teq LD_LIBRARY_PATH=teq//build/ python teqqer.py $*
