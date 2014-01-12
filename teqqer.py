@@ -56,11 +56,6 @@ class main(urwid.Widget):
 		self.cursor_track = 0
 		self.cursor_column = 0
 		
-		self.note_edit_base = self.options["note_edit_base"]
-		self.note_edit_velocity = self.options["note_edit_velocity"]
-		
-		self.edit_step = self.options["edit_step"]
-		
 		self.history = history()
 
 		self.info = None
@@ -192,7 +187,7 @@ class main(urwid.Widget):
 	
 	def keypress(self,  size,  key):
 		if key in self.options["keys"].keys():
-			self.options["keys"][key]()
+			self.options["keys"][key](self)
 			self._invalidate()
 			return
 		
@@ -211,22 +206,22 @@ class main(urwid.Widget):
 			return
 		
 		if key == self.options["increase_octave_key"]:
-			self.note_edit_base += 12
+			self.options["note_edit_base"] += 12
 			self._invalidate()
 			return
 
 		if key == self.options["decrease_octave_key"]:
-			self.note_edit_base -= 12
+			self.options["note_edit_base"] -= 12
 			self._invalidate()
 			return
 		
 		if key == self.options["increase_velocity_key"]:
-			self.note_edit_velocity += 1
+			self.options["note_edit_velocity"] += 1
 			self._invalidate()
 			return
 
 		if key == self.options["decrease_velocity_key"]:
-			self.note_edit_velocity -= 1
+			self.options["note_edit_velocity"] -= 1
 			self._invalidate()
 			return
 
@@ -323,7 +318,7 @@ class main(urwid.Widget):
 		return note + "%0.1x" % octave + " " + "%0.2x" % value2
 	
 	def render_menu(self):
-		ret =  ((self.info.transport_state == teq.transport_state.PLAYING) and self.options["transport_indicator_playing"] or self.options["transport_indicator_stopped"]) + " " + (self.edit_mode and self.options["edit_mode_indicator_enabled"] or self.options["edit_mode_indicator_disabled"]) + " " + self.render_note_on(self.note_edit_base, self.note_edit_velocity) + " " + str(self.teq_engine.get_global_tempo()) + " " + str(self.edit_step) + " "
+		ret =  ((self.info.transport_state == teq.transport_state.PLAYING) and self.options["transport_indicator_playing"] or self.options["transport_indicator_stopped"]) + " " + (self.edit_mode and self.options["edit_mode_indicator_enabled"] or self.options["edit_mode_indicator_disabled"]) + " " + self.render_note_on(self.options["note_edit_base"], self.options["note_edit_velocity"]) + " " + str(self.teq_engine.get_global_tempo()) + " " + str(self.options["edit_step"]) + " "
 		if self.current_menu != self.root_menu:
 			ret = ret + self.options["menu_exit_key"] + ":exit menu "
 		for item in self.current_menu:
