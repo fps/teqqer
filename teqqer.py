@@ -62,25 +62,13 @@ class main(urwid.Widget):
 		
 		self.edit_mode = False
 		
-		self.root_menu = [ 
-			(options["root_menu_key"],  "menu",  self.show_menu), 
-			(options["root_help_key"],  "help",  self.show_help), 
-			(options["root_menu_play_stop_key"],  "play/stop",  self.toggle_playback)
-		]
-		
-		self.menu = [
-			(options["menu_file_key"],  "file",  self.show_file_menu), 
-			(options["menu_quit_key"],  "quit",  self.show_quit_menu), 
-			(options["menu_song_key"],  "song",  self.show_song_menu)
-		]
-		
-		self.quit_menu = [
-			(options["menu_yes_key"],  "yes,  really quit",  self.quit)
-		]
-			
-		self.current_menu = self.root_menu
+		self.current_menu = self.options["menu"]
 	
 	def change_menu(self, menu):
+		self.current_menu = menu
+	
+	def exit_menu(self):
+		self.current_menu = self.options["menu"]
 		pass
 	
 	def undo(self):

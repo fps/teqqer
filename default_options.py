@@ -47,20 +47,18 @@ options = {
 		"<": lambda x: x.change_tempo(-1.0/8.0)
 	},
 	
-	"menu_modifier_key": "ctrl",
 	"menu_exit_key": "esc",
 	
-	# Top level entries' keys are combined with the menu_modifier_key.
-	# And each submenu gets an additional entry: exit_menu_key, "exit menu".
+	# Aach submenu gets an additional entry: exit_menu_key, "exit menu".
 	# Also each submenu's action is modified to exit the menu after
 	# performing it.
 	"menu": {
-		"file": ("f", lambda x: x.change_menu(x.current_menu()["file"][2]), {
+		"file": ("ctrl f", lambda x: x.change_menu(x.current_menu["file"][2]), {
 			"save": ("s", lambda x: x.save()),
 			"quit": ("q", lambda x: x.quit())
 		}),
-		"song": ("s", lambda x: x.change_menu(x.current_menu()["song"][2]), {
-			"add track": ("t", lambda x: x.change_menu(x.current_menu()["add track"][2]), {
+		"song": ("s", lambda x: x.change_menu(x.current_menu["song"][2]), {
+			"add track": ("t", lambda x: x.change_menu(x.current_menu["add track"][2]), {
 				"midi": ("m", lambda x: x.add_midi_track()),
 				"control": ("c", lambda x: x.add_control_track()),
 				"cv": ("v", lambda x: x.add_cv_track())
