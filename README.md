@@ -24,8 +24,21 @@ mkdir bld
 cd bld
 cmake ..
 make
-cd ..
+cd ../..
 </pre>
+
+# Running
+
+Run teqqer from the root of the source tree with the 
+provided script <code>teqqer</code>
+
+<pre>
+./teqqer foo.teq
+</pre>
+
+# Installation
+
+Not yet..
 
 # Author
 
