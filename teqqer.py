@@ -191,6 +191,11 @@ class main(urwid.Widget):
 		)
 	
 	def keypress(self,  size,  key):
+		if key in self.options["keys"].keys():
+			self.options["keys"][key]()
+			self._invalidate()
+			return
+		
 		if key == self.options["edit_mode_key"]:
 			self.toggle_edit_mode()
 			return
