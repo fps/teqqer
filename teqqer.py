@@ -73,10 +73,13 @@ u"""Press esc to exit this about screen.
 teqqer - A Midi Sequencer With a Tracker Like Console Interface.""")
 		
 		urwid.connect_signal(self.popup_widget, 'close', lambda x: self.close_pop_up())
+		
+		self.popup_parameters = {'left':0, 'top':0, 'overlay_width':200, 'overlay_height':200}
+		
 		self.open_pop_up()
 
 	def get_pop_up_parameters(self):
-		return {'left':0, 'top':1, 'overlay_width':200, 'overlay_height':1}
+		return self.popup_parameters
 	
 	def create_pop_up(self):
 		return self.popup_widget
