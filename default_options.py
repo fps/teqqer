@@ -48,7 +48,27 @@ options = {
 		">": lambda x: x.change_tempo(1.0/8.0),
 		"<": lambda x: x.change_tempo(-1.0/8.0)
 	},
+
+	# The numbers are relative to the C of the current octave. This layout
+	# needs to be changed for non US keyboards.
+	"note_keys": {
+		# C to E lower octave
+		'z': 0, 's': 1, 'x': 2, 'd': 3, 'c': 4, 
+		# F to B lower octave
+		'v': 5, 'g': 6, 'b': 7, 'h': 8, 'n': 9, 'j': 10, 'm': 11, 
+		# C to E lower octave plus one
+		',': 12, 'l': 13, '.': 14, ';': 15, '/': 16,
+		# C to E upper octave
+		'q': 12, '2': 13, 'w': 14, '3': 15, 'e': 16,
+		# F to B upper octave
+		'r': 17, '5': 18, 't': 19, '6': 20, 'y': 21, '7': 22, 'u': 23,
+		# C to E upper octave plus one
+		'i': 24, '9': 25, 'o': 26, '0': 27, 'p':  28,
+		# F to G upper octave plus one
+		'[': 29, '=': 30, ']': 31
+	},
 	
+
 	"menu_exit_key": "esc",
 	
 	# Aach submenu gets an additional entry: exit_menu_key, "exit menu".
@@ -76,7 +96,7 @@ options = {
 			]]
 		]],
 		["help", "f1", lambda x: x.change_menu(x.current_menu[2][3]), [
-			["about", "a", lambda x: x.show_about(), []],
+			["about", "a", lambda x: x._emit('popup_about'), []],
 			["license", "l", lambda x: x.show_license(), []],
 			["help", "f1", lambda x: x.show_help(), []]
 		]]
@@ -110,17 +130,6 @@ options = {
 	"note_edit_base": 48,
 	"note_edit_velocity": 127,
 	
-	# The numbers are relative to the C of the current octave. This layout
-	# needs to be changed for non US keyboards.
-	"note_keys": {
-		'z': 0, 's': 1, 'x': 2, 'd': 3, 'c': 4, 'v': 5, 'g': 6,
-		'b': 7, 'h': 8, 'n': 9, 'j': 10, 'm': 11, ',': 12,
-		'l': 13, '.': 14, ';': 15, '/': 16, 'q': 12, '2': 13, 'w': 14,
-		'3': 15, 'e': 16, 'r': 17, '5': 18, 't': 19, '6': 20,
-		'y': 21, '7': 22, 'u': 23, 'i': 24, '9': 25,
-		'o': 26, '0': 27, 'p':  28, '[': 29, '=': 30, ']': 31
-	},
-	
 	"note_off_key": '`',
 	
 	# These can be either "pattern" or "song"
@@ -131,22 +140,6 @@ options = {
 	
 	# What key to press with the cursor keys to select stuff
 	"selection_modifier": "meta", 
-	
-	"menu_yes_key": "y", 
-	
-	"root_menu_key": "esc", 
-	"root_help_key": "f1", 
-	"root_menu_play_stop_key": " ", 
-	
-	"menu_file_key": "f", 
-	"menu_quit_key": "q", 
-	"menu_song_key": "s", 
-	
-	"menu_file_save_key": "s", 
-	
-	"menu_song_add_midi_track_key": "m", 
-	"menu_song_add_control_track_key": "c", 
-	"menu_song_add_cv_track_key": "v",
 	
 	"note_names": [
 		"C ",  "Db",  "D ", "Eb", 
