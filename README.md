@@ -9,8 +9,8 @@ TODOs (those done are marked [check]):
 
 * Midi note insertion, deletion [check]
 * Undo [check]
-* Redo
-* Main view [50% check]
+* Redo [check 50%]
+* Main view [check 50%]
 * Menu infrastructure [check]
 * Input handling infrastructure [check]
 * Changing midi event parameters for editing (base octave, velocity) [check]
@@ -18,12 +18,14 @@ TODOs (those done are marked [check]):
 * Selection of sequence data
 * Copy and paste for selection
 * Copy and paste for patterns
-* Muting patterns/sequences
+* Muting patterns/sequences infrastructure
+* Muting patterns/sequences via UI
 * jack transport 
 * Editing of control and cv events
 * Loop support infrastructure [check]
 * Editing loop start/end
 * Display loop range
+* Loading options overridden by the user
 
 # Requirements
 
