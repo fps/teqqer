@@ -12,6 +12,20 @@ options = {
 		("mega",  "black",  "white"),
 		("editing", "black", "dark red")
 	], 
+
+	# The names for the notes. Note that
+	# each string is TWO chars long
+	"note_names": [
+		"C ",  "Db",  "D ", "Eb", 
+		"E ",  "F ",  "Gb",  "G ",  
+		"Ab",  "A ",  "Bb",  "B "
+	],
+	
+	"transport_indicator_stopped": "||",
+	"transport_indicator_playing": ">>",
+	
+	"edit_mode_indicator_enabled": "!",
+	"edit_mode_indicator_disabled": "_",
 	
 	# The parameter x will be bound to an instance of
 	# the class teqqer.main.
@@ -72,7 +86,7 @@ options = {
 	"menu_exit_key": "esc",
 	
 	# Aach submenu gets an additional entry: exit_menu_key, "exit menu".
-	# Also each submenu's action is modified to exit the menu after
+	# Also each action without a submenu is modified to exit the menu after
 	# performing it.
 	"menu": [
 		["file", "ctrl f", lambda x: x.change_menu(x.current_menu[0][3]), [
@@ -139,17 +153,5 @@ options = {
 	"edit_step": 4, 
 	
 	# What key to press with the cursor keys to select stuff
-	"selection_modifier": "meta", 
-	
-	"note_names": [
-		"C ",  "Db",  "D ", "Eb", 
-		"E ",  "F ",  "Gb",  "G ",  
-		"Ab",  "A ",  "Bb",  "B "
-	],
-	
-	"transport_indicator_stopped": "|",
-	"transport_indicator_playing": ">",
-	
-	"edit_mode_indicator_enabled": "!",
-	"edit_mode_indicator_disabled": "_"
+	"selection_modifier": "meta"
 }
