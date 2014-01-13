@@ -47,4 +47,3 @@ indicate the interval (in semitones) above the note_edit_base.:
 		
 	return "".join(text)
 
-# The Mouse
