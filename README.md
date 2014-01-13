@@ -2,6 +2,29 @@
 
 An ncurses/terminal based midi and CV signal tracker/sequencer.
 
+# TODOs
+
+This project is not in a usable state yet. Here's some of the key 
+TODOs (those done are marked [check]):
+
+* Midi note insertion, deletion [check]
+* Undo [check]
+* Redo
+* Main view [50% check]
+* Menu infrastructure [check]
+* Input handling infrastructure [check]
+* Changing midi event parameters for editing (base octave, velocity) [check]
+* Song saving/loading
+* Selection of sequence data
+* Copy and paste for selection
+* Copy and paste for patterns
+* Muting patterns/sequences
+* jack transport 
+* Editing of control and cv events
+* Loop support infrastructure [check]
+* Editing loop start/end
+* Display loop range
+
 # Requirements
 
 * libteq and its python bindings - submodule, see below.
