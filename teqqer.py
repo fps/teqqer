@@ -4,6 +4,8 @@ import teq
 import pyteq
 import math
 import default_options
+import about
+import license
 import json
 
 usage_text = """
@@ -65,12 +67,19 @@ class PopUpLauncherThing(urwid.PopUpLauncher):
 	def __init__(self, original):
 		self.__super.__init__(original)
 		urwid.connect_signal(original, 'popup_about', lambda x: self.popup_about())
+		urwid.connect_signal(original, 'popup_license', lambda x: self.popup_license())
+
+	def popup_license(self):
+		self.popup_widget = TextPopup(license.text)
+		
+		urwid.connect_signal(self.popup_widget, 'close', lambda x: self.close_pop_up())
+		
+		self.popup_parameters = {'left':0, 'top':0, 'overlay_width':200, 'overlay_height':200}
+		
+		self.open_pop_up()
 
 	def popup_about(self):
-		self.popup_widget = TextPopup(
-u"""Press esc to exit this about screen.
-
-teqqer - A Midi Sequencer With a Tracker Like Console Interface.""")
+		self.popup_widget = TextPopup(about.text)
 		
 		urwid.connect_signal(self.popup_widget, 'close', lambda x: self.close_pop_up())
 		
@@ -89,7 +98,9 @@ class main(urwid.Widget):
 	def __init__(self,  teq_engine,  options):
 		self.__super.__init__()
 				
-		urwid.register_signal(main, 'popup_about')
+		urwid.register_signal(main, 'popup_help')
+		urwid.register_signal(main, 'popup_license')
+		urwid.register_signal(main, ['popup_about', 'popup_license', 'popup_help'])
 		
 		self.options = options
 		self.teq_engine = teq_engine

@@ -111,8 +111,8 @@ options = {
 		]],
 		["help", "f1", lambda x: x.change_menu(x.current_menu[2][3]), [
 			["about", "a", lambda x: x._emit('popup_about'), []],
-			["license", "l", lambda x: x.show_license(), []],
-			["help", "f1", lambda x: x.show_help(), []]
+			["license", "l", lambda x:x._emit('popup_license'), []],
+			["help", "f1", lambda x: x._emit('popup_help'), []]
 		]]
 	],
 	
