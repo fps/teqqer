@@ -84,6 +84,7 @@ options = {
 	
 
 	"menu_exit_key": "esc",
+	"edit_mode_key": "esc",
 	
 	# Aach submenu gets an additional entry: exit_menu_key, "exit menu".
 	# Also each action without a submenu is modified to exit the menu after

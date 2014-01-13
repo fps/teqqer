@@ -1,12 +1,15 @@
 import sys
 import urwid
+import math
+import json
+
 import teq
 import pyteq
-import math
+
 import default_options
 import about
 import license
-import json
+import the_help
 
 usage_text = """
 Usage: teqqer [filename]
@@ -66,11 +69,24 @@ class TextPopup(urwid.WidgetWrap):
 class PopUpLauncherThing(urwid.PopUpLauncher):
 	def __init__(self, original):
 		self.__super.__init__(original)
+		
+		self.the_original = original
+		
 		urwid.connect_signal(original, 'popup_about', lambda x: self.popup_about())
 		urwid.connect_signal(original, 'popup_license', lambda x: self.popup_license())
+		urwid.connect_signal(original, 'popup_help', lambda x: self.popup_help())
 
 	def popup_license(self):
 		self.popup_widget = TextPopup(license.text)
+		
+		urwid.connect_signal(self.popup_widget, 'close', lambda x: self.close_pop_up())
+		
+		self.popup_parameters = {'left':0, 'top':0, 'overlay_width':200, 'overlay_height':200}
+		
+		self.open_pop_up()
+
+	def popup_help(self):
+		self.popup_widget = TextPopup(the_help.get_help_text(self.the_original.options))
 		
 		urwid.connect_signal(self.popup_widget, 'close', lambda x: self.close_pop_up())
 		
@@ -98,8 +114,6 @@ class main(urwid.Widget):
 	def __init__(self,  teq_engine,  options):
 		self.__super.__init__()
 				
-		urwid.register_signal(main, 'popup_help')
-		urwid.register_signal(main, 'popup_license')
 		urwid.register_signal(main, ['popup_about', 'popup_license', 'popup_help'])
 		
 		self.options = options
