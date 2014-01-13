@@ -4,6 +4,7 @@ import teq
 import pyteq
 import math
 import default_options
+import json
 
 usage_text = """
 Usage: teqqer [filename]
@@ -43,9 +44,50 @@ class history:
 	def redo(self):
 		pass
 
+class TextPopup(urwid.WidgetWrap):
+	def __init__(self, text):
+		text = urwid.Text(text)
+		help_list_box = urwid.ListBox(urwid.SimpleListWalker([text]))
+
+		self.__super.__init__(help_list_box)
+		
+		urwid.register_signal(TextPopup, 'close')
+
+	
+	def keypress(self, size, key):
+		if key == 'esc':
+			self._emit('close')
+			return
+		
+		self._w.keypress(size, key)
+		
+class PopUpLauncherThing(urwid.PopUpLauncher):
+	def __init__(self, original):
+		self.__super.__init__(original)
+		urwid.connect_signal(original, 'popup_about', lambda x: self.popup_about())
+
+	def popup_about(self):
+		self.popup_widget = TextPopup(
+u"""Press esc to exit this about screen.
+
+teqqer - A Midi Sequencer With a Tracker Like Console Interface.""")
+		
+		urwid.connect_signal(self.popup_widget, 'close', lambda x: self.close_pop_up())
+		self.open_pop_up()
+
+	def get_pop_up_parameters(self):
+		return {'left':0, 'top':1, 'overlay_width':200, 'overlay_height':1}
+	
+	def create_pop_up(self):
+		return self.popup_widget
+	
+
 class main(urwid.Widget):
 	def __init__(self,  teq_engine,  options):
-		urwid.Widget.__init__(self)
+		self.__super.__init__()
+				
+		urwid.register_signal(main, 'popup_about')
+		
 		self.options = options
 		self.teq_engine = teq_engine
 		
@@ -65,19 +107,15 @@ class main(urwid.Widget):
 		self.current_menu = self.options["menu"]
 		for menu in self.current_menu:
 			self.fixup_menu(menu)
-	
+			
 	def show_about(self):
-		pass
-	
-	def show_license(self):
-		pass
-	
-	def show_help(self):
-		pass
+		self._emit('popup_about')
 	
 	def fixup_menu(self, menu):
-		print ("fixing up", menu)
+		# print ("fixing up", menu)
 		if 0 == len(menu[3]):
+			l = menu[2]
+			menu[2] = lambda x: l(x) or x.exit_menu()
 			return
 		
 		for submenu in menu[3]:
@@ -233,6 +271,7 @@ class main(urwid.Widget):
 		for entry in self.current_menu:
 			if entry[1] ==  key:
 				entry[2](self)
+				
 				self._invalidate()
 				return
 		
@@ -505,6 +544,9 @@ class main(urwid.Widget):
 		t = urwid.TextCanvas(text,  attr,  maxcol = size[0]) 
 
 		return t
+	
+	def save(self):
+		pass
 
 teq_engine = teq.teq()
 teq_engine.insert_midi_track("bd",  teq_engine.number_of_tracks())
@@ -554,7 +596,9 @@ def handle_alarm(main_loop,  the_main):
 
 the_main = main(teq_engine,  options)
 
-loop = urwid.MainLoop(the_main,  options["palette"])
+popup_launcher = PopUpLauncherThing(the_main)
+
+loop = urwid.MainLoop(popup_launcher,  options["palette"], pop_ups=True)
 
 loop.set_alarm_in(the_main.options["ui_update_interval"],  handle_alarm,  the_main)
 
