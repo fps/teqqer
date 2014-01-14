@@ -4,8 +4,7 @@ An ncurses/terminal based midi and CV signal tracker/sequencer.
 
 # TODOs
 
-This project is not in a usable state yet. Here's some of the key 
-TODOs (those done are marked [check]):
+This project is not in a usable state yet. Here's some of the key TODOs (those done are marked [check]):
 
 * Midi note insertion, deletion [check]
 * Undo infrastructure [check]
@@ -26,6 +25,7 @@ TODOs (those done are marked [check]):
 * Editing loop start/end
 * Display loop range
 * Loading options overridden by the user
+* Bounds checking for all kinds of stuff (base note, edit velocity, etc)
 
 # Requirements
 
@@ -54,8 +54,7 @@ cd ../..
 
 # Running
 
-Run teqqer from the root of the source tree with the 
-provided script <code>teqqer</code>:
+Run teqqer from the root of the source tree with the provided script <code>teqqer</code>:
 
 <pre>
 ./teqqer foo.teq
