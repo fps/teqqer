@@ -303,10 +303,11 @@ class main(urwid.Widget):
 				self._invalidate()
 				return
 		
-		if key in self.options["keys"].keys():
-			self.options["keys"][key](self)
-			self._invalidate()
-			return
+		for k in self.options["global_keys"]:
+			if k[0] == key:
+				k[2](self)
+				self._invalidate()
+				return
 
 		# If we are in the root menu we have to do some extra key
 		# processing
@@ -319,9 +320,9 @@ class main(urwid.Widget):
 					self._invalidate()
 					return
 				
-			if key in self.options["note_keys"]:
-				if True == self.edit_mode:
-					self.set_midi_event_action(self.cursor_track, self.cursor_pattern, self.cursor_tick, teq.midi_event_type.ON, self.options["note_edit_base"] + self.options["note_keys"][key], self.options["note_edit_velocity"])
+			for k in self.options["note_keys"]:
+				if k[0] == key and True == self.edit_mode:
+					self.set_midi_event_action(self.cursor_track, self.cursor_pattern, self.cursor_tick, teq.midi_event_type.ON, self.options["note_edit_base"] + k[1], self.options["note_edit_velocity"])
 					self.change_cursor_tick(self.options["edit_step"])
 					self._invalidate()
 					return

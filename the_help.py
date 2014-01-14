@@ -5,45 +5,36 @@ def get_help_text(options):
 
 # The Basics
 
-teqqer is a tracker style midi sequencer. 
-Tracks are represented horizontally. Tracks can have one of 
-three types:
+Teqqer is a tracker style midi sequencer. 
+
+Tracks are layed out horizontally. Tracks can have one of three types:
 
 * MIDI
 * CV
 * Control
 
-Events are presented 
-such that time flows from the top of the screen to the bottom.
-I.e. musical data is arranged in columns (which we will also
-call "sequences").
+Events are presented such that time flows from the top of the screen to the bottom.I.e. musical data is arranged in columns (which we will also call "sequences").
 
-Sequences are arranged in patterns. All sequences in a pattern
-have the same length. 
+Sequences are arranged in patterns. All sequences in a pattern have the same length. 
 
-All patterns share the same number of sequences and also their 
-types. 
+All patterns share the same number of sequences and also their types (being that of their corresponding tracks). 
 
 # The Keyboard
 
-The primary means of editing note data is by using the 
-computer's keyboard. Most of the keyboard is used up for this
-purpose.
+The primary means of editing note data is by using the computer's keyboard. Most of the keyboard is used up for this purpose.
 
-To enter the editing mode press:
-
+Here's a list of the key global key bindings:
 """)
-	text.append("edit_mode_key: " + options["edit_mode_key"])
-	
-	text.append(u"""
+	for item in options["global_keys"]:
+		text.append(item[0] + ": " + item[1] + "\n")
 
-To enter a note press on of the following keys (the numbers 
-indicate the interval (in semitones) above the note_edit_base.:
+	text.append("""
+To enter a note press on of the following keys (the numbers indicate the interval (in semitones) above the note_edit_base.:
 
 """)
 	
-	for key in options["note_keys"]:
-		text.append(key + ": " + str(options["note_keys"][key]) + " ")
+	for k in options["note_keys"]:
+		text.append(k[0] + ": " + str(k[1]) + " ")
 		
 	return "".join(text)
 
