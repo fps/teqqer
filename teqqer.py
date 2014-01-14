@@ -80,7 +80,7 @@ class PopUpLauncherThing(urwid.PopUpLauncher):
 		urwid.connect_signal(original, 'popup_help', lambda x: self.popup_help())
 
 	def popup_license(self):
-		self.popup_widget = TextPopup(license.text)
+		self.popup_widget = TextPopup(("medium", license.text))
 		
 		urwid.connect_signal(self.popup_widget, 'close', lambda x: self.close_pop_up())
 		
@@ -89,7 +89,7 @@ class PopUpLauncherThing(urwid.PopUpLauncher):
 		self.open_pop_up()
 
 	def popup_help(self):
-		self.popup_widget = TextPopup(the_help.get_help_text(self.the_original.options))
+		self.popup_widget = TextPopup(("medium", the_help.get_help_text(self.the_original.options)))
 		
 		urwid.connect_signal(self.popup_widget, 'close', lambda x: self.close_pop_up())
 		
@@ -98,7 +98,7 @@ class PopUpLauncherThing(urwid.PopUpLauncher):
 		self.open_pop_up()
 
 	def popup_about(self):
-		self.popup_widget = TextPopup(about.text)
+		self.popup_widget = TextPopup(("medium", about.text))
 		
 		urwid.connect_signal(self.popup_widget, 'close', lambda x: self.close_pop_up())
 		
@@ -547,6 +547,9 @@ class main(urwid.Widget):
 			attr.append(event_attrs)
 			
 		return (text,  attr)
+	
+	def render_body(self):
+		pass
 	
 	def render(self,  size,  focus):
 		if self.info == None:
