@@ -8,8 +8,8 @@ This project is not in a usable state yet. Here's some of the key
 TODOs (those done are marked [check]):
 
 * Midi note insertion, deletion [check]
-* Undo [check]
-* Redo [check 50%]
+* Undo infrastructure [check]
+* Redo infrastructure [check]
 * Main view [check 50%]
 * Menu infrastructure [check]
 * Input handling infrastructure [check]
