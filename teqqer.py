@@ -590,9 +590,9 @@ class main(urwid.Widget):
 			attr.append(event_attrs)
 			
 		return (text,  attr)
-	
+
 	def render_body(self):
-		pattern = self.render_pattern_view()
+		self.render_pattern()
 	
 	def render(self,  size,  focus):
 		if self.info == None:
@@ -600,7 +600,6 @@ class main(urwid.Widget):
 			t = urwid.TextCanvas(text) 
 
 			return t
-
 			
 		text = []
 		attr = []
@@ -629,7 +628,7 @@ class main(urwid.Widget):
 		
 		split = int(round(event_rows * self.options["center_line_fraction"]))
 		
-		rendered_pattern = self.render_pattern()
+		body = self.render_body()
 		
 		for n in range(0,  event_rows):
 			displayed_tick = (self.cursor_tick + n) - split
