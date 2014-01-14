@@ -572,18 +572,27 @@ class main(urwid.Widget):
 					event = self.render_cv_event(pattern.get_cv_event(track_index,  tick_index))
 				
 				events.append(column_separator)
+				
 				events.append(event)
 				
 				if self.cursor_tick == tick_index:
-					event_attrs.append(("strong",  column_separator_len))
-					if self.cursor_track == track_index:
-						event_attrs.append(("mega",  len(event)))
-					else:
-						event_attrs.append(("strong",  len(event)))
+					event_attrs.append(("strong", column_separator_len))
 				else:
-					event_attrs.append(("weak",  column_separator_len))
+					event_attrs.append((None, column_separator_len))
+
+				
+				if self.cursor_track == track_index and self.cursor_tick == tick_index:
+					event_attrs.append(("mega",  len(event)))
+					
+				if self.cursor_track == track_index and not self.cursor_tick == tick_index:
+					event_attrs.append(("medium",  len(event)))
+						
+				if not self.cursor_track == track_index and self.cursor_tick == tick_index:
+					event_attrs.append(("strong",  len(event)))
+						
+				if not self.cursor_track == track_index and not self.cursor_tick == tick_index:
 					event_attrs.append((None,  len(event)))
-			
+				
 			text.append(''.join(events))
 			attr.append(event_attrs)
 			
