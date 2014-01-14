@@ -553,15 +553,9 @@ class main(urwid.Widget):
 			
 			events.append("%0.4x" % tick_index)
 			if 0 == tick_index % highlighted_rows:
-				event_attrs.append(("weak", len(events[-1])))
-			else:
 				event_attrs.append(("medium", len(events[-1])))
-			
-			events.append(column_separator)
-			if 0 == tick_index % highlighted_rows:
-				event_attrs.append(("weak", len(events[-1])))
 			else:
-				event_attrs.append(("medium", len(events[-1])))
+				event_attrs.append(("weak", len(events[-1])))
 			
 			for track_index in xrange(self.teq_engine.number_of_tracks()):
 				event = None
@@ -591,8 +585,16 @@ class main(urwid.Widget):
 			
 		return (text,  attr)
 
-	def render_body(self):
-		self.render_pattern()
+	def render_patterns_list(self):
+		text = []
+		attr = []
+		for n in xrange(0, self.teq_engine.number_of_patterns()):
+			pattern_name = self.teq_engine.get_pattern(n).name
+			if pattern_name == "":
+				pattern_name = "." * 3
+			text.append(self.render_name(pattern_name,  8))
+			attr.append(("weak", len(text[-1])))
+		return (text, attr)
 	
 	def render(self,  size,  focus):
 		if self.info == None:
@@ -605,6 +607,7 @@ class main(urwid.Widget):
 		attr = []
 		
 		column_separator = self.options["column_separator"]
+		column_separator_len = len(column_separator)
 		
 		header = self.render_header()
 		
@@ -628,7 +631,8 @@ class main(urwid.Widget):
 		
 		split = int(round(event_rows * self.options["center_line_fraction"]))
 		
-		body = self.render_body()
+		rendered_pattern = self.render_pattern()
+		rendered_patterns_list = self.render_patterns_list()
 		
 		for n in range(0,  event_rows):
 			displayed_tick = (self.cursor_tick + n) - split
@@ -637,43 +641,58 @@ class main(urwid.Widget):
 			# Initialize with an empty line and attributes
 			line = ""
 			line_attr = []
-			
-			pattern_line = " " * len("patterns")
-			pattern_line_attr = (None,  len(pattern_line))
-			
-			if displayed_pattern >= 0 and displayed_pattern < self.teq_engine.number_of_patterns():
-				pattern_name = self.teq_engine.get_pattern(displayed_pattern).name
-				if pattern_name == "":
-					pattern_name = "." * 3
-				pattern_line = self.render_name(pattern_name,  8)
-				if displayed_pattern == self.cursor_pattern:
-					pattern_line_attr = ("strong",  len(pattern_line))
 
-			line = line + pattern_line
-			line_attr.append(pattern_line_attr)
-			
-			line = line + column_separator
-			if displayed_pattern == self.cursor_pattern:
-				line_attr.append(("strong",  len(column_separator)))
+			if displayed_pattern >= 0 and displayed_pattern < self.teq_engine.number_of_patterns():
+				line = rendered_patterns_list[0][displayed_pattern]
+				line_attr.append(rendered_patterns_list[1][displayed_pattern])
 			else:
-				line_attr.append((None,  len(column_separator)))
+				line = " " * len("patterns")
+				line_attr.append((None, len("patterns")))
+			
+			line += column_separator
+			line_attr.append((None, column_separator_len))
 			
 			if displayed_tick >= 0 and displayed_tick < pattern.length():
-				pattern_line = self.render_pattern_line(pattern,  displayed_tick)
+				line += rendered_pattern[0][displayed_tick]
+				line_attr.extend(rendered_pattern[1][displayed_tick])
+			
+			if 0 == 1:
+				pattern_line = " " * len("patterns")
 				pattern_line_attr = (None,  len(pattern_line))
-				if displayed_tick % self.options["highlighted_rows"] == 0:
-					pattern_line_attr = ("weak",  len(pattern_line))
-				if displayed_tick == self.cursor_tick:
-					pattern_line_attr = ("strong",  len(pattern_line))
+				
+				if displayed_pattern >= 0 and displayed_pattern < self.teq_engine.number_of_patterns():
+					pattern_name = self.teq_engine.get_pattern(displayed_pattern).name
+					if pattern_name == "":
+						pattern_name = "." * 3
+					pattern_line = self.render_name(pattern_name,  8)
+					if displayed_pattern == self.cursor_pattern:
+						pattern_line_attr = ("strong",  len(pattern_line))
+
 				line = line + pattern_line
 				line_attr.append(pattern_line_attr)
-
-			if len(line) < size[0]:
-				remainder_line = " " * (size[0] - len(line))
-				remainder_attr = (None,  size[0] - len(line))
 				
-				line = line + remainder_line
-				line_attr.append(remainder_attr)
+				line = line + column_separator
+				if displayed_pattern == self.cursor_pattern:
+					line_attr.append(("strong",  len(column_separator)))
+				else:
+					line_attr.append((None,  len(column_separator)))
+				
+				if displayed_tick >= 0 and displayed_tick < pattern.length():
+					pattern_line = self.render_pattern_line(pattern,  displayed_tick)
+					pattern_line_attr = (None,  len(pattern_line))
+					if displayed_tick % self.options["highlighted_rows"] == 0:
+						pattern_line_attr = ("weak",  len(pattern_line))
+					if displayed_tick == self.cursor_tick:
+						pattern_line_attr = ("strong",  len(pattern_line))
+					line = line + pattern_line
+					line_attr.append(pattern_line_attr)
+
+				if len(line) < size[0]:
+					remainder_line = " " * (size[0] - len(line))
+					remainder_attr = (None,  size[0] - len(line))
+					
+					line = line + remainder_line
+					line_attr.append(remainder_attr)
 			
 			text.append(line)
 			attr.append(line_attr)
