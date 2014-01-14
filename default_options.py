@@ -68,7 +68,10 @@ options = {
 		["ctrl r", "undo", lambda x: x.redo()],
 		
 		[">", "increase global tempo", lambda x: x.change_tempo(1.0/8.0)],
-		["<", "decrease global tempo", lambda x: x.change_tempo(-1.0/8.0)]
+		["<", "decrease global tempo", lambda x: x.change_tempo(-1.0/8.0)],
+
+		["home", "move one event up", lambda x: x.move_to_pattern_top()],
+		["end", "move one event down", lambda x: x.move_to_pattern_end()],
 	],
 
 	# The numbers are relative to the C of the current octave. This layout

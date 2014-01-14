@@ -246,6 +246,13 @@ class main(urwid.Widget):
 	
 	def change_cursor_pattern(self, amount):
 		pass
+
+	def move_to_pattern_top(self):
+		self.cursor_tick = 0
+		
+	def move_to_pattern_end(self):
+		pattern = self.teq_engine.get_pattern(self.cursor_pattern)
+		self.cursor_tick = pattern.length() - 1
 	
 	def delete_event(self):
 		if False == self.edit_mode:
@@ -433,6 +440,9 @@ class main(urwid.Widget):
 		
 		if event.type == teq.midi_event_type.OFF:
 			return "OFF --"
+		
+		if event.type == teq.midi_event_type.CC:
+			return "%0.2x" % event.value1 + "  " + "%0.2x" % event.value2
 		
 		return "--- --"
 	
@@ -664,6 +674,7 @@ for n in xrange(4):
 	p.name = "part" + str(n)
 	p.set_midi_event(0,  0,  teq.midi_event(teq.midi_event_type.ON,  63,  127))
 	p.set_midi_event(0,  4,  teq.midi_event(teq.midi_event_type.OFF,  60,  127))
+	p.set_midi_event(0,  2,  teq.midi_event(teq.midi_event_type.CC,  60,  127))
 	teq_engine.insert_pattern(teq_engine.number_of_patterns(),  p)
 
 	p = teq_engine.create_pattern(32)
