@@ -348,11 +348,41 @@ class main(urwid.Widget):
 		return note + "%0.1x" % octave + " " + "%0.2x" % value2
 	
 	def render_menu(self):
-		ret =  str(len(self.history.actions)) + " " + str(self.history.last) + " " + ((self.info.transport_state == teq.transport_state.PLAYING) and self.options["transport_indicator_playing"] or self.options["transport_indicator_stopped"]) + " " + (self.edit_mode and self.options["edit_mode_indicator_enabled"] or self.options["edit_mode_indicator_disabled"]) + " | " + self.render_note_on(self.options["note_edit_base"], self.options["note_edit_velocity"]) + " " + str(self.teq_engine.get_global_tempo()) + " " + str(self.options["edit_step"]) + " | "
+		text = []
+		attr = []
+		
+		text.append(str(len(self.history.actions)))
+		attr.append(("strong", len(text[-1])))
 
+		text.append(" ")
+		attr.append(("strong", len(text[-1])))
+
+		text.append(str(self.history.last))
+		attr.append(("strong", len(text[-1])))
+		
+		text.append(" ")
+		attr.append(("strong", len(text[-1])))
+
+		text.append((self.info.transport_state == teq.transport_state.PLAYING) and self.options["transport_indicator_playing"] or self.options["transport_indicator_stopped"])
+		
+		text.append(" ")
+		attr.append(("strong", len(text[-1])))
+
+		text.append((self.edit_mode and self.options["edit_mode_indicator_enabled"] or self.options["edit_mode_indicator_disabled"]))
+		attr.append(("strong", len(text[-1])))
+		
+		
+		text.append(" | " + self.render_note_on(self.options["note_edit_base"], self.options["note_edit_velocity"]) + " " + str(self.teq_engine.get_global_tempo()) + " " + str(self.options["edit_step"]) + " | ")
+		attr.append(("strong", len(text[-1])))
+
+
+		menu_string = ""
 		for entry in self.current_menu:
-			ret = ret + self.render_key(entry[1]) + ":" + entry[0] + " "
-		return ret
+			menu_string = menu_string + self.render_key(entry[1]) + ":" + entry[0] + " "
+		
+		text.append(menu_string)
+		attr.append(("strong", len(text[-1])))
+		return ''.join(text)
 	
 	def midi_track_render_size(self):
 		return 6
