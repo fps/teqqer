@@ -61,6 +61,7 @@ options = {
 		["delete", "delete an event", lambda x: x.delete_event()],
 		
 		["ctrl u", "undo", lambda x: x.undo()],
+		["ctrl r", "undo", lambda x: x.redo()],
 		
 		[">", "increase global tempo", lambda x: x.change_tempo(1.0/8.0)],
 		["<", "decrease global tempo", lambda x: x.change_tempo(-1.0/8.0)]

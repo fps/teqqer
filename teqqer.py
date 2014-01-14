@@ -33,21 +33,24 @@ class history:
 		self.actions = []
 		self.last = -1
 		
-	def add(self, action, inverse_action):
+	def add(self, action, inverse_action):		
+		if self.last > -1:
+			self.actions = self.actions[0:self.last+1]
+		
 		self.actions.append((action, inverse_action))
 		self.last += 1
+		
 		action()
 		
 	def undo(self):
-		try:
-			action = self.actions.pop()[1]
+		if self.last > -1:
+			self.actions[self.last][1]()
 			self.last -= 1
-			action()
-		except:
-			pass
 	
 	def redo(self):
-		pass
+		if self.last + 1 < len(self.actions):
+			self.actions[self.last + 1][0]()
+			self.last += 1
 
 class TextPopup(urwid.WidgetWrap):
 	def __init__(self, text):
@@ -160,6 +163,9 @@ class main(urwid.Widget):
 	
 	def undo(self):
 		self.history.undo()
+	
+	def redo(self):
+		self.history.redo()
 	
 	def get_state_info_and_update(self):
 		# The first time we get some info we are in the game
@@ -342,7 +348,7 @@ class main(urwid.Widget):
 		return note + "%0.1x" % octave + " " + "%0.2x" % value2
 	
 	def render_menu(self):
-		ret =  ((self.info.transport_state == teq.transport_state.PLAYING) and self.options["transport_indicator_playing"] or self.options["transport_indicator_stopped"]) + " " + (self.edit_mode and self.options["edit_mode_indicator_enabled"] or self.options["edit_mode_indicator_disabled"]) + " | " + self.render_note_on(self.options["note_edit_base"], self.options["note_edit_velocity"]) + " " + str(self.teq_engine.get_global_tempo()) + " " + str(self.options["edit_step"]) + " | "
+		ret =  str(len(self.history.actions)) + " " + str(self.history.last) + " " + ((self.info.transport_state == teq.transport_state.PLAYING) and self.options["transport_indicator_playing"] or self.options["transport_indicator_stopped"]) + " " + (self.edit_mode and self.options["edit_mode_indicator_enabled"] or self.options["edit_mode_indicator_disabled"]) + " | " + self.render_note_on(self.options["note_edit_base"], self.options["note_edit_velocity"]) + " " + str(self.teq_engine.get_global_tempo()) + " " + str(self.options["edit_step"]) + " | "
 
 		for entry in self.current_menu:
 			ret = ret + self.render_key(entry[1]) + ":" + entry[0] + " "
