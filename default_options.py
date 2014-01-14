@@ -52,8 +52,8 @@ options = {
 		["ctrl up", "move one edit step up", lambda x: x.change_cursor_tick(-x.options["edit_step"])],
 		["ctrl down", "move one edit step down", lambda x: x.change_cursor_tick(x.options["edit_step"])],
 		
-		["left", "move to previous track", lambda x: x.change_cursor_track(-1)],
-		["right", "move to next track", lambda x: x.change_cursor_track(1)],
+		["shift tab", "move to previous track", lambda x: x.change_cursor_track(-1)],
+		["tab", "move to next track", lambda x: x.change_cursor_track(1)],
 		
 		["page up", "move to previous pattern", lambda x: x.change_cursor_pattern(-1)],
 		["page down", "move to next pattern", lambda x: x.change_cursor_pattern(1)],
