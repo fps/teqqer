@@ -347,42 +347,67 @@ class main(urwid.Widget):
 		note = self.options["note_names"][value1 % 12]
 		return note + "%0.1x" % octave + " " + "%0.2x" % value2
 	
+	def render_menu(self, default_style):
+		text = []
+		attr = []
+		
+		for n in xrange(len(self.current_menu)):
+			entry = self.current_menu[n]
+			text.append(self.render_key(entry[1]) + ":" + entry[0])
+			attr.append(("menu", len(text[-1])))
+			if n < len(self.current_menu):
+				text.append(" ")
+				attr.append((default_style, 1))
+
+		return ("".join(text), attr)
+
+	
 	def render_footer(self, size, default_style):
 		text = []
 		attr = []
 		
-		text.append(str(len(self.history.actions)))
-		attr.append((default_style, len(text[-1])))
+		#text.append(str(len(self.history.actions)))
+		#attr.append((default_style, len(text[-1])))
+
+		#text.append(" ")
+		#attr.append((default_style, len(text[-1])))
+
+		#text.append(str(self.history.last))
+		#attr.append((default_style, len(text[-1])))
+		
+		#text.append(" ")
+		#attr.append((default_style, len(text[-1])))
+
+		if True == self.edit_mode:
+			text.append(self.options["edit_mode_indicator_enabled"])
+			attr.append(("editing", len(text[-1])))
+		else:
+			text.append(self.options["edit_mode_indicator_disabled"])
+			attr.append((default_style, len(text[-1])))
+		
+		if self.info.transport_state == teq.transport_state.PLAYING:
+			text.append(self.options["transport_indicator_playing"])
+			attr.append(("transport-playing", len(text[-1])))
+		else:
+			text.append(self.options["transport_indicator_stopped"])
+			attr.append(("transport-stopped", len(text[-1])))
+
+		text.append(self.render_note_on(self.options["note_edit_base"], self.options["note_edit_velocity"]))
+		attr.append(("midi-event", len(text[-1])))
 
 		text.append(" ")
 		attr.append((default_style, len(text[-1])))
 
-		text.append(str(self.history.last))
-		attr.append((default_style, len(text[-1])))
-		
+		text.append(str(self.teq_engine.get_global_tempo()) + " " + str(self.options["edit_step"]))
+		attr.append(("note-base", len(text[-1])))
+
 		text.append(" ")
 		attr.append((default_style, len(text[-1])))
 
-		text.append((self.info.transport_state == teq.transport_state.PLAYING) and self.options["transport_indicator_playing"] or self.options["transport_indicator_stopped"])
-		attr.append((default_style, len(text[-1])))
-		
-		text.append(" ")
-		attr.append((default_style, len(text[-1])))
+		menu = self.render_menu(default_style)
+		text.append(menu[0])
+		attr.extend(menu[1])
 
-		text.append((self.edit_mode and self.options["edit_mode_indicator_enabled"] or self.options["edit_mode_indicator_disabled"]))
-		attr.append((default_style, len(text[-1])))
-		
-		
-		text.append(" | " + self.render_note_on(self.options["note_edit_base"], self.options["note_edit_velocity"]) + " " + str(self.teq_engine.get_global_tempo()) + " " + str(self.options["edit_step"]) + " | ")
-		attr.append((default_style, len(text[-1])))
-
-
-		menu_string = ""
-		for entry in self.current_menu:
-			menu_string = menu_string + self.render_key(entry[1]) + ":" + entry[0] + " "
-		
-		text.append(menu_string)
-		attr.append((default_style, len(text[-1])))
 		
 		remainder = size - len(''.join(text))
 		
@@ -477,7 +502,7 @@ class main(urwid.Widget):
 
 			text.append(self.render_name(track_name,  render_size))
 			if self.cursor_track == n:
-				attr.append(("stronger",  render_size))
+				attr.append(("mega",  render_size))
 			else:
 				attr.append(("strong",  render_size))
 
@@ -607,11 +632,7 @@ class main(urwid.Widget):
 			attr.append(line_attr)
 		
 		
-		footer = ()
-		if self.edit_mode == True:
-			footer = self.render_footer(size[0], "editing")			
-		else:
-			footer = self.render_footer(size[0], "strong")
+		footer = self.render_footer(size[0], "stronger")
 		
 		text.append(footer[0])
 		attr.append(footer[1])

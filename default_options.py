@@ -11,9 +11,13 @@ options = {
 		("stronger", "white", "dark gray"),
 		("mega",  "black",  "white"),
 		("editing", "black", "dark red"),
-		("midi-event", "black", "dark green"),
+		("midi-event", "white", "dark green"),
 		("control-event", "black", "dark red"),
-		("cv-event", "black", "dark blue")
+		("cv-event", "black", "dark blue"),
+		("transport-stopped", "light gray", "black"),
+		("transport-playing", "dark green", "black"),
+		("note-base", "black", "light gray"),
+		("menu", "black", "white")
 	], 
 
 	# The names for the notes. Note that
@@ -27,8 +31,8 @@ options = {
 	"transport_indicator_stopped": "||",
 	"transport_indicator_playing": ">>",
 	
-	"edit_mode_indicator_enabled": "!",
-	"edit_mode_indicator_disabled": "_",
+	"edit_mode_indicator_enabled": "EDIT",
+	"edit_mode_indicator_disabled": "    ",
 	
 	# The parameter x will be bound to an instance of
 	# the class teqqer.main.
