@@ -347,33 +347,34 @@ class main(urwid.Widget):
 		note = self.options["note_names"][value1 % 12]
 		return note + "%0.1x" % octave + " " + "%0.2x" % value2
 	
-	def render_menu(self):
+	def render_menu(self, size, default_style):
 		text = []
 		attr = []
 		
 		text.append(str(len(self.history.actions)))
-		attr.append(("strong", len(text[-1])))
+		attr.append((default_style, len(text[-1])))
 
 		text.append(" ")
-		attr.append(("strong", len(text[-1])))
+		attr.append((default_style, len(text[-1])))
 
 		text.append(str(self.history.last))
-		attr.append(("strong", len(text[-1])))
+		attr.append((default_style, len(text[-1])))
 		
 		text.append(" ")
-		attr.append(("strong", len(text[-1])))
+		attr.append((default_style, len(text[-1])))
 
 		text.append((self.info.transport_state == teq.transport_state.PLAYING) and self.options["transport_indicator_playing"] or self.options["transport_indicator_stopped"])
+		attr.append((default_style, len(text[-1])))
 		
 		text.append(" ")
-		attr.append(("strong", len(text[-1])))
+		attr.append((default_style, len(text[-1])))
 
 		text.append((self.edit_mode and self.options["edit_mode_indicator_enabled"] or self.options["edit_mode_indicator_disabled"]))
-		attr.append(("strong", len(text[-1])))
+		attr.append((default_style, len(text[-1])))
 		
 		
 		text.append(" | " + self.render_note_on(self.options["note_edit_base"], self.options["note_edit_velocity"]) + " " + str(self.teq_engine.get_global_tempo()) + " " + str(self.options["edit_step"]) + " | ")
-		attr.append(("strong", len(text[-1])))
+		attr.append((default_style, len(text[-1])))
 
 
 		menu_string = ""
@@ -381,8 +382,15 @@ class main(urwid.Widget):
 			menu_string = menu_string + self.render_key(entry[1]) + ":" + entry[0] + " "
 		
 		text.append(menu_string)
-		attr.append(("strong", len(text[-1])))
-		return ''.join(text)
+		attr.append((default_style, len(text[-1])))
+		
+		remainder = size - len(''.join(text))
+		
+		if remainder > 0:
+			text.append(" " * remainder)
+			attr.append((default_style, len(text[-1])))
+		
+		return (''.join(text), attr)
 	
 	def midi_track_render_size(self):
 		return 6
@@ -598,13 +606,20 @@ class main(urwid.Widget):
 			text.append(line)
 			attr.append(line_attr)
 		
-		menu = self.fill_line(self.render_menu(),  size[0])
-		text.append(menu)
 		
+		menu = ()
 		if self.edit_mode == True:
-			attr.append([("editing", len(menu))])
+			menu = self.render_menu(size[0], "editing")			
 		else:
-			attr.append([("stronger",  len(menu))])
+			menu = self.render_menu(size[0], "strong")
+		
+		text.append(menu[0])
+		attr.append(menu[1])
+		
+		#if self.edit_mode == True:
+		#	attr.append([("editing", len(menu))])
+		#else:
+		#	attr.append([("stronger",  len(menu))])
 		
 		t = urwid.TextCanvas(text,  attr,  maxcol = size[0]) 
 
