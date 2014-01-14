@@ -552,10 +552,14 @@ class main(urwid.Widget):
 			event_attrs = []
 			
 			events.append("%0.4x" % tick_index)
-			if 0 == tick_index % highlighted_rows:
-				event_attrs.append(("medium", len(events[-1])))
+			
+			if tick_index == self.cursor_tick:
+					event_attrs.append(("strong", len(events[-1])))			
 			else:
-				event_attrs.append(("weak", len(events[-1])))
+				if 0 == tick_index % highlighted_rows:
+					event_attrs.append(("medium", len(events[-1])))
+				else:
+					event_attrs.append(("weak", len(events[-1])))
 			
 			for track_index in xrange(self.teq_engine.number_of_tracks()):
 				event = None
@@ -644,13 +648,19 @@ class main(urwid.Widget):
 
 			if displayed_pattern >= 0 and displayed_pattern < self.teq_engine.number_of_patterns():
 				line = rendered_patterns_list[0][displayed_pattern]
-				line_attr.append(rendered_patterns_list[1][displayed_pattern])
+				if displayed_pattern == self.cursor_pattern:
+					line_attr.append(("strong", rendered_patterns_list[1][displayed_pattern][1]))
+				else:
+					line_attr.append(rendered_patterns_list[1][displayed_pattern])
 			else:
 				line = " " * len("patterns")
 				line_attr.append((None, len("patterns")))
 			
 			line += column_separator
-			line_attr.append((None, column_separator_len))
+			if displayed_pattern == self.cursor_pattern:
+				line_attr.append(("strong", column_separator_len))
+			else:
+				line_attr.append((None, column_separator_len))
 			
 			if displayed_tick >= 0 and displayed_tick < pattern.length():
 				line += rendered_pattern[0][displayed_tick]
