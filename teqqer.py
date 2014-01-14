@@ -200,7 +200,10 @@ class main(urwid.Widget):
 	
 	def change_note_edit_base(self, amount):
 		self.options["note_edit_base"] += amount
-		
+	
+	def change_note_velocity(self, amount):
+		self.options["note_edit_velocity"] += amount
+	
 	def change_edit_step(self, amount):
 		self.options["edit_step"] += amount
 	
@@ -322,7 +325,7 @@ class main(urwid.Widget):
 				self._invalidate()
 				return
 			
-		if self.teq_engine.track_type(self.cursor_track) == teq.track_name.MIDI:
+		if self.teq_engine.track_type(self.cursor_track) == teq.track_type.MIDI:
 			for k in self.options["midi_track_keys"]:
 				if k[0] == key:
 					k[2](self)

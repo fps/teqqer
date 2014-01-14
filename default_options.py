@@ -72,8 +72,11 @@ options = {
 		["ctrl page up", "increase base note by an octave", lambda x: x.change_note_edit_base(12)],
 		["ctrl page down", "decrease base note by an octave", lambda x: x.change_note_edit_base(-12)],
 		
-		["meta page up", "increase base note by a semitone", lambda x: x.change_note_edit_base(1)],
-		["meta page down", "decrease base note by a semitone", lambda x: x.change_note_edit_base(-1)]		
+		["meta ctrl page up", "increase base note by a semitone", lambda x: x.change_note_edit_base(1)],
+		["meta ctrl page down", "decrease base note by a semitone", lambda x: x.change_note_edit_base(-1)],
+
+		["meta page up", "increase base velocity by one", lambda x: x.change_note_velocity(1)],
+		["meta page down", "decrease base velocity by one", lambda x: x.change_note_velocity(-1)]
 	],
 
 	# The numbers are relative to the C of the current octave. This layout
