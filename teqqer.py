@@ -323,6 +323,10 @@ class main(urwid.Widget):
 				self._invalidate()
 				return
 		
+		if self.teq_engine.number_of_patterns() == 0:
+			return 
+		
+
 		for k in self.options["global_keys"]:
 			if k[0] == key:
 				k[2](self)
@@ -408,12 +412,13 @@ class main(urwid.Widget):
 			text.append(self.options["edit_mode_indicator_disabled"])
 			attr.append((default_style, len(text[-1])))
 		
-		if self.info.transport_state == teq.transport_state.PLAYING:
-			text.append(self.options["transport_indicator_playing"])
-			attr.append(("transport-playing", len(text[-1])))
-		else:
-			text.append(self.options["transport_indicator_stopped"])
-			attr.append(("transport-stopped", len(text[-1])))
+		if None != self.info:
+			if self.info.transport_state == teq.transport_state.PLAYING:
+				text.append(self.options["transport_indicator_playing"])
+				attr.append(("transport-playing", len(text[-1])))
+			else:
+				text.append(self.options["transport_indicator_stopped"])
+				attr.append(("transport-stopped", len(text[-1])))
 
 		text.append(self.render_note_on(self.options["note_edit_base"], self.options["note_edit_velocity"]))
 		attr.append(("midi-event", len(text[-1])))
@@ -444,10 +449,10 @@ class main(urwid.Widget):
 		return 6
 	
 	def control_track_render_size(self):
-		return 4 + self.options["control_integer_precision"] + 1 + self.options["control_fraction_precision"]
+		return 2 + self.options["control_integer_precision"] + 1 + self.options["control_fraction_precision"]
 	
 	def cv_track_render_size(self):
-		return 4 + self.options["cv_integer_precision"] + 1 + self.options["cv_fraction_precision"]
+		return 2 + self.options["cv_integer_precision"] + 1 + self.options["cv_fraction_precision"]
 		pass
 	
 	def render_midi_event(self,  event):
@@ -463,10 +468,10 @@ class main(urwid.Widget):
 		return "--- --"
 	
 	def render_cv_event(self,  event):
-		return "---" + " " + "-" * self.options["cv_integer_precision"] + "." + "-" * self.options["cv_fraction_precision"]
+		return "-" + " " + "-" * self.options["cv_integer_precision"] + "." + "-" * self.options["cv_fraction_precision"]
 	
 	def render_control_event(self,  event):
-		return "---" + " " + "-" * self.options["control_integer_precision"] + "." + "-" * self.options["control_fraction_precision"]
+		return "-" + " " + "-" * self.options["control_integer_precision"] + "." + "-" * self.options["control_fraction_precision"]
 	
 	def render_name(self,  name,  maxlength):
 		if len(name) > maxlength:
@@ -590,7 +595,7 @@ class main(urwid.Widget):
 					event_attr = ("mega",  len(event))
 					
 				if self.cursor_track == track_index and not self.cursor_tick == tick_index:
-					event_attr = ("medium",  len(event))
+					event_attr = ("strong",  len(event))
 						
 				if not self.cursor_track == track_index and self.cursor_tick == tick_index:
 					event_attr = ("strong",  len(event))
@@ -614,11 +619,12 @@ class main(urwid.Widget):
 		return (text, attr)
 	
 	def render(self,  size,  focus):
-		if self.info == None:
-			text = [" " * size[0]] * size[1]
-			t = urwid.TextCanvas(text) 
+		if 1 == 0:
+			if self.info == None:
+				text = [" " * size[0]] * size[1]
+				t = urwid.TextCanvas(text) 
 
-			return t
+				return t
 			
 		text = []
 		attr = []
@@ -641,85 +647,52 @@ class main(urwid.Widget):
 		
 		text.append(header_text)
 		attr.append(header_attr)
-		
-		pattern = self.teq_engine.get_pattern(self.cursor_pattern)
-		
+
 		event_rows = size[1] - 2
-		
-		split = int(round(event_rows * self.options["center_line_fraction"]))
-		
-		rendered_pattern = self.render_pattern()
-		rendered_patterns_list = self.render_patterns_list()
-		
-		for n in range(0,  event_rows):
-			displayed_tick = (self.cursor_tick + n) - split
-			displayed_pattern = (self.cursor_pattern + n) - split
 
-			# Initialize with an empty line and attributes
-			line = ""
-			line_attr = []
+		if self.cursor_pattern < self.teq_engine.number_of_patterns():
+			pattern = self.teq_engine.get_pattern(self.cursor_pattern)
+			
+			
+			split = int(round(event_rows * self.options["center_line_fraction"]))
+			
+			rendered_pattern = self.render_pattern()
+			rendered_patterns_list = self.render_patterns_list()
+			
+			for n in range(0,  event_rows):
+				displayed_tick = (self.cursor_tick + n) - split
+				displayed_pattern = (self.cursor_pattern + n) - split
 
-			if displayed_pattern >= 0 and displayed_pattern < self.teq_engine.number_of_patterns():
-				line = rendered_patterns_list[0][displayed_pattern]
-				if displayed_pattern == self.cursor_pattern:
-					line_attr.append(("strong", rendered_patterns_list[1][displayed_pattern][1]))
-				else:
-					line_attr.append(rendered_patterns_list[1][displayed_pattern])
-			else:
-				line = " " * len("patterns")
-				line_attr.append((None, len("patterns")))
-			
-			line += column_separator
-			if displayed_pattern == self.cursor_pattern:
-				line_attr.append(("strong", column_separator_len))
-			else:
-				line_attr.append((None, column_separator_len))
-			
-			if displayed_tick >= 0 and displayed_tick < pattern.length():
-				line += rendered_pattern[0][displayed_tick]
-				line_attr.extend(rendered_pattern[1][displayed_tick])
-			
-			if 0 == 1:
-				pattern_line = " " * len("patterns")
-				pattern_line_attr = (None,  len(pattern_line))
-				
+				# Initialize with an empty line and attributes
+				line = ""
+				line_attr = []
+
 				if displayed_pattern >= 0 and displayed_pattern < self.teq_engine.number_of_patterns():
-					pattern_name = self.teq_engine.get_pattern(displayed_pattern).name
-					if pattern_name == "":
-						pattern_name = "." * 3
-					pattern_line = self.render_name(pattern_name,  8)
+					line = rendered_patterns_list[0][displayed_pattern]
 					if displayed_pattern == self.cursor_pattern:
-						pattern_line_attr = ("strong",  len(pattern_line))
-
-				line = line + pattern_line
-				line_attr.append(pattern_line_attr)
-				
-				line = line + column_separator
-				if displayed_pattern == self.cursor_pattern:
-					line_attr.append(("strong",  len(column_separator)))
+						line_attr.append(("strong", rendered_patterns_list[1][displayed_pattern][1]))
+					else:
+						line_attr.append(rendered_patterns_list[1][displayed_pattern])
 				else:
-					line_attr.append((None,  len(column_separator)))
+					line = " " * len("patterns")
+					line_attr.append((None, len("patterns")))
+				
+				line += column_separator
+				if displayed_pattern == self.cursor_pattern:
+					line_attr.append(("strong", column_separator_len))
+				else:
+					line_attr.append((None, column_separator_len))
 				
 				if displayed_tick >= 0 and displayed_tick < pattern.length():
-					pattern_line = self.render_pattern_line(pattern,  displayed_tick)
-					pattern_line_attr = (None,  len(pattern_line))
-					if displayed_tick % self.options["highlighted_rows"] == 0:
-						pattern_line_attr = ("weak",  len(pattern_line))
-					if displayed_tick == self.cursor_tick:
-						pattern_line_attr = ("strong",  len(pattern_line))
-					line = line + pattern_line
-					line_attr.append(pattern_line_attr)
-
-				if len(line) < size[0]:
-					remainder_line = " " * (size[0] - len(line))
-					remainder_attr = (None,  size[0] - len(line))
-					
-					line = line + remainder_line
-					line_attr.append(remainder_attr)
-			
-			text.append(line)
-			attr.append(line_attr)
-		
+					line += rendered_pattern[0][displayed_tick]
+					line_attr.extend(rendered_pattern[1][displayed_tick])
+				
+				text.append(line)
+				attr.append(line_attr)	
+		else:
+			for n in xrange(0, event_rows):
+				text.append(" " * size[0])
+				attr.append([(None, len(text[-1]))])
 		
 		footer = self.render_footer(size[0], "stronger")
 		
@@ -734,43 +707,50 @@ class main(urwid.Widget):
 		pass
 
 teq_engine = teq.teq()
-teq_engine.insert_midi_track("bd",  teq_engine.number_of_tracks())
-teq_engine.insert_midi_track("snare",  teq_engine.number_of_tracks())
-teq_engine.insert_control_track("control",  teq_engine.number_of_tracks())
-teq_engine.insert_midi_track("bd2",  teq_engine.number_of_tracks())
-teq_engine.insert_midi_track("snare2",  teq_engine.number_of_tracks())
-teq_engine.insert_cv_track("cv",  teq_engine.number_of_tracks())
-teq_engine.insert_midi_track("bd3",  teq_engine.number_of_tracks())
-teq_engine.insert_midi_track("snare3",  teq_engine.number_of_tracks())
-teq_engine.insert_midi_track("bd4",  teq_engine.number_of_tracks())
-teq_engine.insert_midi_track("snare4",  teq_engine.number_of_tracks())
 
-for n in xrange(4):
-	p = teq_engine.create_pattern(32)
-	p.name = "part" + str(n)
-	p.set_midi_event(0,  0,  teq.midi_event(teq.midi_event_type.ON,  63,  127))
-	p.set_midi_event(0,  4,  teq.midi_event(teq.midi_event_type.OFF,  60,  127))
-	p.set_midi_event(0,  2,  teq.midi_event(teq.midi_event_type.CC,  60,  127))
-	teq_engine.insert_pattern(teq_engine.number_of_patterns(),  p)
+def test_state():
+	teq_engine.insert_midi_track("bd",  teq_engine.number_of_tracks())
+	teq_engine.insert_midi_track("snare",  teq_engine.number_of_tracks())
+	teq_engine.insert_control_track("control",  teq_engine.number_of_tracks())
+	teq_engine.insert_midi_track("bd2",  teq_engine.number_of_tracks())
+	teq_engine.insert_midi_track("snare2",  teq_engine.number_of_tracks())
+	teq_engine.insert_cv_track("cv",  teq_engine.number_of_tracks())
+	teq_engine.insert_midi_track("bd3",  teq_engine.number_of_tracks())
+	teq_engine.insert_midi_track("snare3",  teq_engine.number_of_tracks())
+	teq_engine.insert_midi_track("bd4",  teq_engine.number_of_tracks())
+	teq_engine.insert_midi_track("snare4",  teq_engine.number_of_tracks())
 
-	p = teq_engine.create_pattern(32)
-	p.set_midi_event(0,  0,  teq.midi_event(teq.midi_event_type.ON,  60,  127))
-	p.set_midi_event(0,  4,  teq.midi_event(teq.midi_event_type.OFF,  62,  127))
-	teq_engine.insert_pattern(teq_engine.number_of_patterns(),  p)
+	for n in xrange(4):
+		p = teq_engine.create_pattern(32)
+		p.name = "part" + str(n)
+		p.set_midi_event(0,  0,  teq.midi_event(teq.midi_event_type.ON,  63,  127))
+		p.set_midi_event(0,  4,  teq.midi_event(teq.midi_event_type.OFF,  60,  127))
+		p.set_midi_event(0,  2,  teq.midi_event(teq.midi_event_type.CC,  60,  127))
+		p.set_control_event(2, 0, teq.control_event(teq.control_event_type.GLOBAL_TEMPO, 8))
+		teq_engine.insert_pattern(teq_engine.number_of_patterns(),  p)
 
-	p = teq_engine.create_pattern(32)
-	p.set_midi_event(0,  0,  teq.midi_event(teq.midi_event_type.ON,  60,  127))
-	p.set_midi_event(0,  4,  teq.midi_event(teq.midi_event_type.OFF,  62,  127))
-	teq_engine.insert_pattern(teq_engine.number_of_patterns(),  p)
+		p = teq_engine.create_pattern(32)
+		p.set_midi_event(0,  0,  teq.midi_event(teq.midi_event_type.ON,  60,  127))
+		p.set_midi_event(0,  4,  teq.midi_event(teq.midi_event_type.OFF,  62,  127))
+		teq_engine.insert_pattern(teq_engine.number_of_patterns(),  p)
 
-	p = teq_engine.create_pattern(32)
-	p.set_midi_event(0,  0,  teq.midi_event(teq.midi_event_type.ON,  60,  127))
-	p.set_midi_event(0,  4,  teq.midi_event(teq.midi_event_type.OFF,  62,  127))
-	teq_engine.insert_pattern(teq_engine.number_of_patterns(),  p)
+		p = teq_engine.create_pattern(32)
+		p.set_midi_event(0,  0,  teq.midi_event(teq.midi_event_type.ON,  60,  127))
+		p.set_midi_event(0,  4,  teq.midi_event(teq.midi_event_type.OFF,  62,  127))
+		teq_engine.insert_pattern(teq_engine.number_of_patterns(),  p)
 
-teq_engine.set_global_tempo(16)
-pyteq.set_transport_position(teq_engine,  0,  0)
-pyteq.set_loop_range(teq_engine,  0,  0,  2,  0,  True)
+		p = teq_engine.create_pattern(32)
+		p.set_midi_event(0,  0,  teq.midi_event(teq.midi_event_type.ON,  60,  127))
+		p.set_midi_event(0,  4,  teq.midi_event(teq.midi_event_type.OFF,  62,  127))
+		teq_engine.insert_pattern(teq_engine.number_of_patterns(),  p)
+
+	teq_engine.set_global_tempo(16)
+	pyteq.set_transport_position(teq_engine,  0,  0)
+	pyteq.set_loop_range(teq_engine,  0,  0,  0,  0,  True)
+
+if 1 == 0:
+	test_state()
+	
 
 # TODO: merge in user options
 options = default_options.options

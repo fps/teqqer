@@ -23,7 +23,8 @@ All patterns share the same number of sequences and also their types (being that
 
 The primary means of editing note data is by using the computer's keyboard. Most of the keyboard is used up for this purpose.
 
-Here's a list of the key global key bindings:
+Here's a list of the key global key bindings (note that uppercase characters imply pressing shift):
+
 """)
 	for item in options["global_keys"]:
 		text.append(item[0] + ": " + item[1] + "\n")
