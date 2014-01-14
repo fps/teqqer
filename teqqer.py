@@ -566,11 +566,11 @@ class main(urwid.Widget):
 			for track_index in xrange(self.teq_engine.number_of_tracks()):
 				event = None
 				
-				if self.teq_engine.track_type(n) == teq.track_type.MIDI:
+				if self.teq_engine.track_type(track_index) == teq.track_type.MIDI:
 					event = self.render_midi_event(pattern.get_midi_event(track_index,  tick_index))
-				if self.teq_engine.track_type(n) == teq.track_type.CONTROL:
+				if self.teq_engine.track_type(track_index) == teq.track_type.CONTROL:
 					event = self.render_control_event(pattern.get_control_event(track_index,  tick_index))
-				if self.teq_engine.track_type(n) == teq.track_type.CV:
+				if self.teq_engine.track_type(track_index) == teq.track_type.CV:
 					event = self.render_cv_event(pattern.get_cv_event(track_index,  tick_index))
 				
 				events.append(column_separator)
@@ -583,7 +583,7 @@ class main(urwid.Widget):
 					else:
 						event_attrs.append(("strong",  len(event)))
 				else:
-					event_attrs.append(("strong",  column_separator_len))
+					event_attrs.append(("weak",  column_separator_len))
 					event_attrs.append((None,  len(event)))
 			
 			text.append(''.join(events))
