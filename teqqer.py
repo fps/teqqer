@@ -534,11 +534,15 @@ class main(urwid.Widget):
 
 		return (''.join(text),  attr)
 	
-	def render_pattern_view(self):
+	def in_loop_range(self, cursor_pattern, cursor_tick):
+		return False
+	
+	def render_pattern(self):
 		pattern = self.teq_engine.get_pattern(self.cursor_pattern)
 		
 		column_separator = self.options["column_separator"]
 		column_separator_len = len(column_separator)
+		highlighted_rows = self.options["highlighted_rows"]
 		
 		text = []
 		attr =[]
@@ -546,6 +550,19 @@ class main(urwid.Widget):
 		for tick_index in xrange(pattern.length()):
 			events = []
 			event_attrs = []
+			
+			events.append("%0.4x" % tick_index)
+			if 0 == tick_index % highlighted_rows:
+				event_attrs.append(("weak", len(events[-1])))
+			else:
+				event_attrs.append(("medium", len(events[-1])))
+			
+			events.append(column_separator)
+			if 0 == tick_index % highlighted_rows:
+				event_attrs.append(("weak", len(events[-1])))
+			else:
+				event_attrs.append(("medium", len(events[-1])))
+			
 			for track_index in xrange(self.teq_engine.number_of_tracks()):
 				event = None
 				
@@ -575,7 +592,7 @@ class main(urwid.Widget):
 		return (text,  attr)
 	
 	def render_body(self):
-		pass
+		pattern = self.render_pattern_view()
 	
 	def render(self,  size,  focus):
 		if self.info == None:
@@ -611,6 +628,8 @@ class main(urwid.Widget):
 		event_rows = size[1] - 2
 		
 		split = int(round(event_rows * self.options["center_line_fraction"]))
+		
+		rendered_pattern = self.render_pattern()
 		
 		for n in range(0,  event_rows):
 			displayed_tick = (self.cursor_tick + n) - split

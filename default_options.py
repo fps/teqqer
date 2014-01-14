@@ -17,7 +17,9 @@ options = {
 		("transport-stopped", "light gray", "black"),
 		("transport-playing", "dark green", "black"),
 		("note-base", "black", "light gray"),
-		("menu", "black", "white")
+		("menu", "black", "white"),
+		("loop", "light gray", "dark blue"),
+		("loop-highlighted", "white", "dark blue")
 	], 
 
 	# The names for the notes. Note that
@@ -59,7 +61,7 @@ options = {
 		["delete", "delete an event", lambda x: x.delete_event()],
 		
 		["ctrl u", "undo", lambda x: x.undo()],
-		["ctrl r", "undo", lambda x: x.redo()],
+		["ctrl r", "redo", lambda x: x.redo()],
 		
 		[">", "increase global tempo", lambda x: x.change_tempo(1.0/8.0)],
 		["<", "decrease global tempo", lambda x: x.change_tempo(-1.0/8.0)],
