@@ -37,12 +37,6 @@ options = {
 	# The parameter x will be bound to an instance of
 	# the class teqqer.main.
 	"global_keys": [
-		["+", "increase base note by an octave", lambda x: x.change_note_edit_base(12)],
-		["-", "decrease base note by an octave", lambda x: x.change_note_edit_base(-12)],
-		
-		["meta +", "increase base note by a semitone", lambda x: x.change_note_edit_base(1)],
-		["meta -", "decrease base note by a semitone", lambda x: x.change_note_edit_base(-1)],
-		
 		["N", "decrease the edit step by one", lambda x: x.change_edit_step(-1)],
 		["M", "increase the edit step by one", lambda x: x.change_edit_step(1)],
 
@@ -73,6 +67,14 @@ options = {
 		["home", "move one event up", lambda x: x.move_to_pattern_top()],
 		["end", "move one event down", lambda x: x.move_to_pattern_end()],
 	],
+	
+	"midi_track_keys": [
+		["ctrl page up", "increase base note by an octave", lambda x: x.change_note_edit_base(12)],
+		["ctrl page down", "decrease base note by an octave", lambda x: x.change_note_edit_base(-12)],
+		
+		["meta page up", "increase base note by a semitone", lambda x: x.change_note_edit_base(1)],
+		["meta page down", "decrease base note by a semitone", lambda x: x.change_note_edit_base(-1)]		
+	]
 
 	# The numbers are relative to the C of the current octave. This layout
 	# needs to be changed for non US keyboards.

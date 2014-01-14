@@ -321,6 +321,15 @@ class main(urwid.Widget):
 				k[2](self)
 				self._invalidate()
 				return
+			
+		if self.teq_engine.track_type(self.cursor_track) == teq.track_name.MIDI:
+			for k in self.options["midi_track_keys"]:
+				if k[0] == key:
+					k[2](self)
+					self._invalidate()
+					return
+			
+			
 
 		# If we are in the root menu we have to do some extra key
 		# processing
