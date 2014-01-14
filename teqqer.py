@@ -545,7 +545,7 @@ class main(urwid.Widget):
 		highlighted_rows = self.options["highlighted_rows"]
 		
 		text = []
-		attr =[]
+		attr = []
 		
 		for tick_index in xrange(pattern.length()):
 			events = []
@@ -572,26 +572,30 @@ class main(urwid.Widget):
 					event = self.render_cv_event(pattern.get_cv_event(track_index,  tick_index))
 				
 				events.append(column_separator)
-				
 				events.append(event)
 				
+				# Column separator
 				if self.cursor_tick == tick_index:
 					event_attrs.append(("strong", column_separator_len))
 				else:
 					event_attrs.append((None, column_separator_len))
 
+				# The event itself
+				event_attr = (None, len(event))
+				
+				if tick_index % highlighted_rows == 0:
+					event_attr = ("medium", len(event))
 				
 				if self.cursor_track == track_index and self.cursor_tick == tick_index:
-					event_attrs.append(("mega",  len(event)))
+					event_attr = ("mega",  len(event))
 					
 				if self.cursor_track == track_index and not self.cursor_tick == tick_index:
-					event_attrs.append(("medium",  len(event)))
+					event_attr = ("medium",  len(event))
 						
 				if not self.cursor_track == track_index and self.cursor_tick == tick_index:
-					event_attrs.append(("strong",  len(event)))
+					event_attr = ("strong",  len(event))
 						
-				if not self.cursor_track == track_index and not self.cursor_tick == tick_index:
-					event_attrs.append((None,  len(event)))
+				event_attrs.append(event_attr)
 				
 			text.append(''.join(events))
 			attr.append(event_attrs)
