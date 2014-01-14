@@ -347,7 +347,7 @@ class main(urwid.Widget):
 		note = self.options["note_names"][value1 % 12]
 		return note + "%0.1x" % octave + " " + "%0.2x" % value2
 	
-	def render_menu(self, size, default_style):
+	def render_footer(self, size, default_style):
 		text = []
 		attr = []
 		
@@ -607,19 +607,14 @@ class main(urwid.Widget):
 			attr.append(line_attr)
 		
 		
-		menu = ()
+		footer = ()
 		if self.edit_mode == True:
-			menu = self.render_menu(size[0], "editing")			
+			footer = self.render_footer(size[0], "editing")			
 		else:
-			menu = self.render_menu(size[0], "strong")
+			footer = self.render_footer(size[0], "strong")
 		
-		text.append(menu[0])
-		attr.append(menu[1])
-		
-		#if self.edit_mode == True:
-		#	attr.append([("editing", len(menu))])
-		#else:
-		#	attr.append([("stronger",  len(menu))])
+		text.append(footer[0])
+		attr.append(footer[1])
 		
 		t = urwid.TextCanvas(text,  attr,  maxcol = size[0]) 
 
