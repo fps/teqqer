@@ -10,7 +10,10 @@ options = {
 		("strong",  "light gray",  "dark gray"), 
 		("stronger", "white", "dark gray"),
 		("mega",  "black",  "white"),
-		("editing", "black", "dark red")
+		("editing", "black", "dark red"),
+		("midi-event", "black", "dark green"),
+		("control-event", "black", "dark red"),
+		("cv-event", "black", "dark blue")
 	], 
 
 	# The names for the notes. Note that
