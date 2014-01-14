@@ -78,6 +78,11 @@ options = {
 		["meta page up", "increase base velocity by one", lambda x: x.change_note_velocity(1)],
 		["meta page down", "decrease base velocity by one", lambda x: x.change_note_velocity(-1)]
 	],
+	
+	"global_mouse_events": [
+		[("mouse press", 4), "move one event up", lambda x: x.change_cursor_tick(-1)],
+		[("mouse press", 5), "move one event down", lambda x: x.change_cursor_tick(1)]
+	],
 
 	# The numbers are relative to the C of the current octave. This layout
 	# needs to be changed for non US keyboards.

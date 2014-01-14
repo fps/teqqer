@@ -292,7 +292,11 @@ class main(urwid.Widget):
 		return True
 	
 	def mouse_event(self,  size,  event,  button,  col,  row,  focus):
-		pass
+		for entry in self.options["global_mouse_events"]:
+			if entry[0][0] == event and entry[0][1] == button:
+				entry[2](self)
+				self._invalidate()
+				return True
 	
 	def set_midi_event(self, track_index, pattern_index, tick_index, event_type, value1, value2):
 		pattern = self.teq_engine.get_pattern(pattern_index)
