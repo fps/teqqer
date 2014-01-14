@@ -74,7 +74,7 @@ options = {
 		
 		["meta page up", "increase base note by a semitone", lambda x: x.change_note_edit_base(1)],
 		["meta page down", "decrease base note by a semitone", lambda x: x.change_note_edit_base(-1)]		
-	]
+	],
 
 	# The numbers are relative to the C of the current octave. This layout
 	# needs to be changed for non US keyboards.
