@@ -7,19 +7,19 @@ options = {
 		(None,  "dark gray",  "black"), 
 		("weak",  "light gray",  "black"), 
 		("medium", "white", "black"),
-		("strong",  "light gray",  "dark gray"), 
-		("stronger", "white", "dark gray"),
+		("strong",  "light gray",  "dark green"), 
+		("stronger", "white", "dark green"),
 		("mega",  "black",  "white"),
 		("editing", "black", "dark red"),
 		("midi-event", "white", "dark green"),
 		("control-event", "black", "dark red"),
-		("cv-event", "black", "dark blue"),
+		("cv-event", "black", "dark green"),
 		("transport-stopped", "light gray", "black"),
 		("transport-playing", "dark green", "black"),
-		("note-base", "black", "light gray"),
+		("note-base", "black", "dark gray"),
 		("menu", "black", "white"),
-		("loop", "light gray", "dark blue"),
-		("loop-highlighted", "white", "dark blue")
+		("loop", "light gray", "dark green"),
+		("loop-highlighted", "white", "dark green")
 	], 
 
 	# The names for the notes. Note that
@@ -33,8 +33,8 @@ options = {
 	"transport_indicator_stopped": "||",
 	"transport_indicator_playing": ">>",
 	
-	"edit_mode_indicator_enabled": "EDIT",
-	"edit_mode_indicator_disabled": "    ",
+	"edit_mode_indicator_enabled": "E",
+	"edit_mode_indicator_disabled": "V",
 	
 	# The parameter x will be bound to an instance of
 	# the class teqqer.main.
@@ -112,27 +112,38 @@ options = {
 	# Also each action without a submenu is modified to exit the menu after
 	# performing it.
 	"menu": [
-		["file", "ctrl f", lambda x: x.change_menu(x.current_menu[0][3]), [
+		["file", "meta f", lambda x: x.change_menu(x.current_menu[0][3]), [
 			["save", "s", lambda x: x.save(), []],
 			["quit", "q", lambda x: x.quit(), []]
 		]],
-		["properties", "ctrl p", lambda x: x.change_menu(x.current_menu[1][3]), [
+		["edit", "meta e", lambda x: x.change_menu(x.current_menu[1][3]), [
+			["selection", "s", lambda x: x.save(), []],
+			["cut", "t", lambda x: x.save(), []],
+			["copy", "c", lambda x: x.quit(), []],
+			["paste", "v", lambda x: x.quit(), []]
+		]],
+		["props", "meta p", lambda x: x.change_menu(x.current_menu[2][3]), [
 			["track", "t", lambda x: x.change_menu(x.current_menu[0][3]), [
-				["add track", "a", lambda x: x.change_menu(x.current_menu[0][3]), [
+				["add", "a", lambda x: x.change_menu(x.current_menu[0][3]), [
 					["midi", "m", lambda x: x.add_midi_track(), []],
 					["control", "c", lambda x: x.add_control_track(), []],
 					["cv", "v", lambda x: x.add_cv_track(), []],
 				]],
-				["rename track", "n", lambda x: x.rename_track(), []],
-				["remove track", "r", lambda x: x.remove_track(), []]
+				["rename", "n", lambda x: x.rename_track(), []],
+				["remove", "r", lambda x: x.remove_track(), []]
 			]],
 			["pattern", "p", lambda x: x.change_menu(x.current_menu[1][3]), [
-				["add pattern", "a", lambda x: x.remove_track(), []],
-				["set pattern length", "l", lambda x: x.remove_track(), []],
-				["remove pattern", "r", lambda x: x.remove_track(), []]
+				["add", "a", lambda x: x.remove_track(), []],
+				["set length", "l", lambda x: x.remove_track(), []],
+				["remove", "r", lambda x: x.remove_track(), []]
 			]]
 		]],
-		["help", "f1", lambda x: x.change_menu(x.current_menu[2][3]), [
+		["tools", "meta t", lambda x: x.change_menu(x.current_menu[3][3]), [
+			["generate", "g", lambda x: x.save(), []],
+			["modify", "m", lambda x: x.save(), []],
+			["eval", "e", lambda x: x.quit(), []]
+		]],
+		["help", "f1", lambda x: x.change_menu(x.current_menu[4][3]), [
 			["about", "a", lambda x: x._emit('popup_about'), []],
 			["license", "l", lambda x:x._emit('popup_license'), []],
 			["help", "f1", lambda x: x._emit('popup_help'), []]
@@ -153,7 +164,7 @@ options = {
 	"control_fraction_precision": 3, 
 	"control_integer_precision": 1, 
 	
-	"column_separator": " | ", 
+	"column_separator": "|", 
 	
 	# Whether the cursor follows transport 
 	"follow_transport": True, 
@@ -162,7 +173,7 @@ options = {
 	"mouse_interaction": True, 
 	
 	# Reduce this time to make the UI more smooth at the expense of cpu power
-	"ui_update_interval": 0.1, 
+	"ui_update_interval": 0.05, 
 	
 	"note_edit_base": 48,
 	"note_edit_velocity": 127,
