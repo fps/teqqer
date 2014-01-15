@@ -481,10 +481,7 @@ class main(urwid.Widget):
 		if self.info == None:
 			return False
 		
-		if cursor_pattern < self.info.loop_range.end.pattern:
-			return True
-			
-		if cursor_pattern >= self.info.loop_range.start.pattern:
+		if cursor_pattern >= self.info.loop_range.start.pattern and cursor_pattern <= self.info.loop_range.end.pattern:
 			return True
 
 		return False
@@ -508,7 +505,7 @@ class main(urwid.Widget):
 			else:
 				return False
 
-		if cursor_pattern > self.info.loop_range.start.pattern and cursor_pattern < self.info.loop_range.end.pattern:
+		if cursor_pattern > self.info.loop_range.start.pattern and cursor_pattern <= self.info.loop_range.end.pattern:
 			return True
 
 		return False
@@ -532,7 +529,10 @@ class main(urwid.Widget):
 				event_attrs.append(("loop-range-indicator", len(events[-1])))
 			else:
 				events.append(" ")
-				event_attrs.append((None, len(events[-1])))
+				if self.cursor_tick == tick_index:
+					event_attrs.append(("cursor-row-highlight", len(events[-1])))
+				else:
+					event_attrs.append((None, len(events[-1])))
 			
 			events.append("%0.4x" % tick_index)
 			
@@ -540,11 +540,19 @@ class main(urwid.Widget):
 					event_attrs.append(("cursor-row-highlight", len(events[-1])))			
 			else:
 				if 0 == tick_index % highlighted_rows:
-					event_attrs.append(("event-highligh", len(events[-1])))
+					event_attrs.append(("event-highlight", len(events[-1])))
 				else:
 					event_attrs.append(("event-default", len(events[-1])))
 			
 			for track_index in xrange(self.teq_engine.number_of_tracks()):
+				events.append(column_separator)
+				
+				# Column separator
+				if self.cursor_tick == tick_index:
+					event_attrs.append(("cursor-row-highlight", column_separator_len))
+				else:
+					event_attrs.append((None, column_separator_len))
+
 				event = None
 				
 				if self.teq_engine.track_type(track_index) == teq.track_type.MIDI:
@@ -554,16 +562,8 @@ class main(urwid.Widget):
 				if self.teq_engine.track_type(track_index) == teq.track_type.CV:
 					event = self.render_cv_event(pattern.get_cv_event(track_index,  tick_index))
 				
-				events.append(column_separator)
-				events.append(event)
-				
-				# Column separator
-				if self.cursor_tick == tick_index:
-					event_attrs.append(("cursor-row-highlight", column_separator_len))
-				else:
-					event_attrs.append((None, column_separator_len))
-
 				# The event itself
+				events.append(event)
 				event_attr = (None, len(event))
 				
 				if tick_index % highlighted_rows == 0:
@@ -588,16 +588,33 @@ class main(urwid.Widget):
 	def render_patterns_list(self):
 		text = []
 		attr = []
+		
 		for n in xrange(0, self.teq_engine.number_of_patterns()):
+			line = []
+			line_attr = []
+			
 			pattern_name = self.teq_engine.get_pattern(n).name
 			if pattern_name == "":
-				pattern_name = "." * 3
-				
-			text.append(self.render_name(pattern_name,  8))
-			attr.append(("pattern-list-entry-default", len(text[-1])))
+				pattern_name = "-" * 8
+			else:
+				pattern_name = self.render_name(pattern_name,  len("patterns"))
+
+			line.append(pattern_name)
 			
-			#text.append(" ")
-			#attr.append((None, len(text[-1])))
+			if n == self.cursor_pattern:
+				line_attr.append(("cursor-row-highlight", len(line[-1])))
+			else:
+				line_attr.append(("pattern-list-entry-default", len(line[-1])))
+			
+			if self.cursor_pattern_in_loop_range(n):
+				line.append(self.options["loop_range_indicator_patterns"])
+				line_attr.append(("loop-range-indicator", len(line[-1])))
+			else:
+				line.append(" ")
+				line_attr.append(("pattern-list-entry-default", len(line[-1])))
+				
+			text.append("".join(line))
+			attr.append(line_attr)
 			
 		return (text, attr)
 	
@@ -691,7 +708,6 @@ class main(urwid.Widget):
 		if self.cursor_pattern < self.teq_engine.number_of_patterns():
 			pattern = self.teq_engine.get_pattern(self.cursor_pattern)
 			
-			
 			split = int(round(event_rows * self.options["center_line_fraction"]))
 			
 			rendered_pattern = self.render_pattern()
@@ -702,38 +718,37 @@ class main(urwid.Widget):
 				displayed_pattern = (self.cursor_pattern + n) - split
 
 				# Initialize with an empty line and attributes
-				line = ""
+				line = []
 				line_attr = []
 
 				if displayed_pattern >= 0 and displayed_pattern < self.teq_engine.number_of_patterns():
-					line = rendered_patterns_list[0][displayed_pattern]
+					line.append(rendered_patterns_list[0][displayed_pattern])
+					line_attr.extend(rendered_patterns_list[1][displayed_pattern])
+				else:
+					line.append(" " * len("patterns "))
+					line_attr.append((None, len(line[-1])))
+				
+				if 1 == 1:
+					line.append(column_separator)
 					if displayed_pattern == self.cursor_pattern:
-						line_attr.append((header_style, rendered_patterns_list[1][displayed_pattern][1]))
+						line_attr.append(("cursor-row-highlight", len(line[-1])))
 					else:
-						line_attr.append(rendered_patterns_list[1][displayed_pattern])
-				else:
-					line = " " * len("patterns")
-					line_attr.append((None, len("patterns")))
-				
-				line += column_separator
-				if displayed_pattern == self.cursor_pattern:
-					line_attr.append((header_style, column_separator_len))
-				else:
-					line_attr.append((None, column_separator_len))
-				
-				if displayed_tick >= 0 and displayed_tick < pattern.length():
-					line += rendered_pattern[0][displayed_tick]
-					line_attr.extend(rendered_pattern[1][displayed_tick])
-				
-				remainder = size[0] - len(line)
-				if remainder > 0:
-					line += " " * remainder
-					if displayed_tick == self.cursor_tick:
-						line_attr.append((header_style, remainder))
-					else:
-						line_attr.append((None, remainder))
-				
-				text.append(line)
+						line_attr.append((None, len(line[-1])))
+					
+					if displayed_tick >= 0 and displayed_tick < pattern.length():
+						line.append(rendered_pattern[0][displayed_tick])
+						line_attr.extend(rendered_pattern[1][displayed_tick])
+					
+					if 1 == 1:
+						remainder = size[0] - len("".join(line))
+						if remainder > 0:
+							line.append(" " * remainder)
+							if displayed_tick == self.cursor_tick:
+								line_attr.append((header_style, remainder))
+							else:
+								line_attr.append((None, remainder))
+					
+				text.append("".join(line))
 				attr.append(line_attr)	
 		else:
 			for n in xrange(0, event_rows):
@@ -799,7 +814,7 @@ def test_state():
 
 	teq_engine.set_global_tempo(16)
 	pyteq.set_transport_position(teq_engine,  0,  0)
-	pyteq.set_loop_range(teq_engine,  0,  8,  2,  16,  True)
+	pyteq.set_loop_range(teq_engine,  0,  8,  4,  0,  True)
 
 if 1 == 1:
 	test_state()
