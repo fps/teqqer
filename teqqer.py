@@ -168,6 +168,14 @@ class main(urwid.Widget):
 	def redo(self):
 		self.history.redo()
 	
+	def state_changed(self, old_info, new_info):
+		if not old_info.transport_position.tick == new_info.transport_position.tick:
+			return True
+		if not old_info.transport_position.pattern == new_info.transport_position.pattern:
+			return True
+		if not old_info.transport_state == self.info.transport_state:
+			return True
+		
 	def get_state_info_and_update(self):
 		old_info = self.info
 		
@@ -184,7 +192,7 @@ class main(urwid.Widget):
 		
 		# Check if the transport position changed
 		if old_info and self.info:
-			if old_info.transport_position.tick != self.info.transport_position.tick or old_info.transport_position.pattern != self.info.transport_position.pattern or old_info.transport_state != self.info.transport_state:
+			if self.state_changed(old_info, self.info):
 				if self.options["follow_transport"] == True:
 					self.cursor_tick = self.info.transport_position.tick
 					self.cursor_pattern = self.info.transport_position.pattern
