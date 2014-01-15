@@ -107,6 +107,9 @@ class PopUpLauncherThing(urwid.PopUpLauncher):
 		
 		self.open_pop_up()
 
+	def popup_text_entry(self, text):
+		pass
+
 	def get_pop_up_parameters(self):
 		return self.popup_parameters
 	
@@ -139,7 +142,13 @@ class main(urwid.Widget):
 		self.current_menu = self.options["menu"]
 		for menu in self.current_menu:
 			self.fixup_menu(menu)
-			
+	
+	def evaluate(self):
+		pass
+	
+	def evaluate_string(self, string):
+		self._emit("popup_help")
+	
 	def fixup_menu(self, menu):
 		# print ("fixing up", menu)
 		if 0 == len(menu[3]):

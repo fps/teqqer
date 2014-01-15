@@ -65,8 +65,8 @@ options = {
 	"edit_mode_indicator_enabled": "E",
 	"edit_mode_indicator_disabled": "V",
 	
-	"loop_range_indicator_events": "|",
-	"loop_range_indicator_patterns": "|",
+	"loop_range_indicator_events": "[",
+	"loop_range_indicator_patterns": "]",
 	
 	# The parameter x will be bound to an instance of
 	# the class teqqer.main.
@@ -173,7 +173,7 @@ options = {
 		["tools", "ctrl t", lambda x: x.change_menu(x.current_menu[3][3]), [
 			["generate", "g", lambda x: x.generate(), []],
 			["modify", "m", lambda x: x.modify(), []],
-			["eval", "e", lambda x: x.eval(), []]
+			["eval", "e", lambda x: x.evaluate(), []]
 		]],
 		["help", "f1", lambda x: x.change_menu(x.current_menu[4][3]), [
 			["about", "a", lambda x: x._emit('popup_about'), []],

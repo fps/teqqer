@@ -1,4 +1,4 @@
-# teqqer - a simple midi tracker
+# TEQQER - The Console MIDI Tracker for the Nerdy Music Hacker
 
 An ncurses/terminal based midi and CV signal tracker/sequencer.
 
