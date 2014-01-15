@@ -169,32 +169,27 @@ class main(urwid.Widget):
 		self.history.redo()
 	
 	def get_state_info_and_update(self):
-		# The first time we get some info we are in the game
-		if self.info == None:
-			try:
-				self.info = teq_engine.get_state_info()
-				self._invalidate()
-			except Exception as e:
-				# print(e)
-				pass
-			
-			return
+		old_info = self.info
 		
 		try:
-			info = teq_engine.get_state_info()
+			while True:
+				self.info = teq_engine.get_state_info()
+		except Exception as e:
+			pass
+		
+		if self.info == None:
 			
-			# Check if the transport position changed
-			if info.transport_position.tick != self.info.transport_position.tick or info.transport_position.pattern != self.info.transport_position.pattern:
+			self._invalidate()
+			return
+		
+		# Check if the transport position changed
+		if old_info and self.info:
+			if old_info.transport_position.tick != self.info.transport_position.tick or old_info.transport_position.pattern != self.info.transport_position.pattern or old_info.transport_state != self.info.transport_state:
 				if self.options["follow_transport"] == True:
-					self.cursor_tick = info.transport_position.tick
-					self.cursor_pattern = info.transport_position.pattern
+					self.cursor_tick = self.info.transport_position.tick
+					self.cursor_pattern = self.info.transport_position.pattern
 				
 				self._invalidate()
-
-			self.info = info
-			
-		except:
-			pass
 	
 	def change_tempo(self, amount):
 		self.teq_engine.set_global_tempo(self.teq_engine.get_global_tempo() + amount)
@@ -678,6 +673,14 @@ class main(urwid.Widget):
 				if displayed_tick >= 0 and displayed_tick < pattern.length():
 					line += rendered_pattern[0][displayed_tick]
 					line_attr.extend(rendered_pattern[1][displayed_tick])
+				
+				remainder = size[0] - len(line)
+				if remainder > 0:
+					line += " " * remainder
+					if displayed_tick == self.cursor_tick:
+						line_attr.append((header_style, remainder))
+					else:
+						line_attr.append((None, remainder))
 				
 				text.append(line)
 				attr.append(line_attr)	
