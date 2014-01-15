@@ -611,7 +611,12 @@ class main(urwid.Widget):
 				line_attr.append(("loop-range-indicator", len(line[-1])))
 			else:
 				line.append(" ")
-				line_attr.append(("pattern-list-entry-default", len(line[-1])))
+
+				if n == self.cursor_pattern:
+					line_attr.append(("cursor-row-highlight", len(line[-1])))
+				else:
+					line_attr.append(("pattern-list-entry-default", len(line[-1])))
+				
 				
 			text.append("".join(line))
 			attr.append(line_attr)
@@ -814,7 +819,7 @@ def test_state():
 
 	teq_engine.set_global_tempo(16)
 	pyteq.set_transport_position(teq_engine,  0,  0)
-	pyteq.set_loop_range(teq_engine,  0,  8,  4,  0,  True)
+	pyteq.set_loop_range(teq_engine,  0,  8,  0,  16,  True)
 
 if 1 == 1:
 	test_state()
