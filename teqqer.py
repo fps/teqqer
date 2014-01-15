@@ -190,6 +190,9 @@ class main(urwid.Widget):
 			self._invalidate()
 			return
 		
+		if old_info == None and self.info != None:
+			self._invalidate()
+		
 		# Check if the transport position changed
 		if old_info and self.info:
 			if self.state_changed(old_info, self.info):
