@@ -173,7 +173,7 @@ options = {
 	"mouse_interaction": True, 
 	
 	# Reduce this time to make the UI more smooth at the expense of cpu power
-	"ui_update_interval": 0.05, 
+	"ui_update_interval": 0.1, 
 	
 	"note_edit_base": 48,
 	"note_edit_velocity": 127,

@@ -704,7 +704,7 @@ def test_state():
 	teq_engine.insert_control_track("control",  teq_engine.number_of_tracks())
 	teq_engine.insert_midi_track("bd",  teq_engine.number_of_tracks())
 	teq_engine.insert_midi_track("snare",  teq_engine.number_of_tracks())
-	if 1 == 0:
+	if 1 == 1:
 		teq_engine.insert_midi_track("bd2",  teq_engine.number_of_tracks())
 		teq_engine.insert_midi_track("snare2",  teq_engine.number_of_tracks())
 		teq_engine.insert_cv_track("cv",  teq_engine.number_of_tracks())
@@ -761,5 +761,4 @@ loop = urwid.MainLoop(popup_launcher,  options["palette"], pop_ups=True)
 
 loop.set_alarm_in(the_main.options["ui_update_interval"],  handle_alarm,  the_main)
 
-print("Starting up...")
 loop.run()
