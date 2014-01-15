@@ -443,14 +443,14 @@ class main(urwid.Widget):
 		text = []
 		attr = []
 	
-		text.append("patterns")
-		attr.append((default_style,  len("patterns")))
+		text.append("patterns ")
+		attr.append((default_style,  len("patterns ")))
 		
 		text.append(column_separator)
 		attr.append((default_style,  column_separator_len))
 		
-		text.append("tick")
-		attr.append((default_style,  len("tick")))
+		text.append(" tick")
+		attr.append((default_style,  len(" tick")))
 		
 		header = "patterns" + column_separator + "tick"
 		
@@ -477,7 +477,40 @@ class main(urwid.Widget):
 
 		return (''.join(text),  attr)
 	
-	def in_loop_range(self, cursor_pattern, cursor_tick):
+	def cursor_pattern_in_loop_range(self, cursor_pattern):
+		if self.info == None:
+			return False
+		
+		if cursor_pattern < self.info.loop_range.end.pattern:
+			return True
+			
+		if cursor_pattern >= self.info.loop_range.start.pattern:
+			return True
+
+		return False
+	
+	def cursor_in_loop_range(self, cursor_pattern, cursor_tick):
+		if self.info == None:
+			return False
+		
+		if not self.cursor_pattern_in_loop_range(cursor_pattern):
+			return False
+		
+		if cursor_pattern == self.info.loop_range.start.pattern:
+			if cursor_tick >= self.info.loop_range.start.tick:
+				return True
+			else:
+				return False
+			
+		if cursor_pattern == self.info.loop_range.end.pattern:
+			if cursor_tick < self.info.loop_range.end.tick:
+				return True
+			else:
+				return False
+
+		if cursor_pattern > self.info.loop_range.start.pattern and cursor_pattern < self.info.loop_range.end.pattern:
+			return True
+
 		return False
 	
 	def render_pattern(self):
@@ -493,6 +526,13 @@ class main(urwid.Widget):
 		for tick_index in xrange(pattern.length()):
 			events = []
 			event_attrs = []
+			
+			if self.cursor_in_loop_range(self.cursor_pattern, tick_index):
+				events.append(self.options["loop_range_indicator_events"])
+				event_attrs.append(("loop-range-indicator", len(events[-1])))
+			else:
+				events.append(" ")
+				event_attrs.append((None, len(events[-1])))
 			
 			events.append("%0.4x" % tick_index)
 			
@@ -552,8 +592,13 @@ class main(urwid.Widget):
 			pattern_name = self.teq_engine.get_pattern(n).name
 			if pattern_name == "":
 				pattern_name = "." * 3
+				
 			text.append(self.render_name(pattern_name,  8))
 			attr.append(("pattern-list-entry-default", len(text[-1])))
+			
+			#text.append(" ")
+			#attr.append((None, len(text[-1])))
+			
 		return (text, attr)
 	
 	def render_footer(self, size, default_style):
@@ -754,7 +799,7 @@ def test_state():
 
 	teq_engine.set_global_tempo(16)
 	pyteq.set_transport_position(teq_engine,  0,  0)
-	pyteq.set_loop_range(teq_engine,  0,  0,  0,  0,  True)
+	pyteq.set_loop_range(teq_engine,  0,  8,  2,  16,  True)
 
 if 1 == 1:
 	test_state()

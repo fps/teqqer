@@ -35,7 +35,7 @@ options = {
 		
 		("track-events-highlight", "white", "black"),
 		
-		("loop-indicator", "dark blue", "black"),
+		("loop-range-indicator", "white", "dark blue"),
 		
 		("event-default", "dark gray", "black"),
 		("event-highlight", "light gray", "black"),
@@ -64,6 +64,9 @@ options = {
 	
 	"edit_mode_indicator_enabled": "E",
 	"edit_mode_indicator_disabled": "V",
+	
+	"loop_range_indicator_events": "[",
+	"loop_range_indicator_patterns": "]",
 	
 	# The parameter x will be bound to an instance of
 	# the class teqqer.main.
