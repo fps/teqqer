@@ -380,7 +380,7 @@ class main(urwid.Widget):
 		for n in xrange(len(self.current_menu)):
 			entry = self.current_menu[n]
 			text.append(self.render_key(entry[1]) + ":" + entry[0])
-			attr.append(("menu", len(text[-1])))
+			attr.append(("menu-entry-default", len(text[-1])))
 			if n < len(self.current_menu):
 				text.append(" ")
 				attr.append((default_style, 1))
@@ -460,7 +460,7 @@ class main(urwid.Widget):
 
 			text.append(self.render_name(track_name,  render_size))
 			if self.cursor_track == n:
-				attr.append(("note-base",  render_size))
+				attr.append(("track-name-highlight",  render_size))
 			else:
 				attr.append((default_style,  render_size))
 
@@ -479,11 +479,6 @@ class main(urwid.Widget):
 		text = []
 		attr = []
 		
-		strong_style = "strong"
-		
-		if self.edit_mode:
-			strong_style = "editing"
-			
 		for tick_index in xrange(pattern.length()):
 			events = []
 			event_attrs = []
@@ -491,12 +486,12 @@ class main(urwid.Widget):
 			events.append("%0.4x" % tick_index)
 			
 			if tick_index == self.cursor_tick:
-					event_attrs.append((strong_style, len(events[-1])))			
+					event_attrs.append(("cursor-row-highlight", len(events[-1])))			
 			else:
 				if 0 == tick_index % highlighted_rows:
-					event_attrs.append(("medium", len(events[-1])))
+					event_attrs.append(("event-highligh", len(events[-1])))
 				else:
-					event_attrs.append(("weak", len(events[-1])))
+					event_attrs.append(("event-default", len(events[-1])))
 			
 			for track_index in xrange(self.teq_engine.number_of_tracks()):
 				event = None
@@ -513,7 +508,7 @@ class main(urwid.Widget):
 				
 				# Column separator
 				if self.cursor_tick == tick_index:
-					event_attrs.append((strong_style, column_separator_len))
+					event_attrs.append(("cursor-row-highlight", column_separator_len))
 				else:
 					event_attrs.append((None, column_separator_len))
 
@@ -521,16 +516,16 @@ class main(urwid.Widget):
 				event_attr = (None, len(event))
 				
 				if tick_index % highlighted_rows == 0:
-					event_attr = ("medium", len(event))
+					event_attr = ("event-highlight", len(event))
 				
 				if self.cursor_track == track_index and self.cursor_tick == tick_index:
-					event_attr = ("mega",  len(event))
+					event_attr = ("event-selected",  len(event))
 				
 				if self.cursor_track == track_index and not self.cursor_tick == tick_index:
-					event_attr = (strong_style,  len(event))
+					event_attr = ("track-events-highlight",  len(event))
 						
 				if not self.cursor_track == track_index and self.cursor_tick == tick_index:
-					event_attr = (strong_style,  len(event))
+					event_attr = ("cursor-row-highlight",  len(event))
 						
 				event_attrs.append(event_attr)
 				
@@ -547,7 +542,7 @@ class main(urwid.Widget):
 			if pattern_name == "":
 				pattern_name = "." * 3
 			text.append(self.render_name(pattern_name,  8))
-			attr.append(("weak", len(text[-1])))
+			attr.append(("pattern-list-entry-default", len(text[-1])))
 		return (text, attr)
 	
 	def render_footer(self, size, default_style):
@@ -556,10 +551,10 @@ class main(urwid.Widget):
 		
 		if True == self.edit_mode:
 			text.append(self.options["edit_mode_indicator_enabled"])
-			attr.append(("editing", len(text[-1])))
 		else:
 			text.append(self.options["edit_mode_indicator_disabled"])
-			attr.append((default_style, len(text[-1])))
+		
+		attr.append(("edit-mode-indicator", len(text[-1])))
 		
 		text.append(" ")
 		attr.append((default_style, len(text[-1])))
@@ -576,7 +571,7 @@ class main(urwid.Widget):
 		attr.append((default_style, len(text[-1])))
 
 		text.append(self.render_note_on(self.options["note_edit_base"], self.options["note_edit_velocity"]))
-		attr.append(("note-base", len(text[-1])))
+		attr.append(("note-edit-base", len(text[-1])))
 
 		text.append(" ")
 		attr.append((default_style, len(text[-1])))
@@ -586,7 +581,7 @@ class main(urwid.Widget):
 		attr.extend(menu[1])
 
 		text.append(str(self.teq_engine.get_global_tempo()) + " " + str(self.options["edit_step"]))
-		attr.append(("note-base", len(text[-1])))
+		attr.append(("song-properties", len(text[-1])))
 
 		text.append(" ")
 		attr.append((default_style, len(text[-1])))
@@ -615,9 +610,9 @@ class main(urwid.Widget):
 		
 		header_style = None
 		if True == self.edit_mode:
-			header_style = "editing"
+			header_style = "header-editing"
 		else:
-			header_style = "strong"
+			header_style = "header-default"
 		
 		header = self.render_header(header_style)
 		
@@ -689,7 +684,13 @@ class main(urwid.Widget):
 				text.append(" " * size[0])
 				attr.append([(None, len(text[-1]))])
 		
-		footer = self.render_footer(size[0], header_style)
+		footer_style = None
+		if True == self.edit_mode:
+			footer_style = "footer-editing"
+		else:
+			footer_style = "footer-default"
+		
+		footer = self.render_footer(size[0], footer_style)
 		
 		text.append(footer[0])
 		attr.append(footer[1])

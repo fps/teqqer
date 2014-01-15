@@ -5,21 +5,50 @@ options = {
 	# codes,  etc.)
 	"palette": [
 		(None,  "dark gray",  "black"), 
-		("weak",  "light gray",  "black"), 
-		("medium", "white", "black"),
-		("strong",  "black",  "dark green"), 
-		("stronger", "white", "dark green"),
-		("mega",  "black",  "white"),
-		("editing", "black", "dark red"),
-		("midi-event", "white", "dark green"),
-		("control-event", "black", "dark red"),
-		("cv-event", "black", "dark green"),
-		("transport-stopped", "light gray", "black"),
-		("transport-playing", "dark green", "black"),
-		("note-base", "black", "dark gray"),
-		("menu", "black", "white"),
-		("loop", "light gray", "dark green"),
-		("loop-highlighted", "white", "dark green")
+		
+		("help-text-default", "white", "black"),
+
+		("transport-indicator-stopped", "light gray", "black"),
+		("transport-indicator-playing", "dark green", "black"),
+
+		("header-default", "white", "dark gray"),
+		("header-editing", "white", "dark red"),
+		
+		("track-name-highlight", "black", "light gray"),
+
+		("footer-default", "white", "dark gray"),
+		("footer-editing", "white", "dark gray"),
+		
+		("edit-mode-indicator", "black", "white"),
+
+		("menu-entry-default", "black", "white"),
+		("menu-entry-exit-menu", "light gray", "dark gray"),
+		
+		("note-edit-base", "black", "light gray"),
+		("cc-edit-base", "black", "light gray"),
+		
+		("song-properties", "black", "light gray"),
+		
+		("pattern-list-entry-default", "light gray", "black"),
+		
+		("cursor-row-highlight", "white", "dark gray"),
+		
+		("track-events-highlight", "white", "black"),
+		
+		("loop-indicator", "dark blue", "black"),
+		
+		("event-default", "dark gray", "black"),
+		("event-highlight", "light gray", "black"),
+		("event-selected", "black", "white"),
+		
+		("note-on-event-default", "white", "dark green"),
+		("note-on-event-selected", "dark green", "white"),
+		
+		("note-off-event-default", "white", "dark green"),
+		("note-off-event-selected", "dark green", "white"),
+		
+		("cc-event-default", "white", "dark green"),
+		("cc-event-selected", "dark green", "white"),
 	], 
 
 	# The names for the notes. Note that
