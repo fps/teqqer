@@ -733,25 +733,23 @@ class main(urwid.Widget):
 					line.append(" " * len("patterns "))
 					line_attr.append((None, len(line[-1])))
 				
-				if 1 == 1:
-					line.append(column_separator)
-					if displayed_pattern == self.cursor_pattern:
-						line_attr.append(("cursor-row-highlight", len(line[-1])))
+				line.append(column_separator)
+				if displayed_pattern == self.cursor_pattern:
+					line_attr.append(("cursor-row-highlight", len(line[-1])))
+				else:
+					line_attr.append((None, len(line[-1])))
+				
+				if displayed_tick >= 0 and displayed_tick < pattern.length():
+					line.append(rendered_pattern[0][displayed_tick])
+					line_attr.extend(rendered_pattern[1][displayed_tick])
+				
+				remainder = size[0] - len("".join(line))
+				if remainder > 0:
+					line.append(" " * remainder)
+					if displayed_tick == self.cursor_tick:
+						line_attr.append(("cursor-row-highlight", remainder))
 					else:
-						line_attr.append((None, len(line[-1])))
-					
-					if displayed_tick >= 0 and displayed_tick < pattern.length():
-						line.append(rendered_pattern[0][displayed_tick])
-						line_attr.extend(rendered_pattern[1][displayed_tick])
-					
-					if 1 == 1:
-						remainder = size[0] - len("".join(line))
-						if remainder > 0:
-							line.append(" " * remainder)
-							if displayed_tick == self.cursor_tick:
-								line_attr.append((header_style, remainder))
-							else:
-								line_attr.append((None, remainder))
+						line_attr.append((None, remainder))
 					
 				text.append("".join(line))
 				attr.append(line_attr)	
