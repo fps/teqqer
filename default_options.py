@@ -7,7 +7,7 @@ options = {
 		(None,  "dark gray",  "black"), 
 		("weak",  "light gray",  "black"), 
 		("medium", "white", "black"),
-		("strong",  "light gray",  "dark green"), 
+		("strong",  "black",  "dark green"), 
 		("stronger", "white", "dark green"),
 		("mega",  "black",  "white"),
 		("editing", "black", "dark red"),
@@ -117,10 +117,10 @@ options = {
 			["quit", "q", lambda x: x.quit(), []]
 		]],
 		["edit", "meta e", lambda x: x.change_menu(x.current_menu[1][3]), [
-			["selection", "s", lambda x: x.save(), []],
-			["cut", "t", lambda x: x.save(), []],
-			["copy", "c", lambda x: x.quit(), []],
-			["paste", "v", lambda x: x.quit(), []]
+			["selection", "s", lambda x: x.selection(), []],
+			["cut", "t", lambda x: x.cut(), []],
+			["copy", "c", lambda x: x.copy(), []],
+			["paste", "v", lambda x: x.paste(), []]
 		]],
 		["props", "meta p", lambda x: x.change_menu(x.current_menu[2][3]), [
 			["track", "t", lambda x: x.change_menu(x.current_menu[0][3]), [
@@ -133,15 +133,15 @@ options = {
 				["remove", "r", lambda x: x.remove_track(), []]
 			]],
 			["pattern", "p", lambda x: x.change_menu(x.current_menu[1][3]), [
-				["add", "a", lambda x: x.remove_track(), []],
-				["set length", "l", lambda x: x.remove_track(), []],
-				["remove", "r", lambda x: x.remove_track(), []]
+				["add", "a", lambda x: x.add_pattern(), []],
+				["set length", "l", lambda x: x.set_pattern_length(), []],
+				["remove", "r", lambda x: x.remove_pattern(), []]
 			]]
 		]],
 		["tools", "meta t", lambda x: x.change_menu(x.current_menu[3][3]), [
-			["generate", "g", lambda x: x.save(), []],
-			["modify", "m", lambda x: x.save(), []],
-			["eval", "e", lambda x: x.quit(), []]
+			["generate", "g", lambda x: x.generate(), []],
+			["modify", "m", lambda x: x.modify(), []],
+			["eval", "e", lambda x: x.eval(), []]
 		]],
 		["help", "f1", lambda x: x.change_menu(x.current_menu[4][3]), [
 			["about", "a", lambda x: x._emit('popup_about'), []],
