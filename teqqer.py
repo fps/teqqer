@@ -140,9 +140,6 @@ class main(urwid.Widget):
 		for menu in self.current_menu:
 			self.fixup_menu(menu)
 			
-	def show_about(self):
-		self._emit('popup_about')
-	
 	def fixup_menu(self, menu):
 		# print ("fixing up", menu)
 		if 0 == len(menu[3]):
