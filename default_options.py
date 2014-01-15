@@ -112,17 +112,17 @@ options = {
 	# Also each action without a submenu is modified to exit the menu after
 	# performing it.
 	"menu": [
-		["file", "meta f", lambda x: x.change_menu(x.current_menu[0][3]), [
+		["file", "ctrl f", lambda x: x.change_menu(x.current_menu[0][3]), [
 			["save", "s", lambda x: x.save(), []],
 			["quit", "q", lambda x: x.quit(), []]
 		]],
-		["edit", "meta e", lambda x: x.change_menu(x.current_menu[1][3]), [
+		["edit", "ctrl e", lambda x: x.change_menu(x.current_menu[1][3]), [
 			["selection", "s", lambda x: x.selection(), []],
 			["cut", "t", lambda x: x.cut(), []],
 			["copy", "c", lambda x: x.copy(), []],
 			["paste", "v", lambda x: x.paste(), []]
 		]],
-		["props", "meta p", lambda x: x.change_menu(x.current_menu[2][3]), [
+		["props", "ctrl p", lambda x: x.change_menu(x.current_menu[2][3]), [
 			["track", "t", lambda x: x.change_menu(x.current_menu[0][3]), [
 				["add", "a", lambda x: x.change_menu(x.current_menu[0][3]), [
 					["midi", "m", lambda x: x.add_midi_track(), []],
@@ -138,7 +138,7 @@ options = {
 				["remove", "r", lambda x: x.remove_pattern(), []]
 			]]
 		]],
-		["tools", "meta t", lambda x: x.change_menu(x.current_menu[3][3]), [
+		["tools", "ctrl t", lambda x: x.change_menu(x.current_menu[3][3]), [
 			["generate", "g", lambda x: x.generate(), []],
 			["modify", "m", lambda x: x.modify(), []],
 			["eval", "e", lambda x: x.eval(), []]
