@@ -128,11 +128,12 @@ class PopUpLauncherThing(urwid.PopUpLauncher):
 	
 
 class main(urwid.Widget):
-	def __init__(self,  teq_engine,  options):
+	def __init__(self,  teq_engine,  options, filename):
 		self.__super.__init__()
 		
 		urwid.register_signal(main, ['popup_about', 'popup_license', 'popup_help'])
 		
+		self.filename = filename
 		self.options = options
 		self.teq_engine = teq_engine
 		
@@ -152,6 +153,8 @@ class main(urwid.Widget):
 		self.current_menu = self.options["menu"]
 		for menu in self.current_menu:
 			self.fixup_menu(menu)
+			
+		self.load()
 	
 	def display_text(self, text):
 		self.popup_launcher.popup_text(text)
@@ -801,6 +804,19 @@ class main(urwid.Widget):
 
 		return t
 	
+	def load(self):
+		with open(self.filename, "r") as textfile:
+			text = textfile.read()
+			json_object = json.loads(text)
+			
+			for track in json_object["tracks"]:
+				if track["type"] == "CONTROL":
+					self.teq_engine.insert_control_track(str(track["name"]), self.teq_engine.number_of_tracks())
+				if track["type"] == "CV":
+					self.teq_engine.insert_cv_track(str(track["name"]), self.teq_engine.number_of_tracks())
+				if track["type"] == "MIDI":
+					self.teq_engine.insert_midi_track(str(track["name"]), self.teq_engine.number_of_tracks())
+	
 	@handle_error
 	def save(self):
 		if self.info == None:
@@ -868,7 +884,7 @@ class main(urwid.Widget):
 		
 		json_object["patterns"] = patterns_json_object
 		
-		with open(sys.argv[1], "w") as textfile:
+		with open(self.filename, "w") as textfile:
 			textfile.write(json.dumps(json_object, indent=4, separators=(',', ': ')))
 
 teq_engine = teq.teq()
@@ -914,7 +930,7 @@ def test_state():
 	pyteq.set_transport_position(teq_engine,  0,  0)
 	pyteq.set_loop_range(teq_engine,  0,  8,  0,  16,  True)
 
-if 1 == 1:
+if 0 == 1:
 	test_state()
 	
 
@@ -926,7 +942,7 @@ def handle_alarm(main_loop,  the_main):
 	the_main.get_state_info_and_update()
 	main_loop.set_alarm_in(the_main.options["ui_update_interval"] - random.random() * 0.5 * the_main.options["ui_update_interval"],  handle_alarm,  the_main)
 
-the_main = main(teq_engine,  options)
+the_main = main(teq_engine,  options, sys.argv[1])
 
 popup_launcher = PopUpLauncherThing(the_main)
 
