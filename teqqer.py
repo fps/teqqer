@@ -817,6 +817,7 @@ class main(urwid.Widget):
 				if track["type"] == "MIDI":
 					self.teq_engine.insert_midi_track(str(track["name"]), self.teq_engine.number_of_tracks())
 	
+			pyteq.set_loop_range(self.teq_engine, json_object["loop-range-start-pattern"], json_object["loop-range-start-tick"], json_object["loop-range-end-pattern"], json_object["loop-range-end-tick"])
 	@handle_error
 	def save(self):
 		if self.info == None:
