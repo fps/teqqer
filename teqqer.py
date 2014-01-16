@@ -843,6 +843,30 @@ class main(urwid.Widget):
 		text.append(footer[0])
 		attr.append(footer[1])
 		
+		# Sanity checks against small displays
+		if len(text[0]) > size[0] or 3 > size[1]:
+			text = []
+			attr = []
+			
+			for n in xrange(size[1]):
+				text_line = []
+				line_attr = []
+				if n == 0:
+					text_line.append("terminal too small - please make it wider or taller!"[0:size[0]])
+				else:
+					text_line.append(".")
+
+				line_attr.append((None, len(text_line[-1])))
+				
+				remainder = size[0] - len(text_line[-1])
+				if remainder > 0:
+					text_line.append(" " * remainder)
+					line_attr.append((None, len(text_line[-1])))
+				
+				text.append("".join(text_line))
+				attr.append(line_attr)
+			
+		
 		t = urwid.TextCanvas(text,  attr,  maxcol = size[0]) 
 
 		return t
