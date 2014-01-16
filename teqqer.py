@@ -63,7 +63,6 @@ class TextPopup(urwid.WidgetWrap):
 		
 		urwid.register_signal(TextPopup, 'close')
 
-	
 	def keypress(self, size, key):
 		if key == 'esc':
 			self._emit('close')
@@ -374,6 +373,7 @@ class main(urwid.Widget):
 				self._invalidate()
 				return True
 	
+	#@handle_error
 	def keypress(self,  size,  key):
 		# The menu MUST be processed first. This way even
 		# submenu entries without modifiers get priority.
@@ -1012,4 +1012,14 @@ loop = urwid.MainLoop(popup_launcher,  options["palette"], pop_ups=True)
 
 loop.set_alarm_in(the_main.options["ui_update_interval"],  handle_alarm,  the_main)
 
-loop.run()
+
+def do_stuff():
+	loop.run()
+
+do_stuff()
+
+import os
+
+print("go away")
+os._exit(1)
+
