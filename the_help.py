@@ -26,8 +26,18 @@ The primary means of editing note data is by using the computer's keyboard. Most
 Here's a list of the key global key bindings (note that uppercase characters imply pressing shift):
 
 """)
+	
 	for item in options["global_keys"]:
 		text.append(item[0] + ": " + item[1] + "\n")
+
+	text.append("""
+The key bindings for midi tracks:
+
+""")
+	
+	for item in options["midi_track_keys"]:
+		text.append(item[0] + ": " + item[1] + "\n")
+
 
 	text.append("""
 To enter a note press on of the following keys (the numbers indicate the interval (in semitones) above the note_edit_base.:
