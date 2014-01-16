@@ -2,30 +2,9 @@
 
 An ncurses/terminal based midi and CV signal tracker/sequencer.
 
-# TODOs
+# Status
 
-This project is not in a usable state yet. Here's some of the key TODOs (those done are marked [check]):
-
-* Midi note insertion, deletion [check]
-* Undo infrastructure [check]
-* Redo infrastructure [check]
-* Main view [check 50%]
-* Menu infrastructure [check]
-* Input handling infrastructure [check]
-* Changing midi event parameters for editing (base octave, velocity) [check]
-* Song saving/loading
-* Selection of sequence data
-* Copy and paste for selection
-* Copy and paste for patterns
-* Muting patterns/sequences infrastructure
-* Muting patterns/sequences via UI
-* jack transport 
-* Editing of control and cv events
-* Loop support infrastructure [check]
-* Editing loop start/end
-* Display loop range
-* Loading options overridden by the user
-* Bounds checking for all kinds of stuff (base note, edit velocity, etc)
+This project is not in a usable state yet. Check the issue tracker for open problems :D
 
 # Requirements
 
