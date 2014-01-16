@@ -163,6 +163,7 @@ class main(urwid.Widget):
 				raise e
 			except Exception as e:
 				args[0].display_text(str(e) + "\n" + traceback.format_exc())
+				args[0].exit_menu()
 		return g
 	
 	@handle_error
