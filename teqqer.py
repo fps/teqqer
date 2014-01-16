@@ -3,6 +3,7 @@ import urwid
 import math
 import random
 import json
+import traceback
 
 import teq
 import pyteq
@@ -160,7 +161,7 @@ class main(urwid.Widget):
 			try:
 				return f(*args, **kwargs)
 			except Exception as e:
-				args[0].display_text(str(e))
+				args[0].display_text(str(e) + "\n" + traceback.format_exc())
 		return g
 	
 	@handle_error
@@ -800,6 +801,7 @@ class main(urwid.Widget):
 
 		return t
 	
+	@handle_error
 	def save(self):
 		if self.info == None:
 			# TODO: display warning
@@ -866,7 +868,8 @@ class main(urwid.Widget):
 		
 		json_object["patterns"] = patterns_json_object
 		
-		self.display_text(json.dumps(json_object, indent=4, separators=(',', ': ')))
+		with open(sys.argv[1], "w") as textfile:
+			textfile.write(json.dumps(json_object, indent=4, separators=(',', ': ')))
 
 teq_engine = teq.teq()
 
