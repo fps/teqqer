@@ -100,6 +100,9 @@ options = {
 
 		["home", "move one event up", lambda x: x.move_to_pattern_top()],
 		["end", "move one event down", lambda x: x.move_to_pattern_end()],
+		
+		["L", "set loop start", lambda x: x.set_loop_start()],
+		[":", "set loop end", lambda x: x.set_loop_end()],
 	],
 	
 	"midi_track_keys": [

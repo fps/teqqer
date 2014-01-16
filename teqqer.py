@@ -159,6 +159,8 @@ class main(urwid.Widget):
 		def g(*args, **kwargs):
 			try:
 				return f(*args, **kwargs)
+			except urwid.ExitMainLoop as e:
+				raise e
 			except Exception as e:
 				args[0].display_text(str(e) + "\n" + traceback.format_exc())
 		return g
@@ -301,6 +303,28 @@ class main(urwid.Widget):
 		pass
 
 	@handle_error
+	def set_loop_start(self):
+		if not self.info:
+			return
+		
+		loop_range = self.info.loop_range
+		loop_range.start.pattern = self.cursor_pattern
+		loop_range.start.tick = self.cursor_tick
+		
+		self.teq_engine.set_loop_range(loop_range)
+
+	@handle_error
+	def set_loop_end(self):
+		if not self.info:
+			return
+		
+		loop_range = self.info.loop_range
+		loop_range.end.pattern = self.cursor_pattern
+		loop_range.end.tick = self.cursor_tick
+		
+		self.teq_engine.set_loop_range(loop_range)
+
+	@handle_error
 	def move_to_pattern_top(self):
 		self.cursor_tick = 0
 	
@@ -373,7 +397,7 @@ class main(urwid.Widget):
 				self._invalidate()
 				return True
 	
-	#@handle_error
+	@handle_error
 	def keypress(self,  size,  key):
 		# The menu MUST be processed first. This way even
 		# submenu entries without modifiers get priority.
@@ -993,7 +1017,7 @@ def test_state():
 	pyteq.set_transport_position(teq_engine,  0,  0)
 	pyteq.set_loop_range(teq_engine,  0,  8,  0,  16,  True)
 
-# test_state()
+#test_state()
 	
 
 # TODO: merge in user options
@@ -1018,8 +1042,9 @@ def do_stuff():
 
 do_stuff()
 
-import os
+if 1 == 0:
+	import os
 
-print("go away")
-os._exit(1)
+	print("go away")
+	os._exit(1)
 
