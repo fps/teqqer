@@ -76,6 +76,8 @@ class PopUpLauncherThing(urwid.PopUpLauncher):
 		
 		self.the_original = original
 		
+		original.popup_launcher = self
+		
 		urwid.connect_signal(original, 'popup_about', lambda x: self.popup_about())
 		urwid.connect_signal(original, 'popup_license', lambda x: self.popup_license())
 		urwid.connect_signal(original, 'popup_help', lambda x: self.popup_help())
@@ -107,7 +109,14 @@ class PopUpLauncherThing(urwid.PopUpLauncher):
 		
 		self.open_pop_up()
 
-	def popup_text_entry(self, text):
+	def popup_text(self, text):
+		self.popup_widget = TextPopup(("medium", "Press esc to leave this screen\n\n" + text))
+		
+		urwid.connect_signal(self.popup_widget, 'close', lambda x: self.close_pop_up())
+		
+		self.popup_parameters = {'left':0, 'top':0, 'overlay_width':200, 'overlay_height':200}
+		
+		self.open_pop_up()
 		pass
 
 	def get_pop_up_parameters(self):
@@ -120,7 +129,7 @@ class PopUpLauncherThing(urwid.PopUpLauncher):
 class main(urwid.Widget):
 	def __init__(self,  teq_engine,  options):
 		self.__super.__init__()
-				
+		
 		urwid.register_signal(main, ['popup_about', 'popup_license', 'popup_help'])
 		
 		self.options = options
@@ -143,7 +152,20 @@ class main(urwid.Widget):
 		for menu in self.current_menu:
 			self.fixup_menu(menu)
 	
+	def display_text(self, text):
+		self.popup_launcher.popup_text(text)
+	
+	def handle_error(f):
+		def g(*args, **kwargs):
+			try:
+				return f(*args, **kwargs)
+			except Exception as e:
+				args[0].display_text(str(e))
+		return g
+	
+	@handle_error
 	def evaluate(self):
+		raise Error()
 		pass
 	
 	def evaluate_string(self, string):
@@ -160,7 +182,6 @@ class main(urwid.Widget):
 			self.fixup_menu(submenu)
 
 		menu[3].append(["root", "x", lambda x: x.exit_menu(), []])
-		
 	
 	def change_menu(self, menu):
 		self.current_menu = menu
@@ -780,7 +801,72 @@ class main(urwid.Widget):
 		return t
 	
 	def save(self):
-		pass
+		if self.info == None:
+			# TODO: display warning
+			return
+		
+		loop_range = self
+		json_object = {
+			"global-tempo": self.teq_engine.get_global_tempo(),
+			
+			"loop-range-start-pattern": self.info.loop_range.start.pattern,
+			"loop-range-start-tick": self.info.loop_range.start.tick,
+			"loop-range-end-pattern": self.info.loop_range.end.pattern,
+			"loop-range-end-tick": self.info.loop_range.end.tick,
+			
+			"cursor-position-pattern": self.cursor_pattern,
+			"cursor-position-tick": self.cursor_tick,
+		}
+		
+		tracks_json_object = []
+		for n in xrange(self.teq_engine.number_of_tracks()):
+			track_type_name = ""
+			if teq_engine.track_type(n) == teq.track_type.MIDI:
+				track_type_name = "MIDI"
+			if teq_engine.track_type(n) == teq.track_type.CV:
+				track_type_name = "CV"
+			if teq_engine.track_type(n) == teq.track_type.CONTROL:
+				track_type_name = "CONTROL"
+			tracks_json_object.append({ "name": self.teq_engine.track_name(n), "type": track_type_name})
+			
+		json_object["tracks"] = tracks_json_object
+		
+		patterns_json_object = []
+		for n in xrange(self.teq_engine.number_of_patterns()):
+			pattern_json_object = []
+			pattern = self.teq_engine.get_pattern(n)
+			for m in xrange(self.teq_engine.number_of_tracks()):
+				track_json_object = []
+				for tick in xrange(pattern.length()):
+					if self.teq_engine.track_type(m) == teq.track_type.MIDI:
+						event = pattern.get_midi_event(m, tick)
+						if event.type == teq.midi_event_type.ON:
+							track_json_object.append([tick, "ON", event.value1, event.value2])
+						if event.type == teq.midi_event_type.OFF:
+							track_json_object.append([tick, "OFF", event.value1, event.value2])
+						if event.type == teq.midi_event_type.CC:
+							track_json_object.append([tick, "CC", event.value1, event.value2])
+							
+					if self.teq_engine.track_type(m) == teq.track_type.CONTROL:
+						event = pattern.get_control_event(m, tick)
+						if event.type == teq.control_event_type.GLOBAL_TEMPO:
+							track_json_object.append([tick, "GLOBAL_TEMPO", event.value])
+						if event.type == teq.control_event_type.RELATIVE_TEMPO:
+							track_json_object.append([tick, "RELATIVE_TEMPO", event.value])
+							
+					if self.teq_engine.track_type(m) == teq.track_type.CV:
+						event = pattern.get_cv_event(m, tick)
+						if event.type == teq.cv_event_type.CONSTANT:
+							track_json_object.append([tick, "CONSTANT", event.value1, event.value2])
+						if event.type == teq.cv_event_type.INTERVAL:
+							track_json_object.append([tick, "INTERVAL", event.value1, event.value2])
+							
+				pattern_json_object.append(track_json_object)
+			patterns_json_object.append(pattern_json_object)
+		
+		json_object["patterns"] = patterns_json_object
+		
+		self.display_text(json.dumps(json_object, indent=4, separators=(',', ': ')))
 
 teq_engine = teq.teq()
 
