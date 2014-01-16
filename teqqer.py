@@ -156,9 +156,6 @@ class main(urwid.Widget):
 			
 		self.load()
 	
-	def display_text(self, text):
-		self.popup_launcher.popup_text(text)
-	
 	def handle_error(f):
 		def g(*args, **kwargs):
 			try:
@@ -168,10 +165,15 @@ class main(urwid.Widget):
 		return g
 	
 	@handle_error
+	def display_text(self, text):
+		self.popup_launcher.popup_text(text)
+	
+	@handle_error
 	def evaluate(self):
 		raise Error()
 		pass
 	
+	@handle_error
 	def evaluate_string(self, string):
 		self._emit("popup_help")
 	
@@ -187,15 +189,19 @@ class main(urwid.Widget):
 
 		menu[3].append(["root", "x", lambda x: x.exit_menu(), []])
 	
+	@handle_error
 	def change_menu(self, menu):
 		self.current_menu = menu
 	
+	@handle_error
 	def exit_menu(self):
 		self.current_menu = self.options["menu"]
 	
+	@handle_error
 	def undo(self):
 		self.history.undo()
 	
+	@handle_error
 	def redo(self):
 		self.history.redo()
 	
@@ -233,19 +239,24 @@ class main(urwid.Widget):
 				
 				self._invalidate()
 	
+	@handle_error
 	def change_tempo(self, amount):
 		self.teq_engine.set_global_tempo(self.teq_engine.get_global_tempo() + amount)
 	
+	@handle_error
 	def change_note_edit_base(self, amount):
 		self.options["note_edit_base"] += amount
 	
+	@handle_error
 	def change_note_velocity(self, amount):
 		self.options["note_edit_velocity"] += amount
 	
+	@handle_error
 	def change_edit_step(self, amount):
 		self.options["edit_step"] += amount
 	
 	# Only the sign of amount is important
+	@handle_error
 	def change_cursor_tick_by_one(self, amount):
 		if 0 == amount:
 			return
@@ -276,25 +287,30 @@ class main(urwid.Widget):
 				if self.cursor_pattern >= self.teq_engine.number_of_patterns():
 					self.cursor_pattern = 0
 	
+	@handle_error
 	def change_cursor_tick(self, amount):
 		for n in xrange(abs(amount)):
 			self.change_cursor_tick_by_one(amount)
 		
-	
+	@handle_error
 	def change_cursor_track(self, amount):
 		self.cursor_track += amount
 		self.cursor_track = self.cursor_track % self.teq_engine.number_of_tracks()
 	
+	@handle_error
 	def change_cursor_pattern(self, amount):
 		pass
 
+	@handle_error
 	def move_to_pattern_top(self):
 		self.cursor_tick = 0
-		
+	
+	@handle_error
 	def move_to_pattern_end(self):
 		pattern = self.teq_engine.get_pattern(self.cursor_pattern)
 		self.cursor_tick = pattern.length() - 1
 	
+	@handle_error
 	def delete_event(self):
 		if False == self.edit_mode:
 			return
@@ -302,17 +318,19 @@ class main(urwid.Widget):
 		self.set_midi_event_action(self.cursor_track, self.cursor_pattern, self.cursor_tick, teq.midi_event_type.NONE, 0, 127)
 		self._invalidate()
 		return	
-		
+	
 	def show_help(self):
 		pass
 	
 	def quit(self):
 		raise urwid.ExitMainLoop()
 	
+	@handle_error
 	def toggle_edit_mode(self):
 		self.edit_mode = not self.edit_mode
 		self._invalidate()
 	
+	@handle_error
 	def toggle_playback(self):
 		if self.info == None:
 			print(":(")
@@ -329,13 +347,14 @@ class main(urwid.Widget):
 	def selectable(self):
 		return True
 	
+	@handle_error
 	def set_midi_event(self, track_index, pattern_index, tick_index, event_type, value1, value2):
 		pattern = self.teq_engine.get_pattern(pattern_index)
 		pattern.set_midi_event(track_index, tick_index, teq.midi_event(event_type, value1, value2))
 		self.teq_engine.set_pattern(self.cursor_pattern, pattern)
 		self.teq_engine.gc()
 		
-	
+	@handle_error
 	def set_midi_event_action(self, track_index, pattern_index, tick_index, event_type, value1, value2):
 		pattern = self.teq_engine.get_pattern(pattern_index)
 		event = pattern.get_midi_event(track_index, tick_index)
@@ -344,6 +363,7 @@ class main(urwid.Widget):
 			lambda: self.set_midi_event(track_index, pattern_index, tick_index, event.type, event.value1, event.value2)
 		)
 	
+	@handle_error
 	def mouse_event(self,  size,  event,  button,  col,  row,  focus):
 		if self.teq_engine.number_of_patterns() == 0:
 			return 
@@ -508,6 +528,7 @@ class main(urwid.Widget):
 
 		return (''.join(text),  attr)
 	
+	@handle_error
 	def cursor_pattern_in_loop_range(self, cursor_pattern):
 		if self.info == None:
 			return False
@@ -517,6 +538,7 @@ class main(urwid.Widget):
 
 		return False
 	
+	@handle_error
 	def cursor_in_loop_range(self, cursor_pattern, cursor_tick):
 		if self.info == None:
 			return False
@@ -850,7 +872,7 @@ class main(urwid.Widget):
 									new_pattern.set_cv_event(int(track), int(event[0]), teq.control_event(teq.cv_event_type.CONSTANT, event[2], event[3]))
 								
 					self.teq_engine.insert_pattern(self.teq_engine.number_of_patterns(), new_pattern)
-		except IOError as e:
+		except Exception as e:
 			print(str(e))
 			
 	@handle_error
@@ -891,7 +913,7 @@ class main(urwid.Widget):
 		for n in xrange(self.teq_engine.number_of_patterns()):
 			pattern_json_object = []
 			pattern = self.teq_engine.get_pattern(n)
-			pattern_json_object.append(pattern.length)
+			pattern_json_object.append(pattern.length())
 			for m in xrange(self.teq_engine.number_of_tracks()):
 				track_json_object = []
 				for tick in xrange(pattern.length()):
@@ -969,8 +991,7 @@ def test_state():
 	pyteq.set_transport_position(teq_engine,  0,  0)
 	pyteq.set_loop_range(teq_engine,  0,  8,  0,  16,  True)
 
-if 0 == 1:
-	test_state()
+#test_state()
 	
 
 # TODO: merge in user options
