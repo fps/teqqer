@@ -971,52 +971,56 @@ class main(urwid.Widget):
 		with open(self.filename, "w") as textfile:
 			textfile.write(json.dumps(json_object, indent=4, separators=(',', ': ')))
 
-def test_state():
-	teq_engine.insert_control_track("control",  teq_engine.number_of_tracks())
-	teq_engine.insert_midi_track("bd",  teq_engine.number_of_tracks())
-	teq_engine.insert_midi_track("snare",  teq_engine.number_of_tracks())
-	if 1 == 1:
-		teq_engine.insert_midi_track("bd2",  teq_engine.number_of_tracks())
-		teq_engine.insert_midi_track("snare2",  teq_engine.number_of_tracks())
-		teq_engine.insert_cv_track("cv",  teq_engine.number_of_tracks())
-		teq_engine.insert_midi_track("bd3",  teq_engine.number_of_tracks())
-		teq_engine.insert_midi_track("snare3",  teq_engine.number_of_tracks())
-		teq_engine.insert_midi_track("bd4",  teq_engine.number_of_tracks())
-		teq_engine.insert_midi_track("snare4",  teq_engine.number_of_tracks())
+#def test_state():
+	#teq_engine.insert_control_track("control",  teq_engine.number_of_tracks())
+	#teq_engine.insert_midi_track("bd",  teq_engine.number_of_tracks())
+	#teq_engine.insert_midi_track("snare",  teq_engine.number_of_tracks())
+	#if 1 == 1:
+		#teq_engine.insert_midi_track("bd2",  teq_engine.number_of_tracks())
+		#teq_engine.insert_midi_track("snare2",  teq_engine.number_of_tracks())
+		#teq_engine.insert_cv_track("cv",  teq_engine.number_of_tracks())
+		#teq_engine.insert_midi_track("bd3",  teq_engine.number_of_tracks())
+		#teq_engine.insert_midi_track("snare3",  teq_engine.number_of_tracks())
+		#teq_engine.insert_midi_track("bd4",  teq_engine.number_of_tracks())
+		#teq_engine.insert_midi_track("snare4",  teq_engine.number_of_tracks())
 
-	for n in xrange(4):
-		p = teq_engine.create_pattern(32)
-		p.name = "part" + str(n)
-		p.set_midi_event(1,  0,  teq.midi_event(teq.midi_event_type.ON,  63,  127))
-		p.set_midi_event(1,  4,  teq.midi_event(teq.midi_event_type.OFF,  60,  127))
-		p.set_midi_event(1,  2,  teq.midi_event(teq.midi_event_type.CC,  60,  127))
-		p.set_control_event(0, 0, teq.control_event(teq.control_event_type.GLOBAL_TEMPO, 8))
-		teq_engine.insert_pattern(teq_engine.number_of_patterns(),  p)
+	#for n in xrange(4):
+		#p = teq_engine.create_pattern(32)
+		#p.name = "part" + str(n)
+		#p.set_midi_event(1,  0,  teq.midi_event(teq.midi_event_type.ON,  63,  127))
+		#p.set_midi_event(1,  4,  teq.midi_event(teq.midi_event_type.OFF,  60,  127))
+		#p.set_midi_event(1,  2,  teq.midi_event(teq.midi_event_type.CC,  60,  127))
+		#p.set_control_event(0, 0, teq.control_event(teq.control_event_type.GLOBAL_TEMPO, 8))
+		#teq_engine.insert_pattern(teq_engine.number_of_patterns(),  p)
 
-		p = teq_engine.create_pattern(32)
-		p.set_midi_event(1,  0,  teq.midi_event(teq.midi_event_type.ON,  60,  127))
-		p.set_midi_event(1,  4,  teq.midi_event(teq.midi_event_type.OFF,  62,  127))
-		teq_engine.insert_pattern(teq_engine.number_of_patterns(),  p)
+		#p = teq_engine.create_pattern(32)
+		#p.set_midi_event(1,  0,  teq.midi_event(teq.midi_event_type.ON,  60,  127))
+		#p.set_midi_event(1,  4,  teq.midi_event(teq.midi_event_type.OFF,  62,  127))
+		#teq_engine.insert_pattern(teq_engine.number_of_patterns(),  p)
 
-		p = teq_engine.create_pattern(32)
-		p.set_midi_event(1,  0,  teq.midi_event(teq.midi_event_type.ON,  60,  127))
-		p.set_midi_event(1,  4,  teq.midi_event(teq.midi_event_type.OFF,  62,  127))
-		teq_engine.insert_pattern(teq_engine.number_of_patterns(),  p)
+		#p = teq_engine.create_pattern(32)
+		#p.set_midi_event(1,  0,  teq.midi_event(teq.midi_event_type.ON,  60,  127))
+		#p.set_midi_event(1,  4,  teq.midi_event(teq.midi_event_type.OFF,  62,  127))
+		#teq_engine.insert_pattern(teq_engine.number_of_patterns(),  p)
 
-		p = teq_engine.create_pattern(32)
-		p.set_midi_event(1,  0,  teq.midi_event(teq.midi_event_type.ON,  60,  127))
-		p.set_midi_event(1,  4,  teq.midi_event(teq.midi_event_type.OFF,  62,  127))
-		teq_engine.insert_pattern(teq_engine.number_of_patterns(),  p)
+		#p = teq_engine.create_pattern(32)
+		#p.set_midi_event(1,  0,  teq.midi_event(teq.midi_event_type.ON,  60,  127))
+		#p.set_midi_event(1,  4,  teq.midi_event(teq.midi_event_type.OFF,  62,  127))
+		#teq_engine.insert_pattern(teq_engine.number_of_patterns(),  p)
 
-	teq_engine.set_global_tempo(16)
-	pyteq.set_transport_position(teq_engine,  0,  0)
-	pyteq.set_loop_range(teq_engine,  0,  8,  0,  16,  True)
+	#teq_engine.set_global_tempo(16)
+	#pyteq.set_transport_position(teq_engine,  0,  0)
+	#pyteq.set_loop_range(teq_engine,  0,  8,  0,  16,  True)
 
 #test_state()
 	
 
 # TODO: merge in user options
 options = default_options.options
+
+teq_engine = teq.teq()
+
+the_main = main(teq_engine,  options, sys.argv[1])
 
 def handle_alarm(main_loop,  the_main):
 	#print("alarm")
@@ -1025,10 +1029,6 @@ def handle_alarm(main_loop,  the_main):
 
 
 def do_stuff():
-	teq_engine = teq.teq()
-
-	the_main = main(teq_engine,  options, sys.argv[1])
-
 	popup_launcher = PopUpLauncherThing(the_main)
 
 	loop = urwid.MainLoop(popup_launcher,  options["palette"], pop_ups=True)
