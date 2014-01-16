@@ -805,50 +805,53 @@ class main(urwid.Widget):
 		return t
 	
 	def load(self):
-		print("loading " + self.filename)
-		with open(self.filename, "r") as textfile:
-			text = textfile.read()
-			json_object = json.loads(text)
-			
-			for track in json_object["tracks"]:
-				if track["type"] == "CONTROL":
-					self.teq_engine.insert_control_track(str(track["name"]), self.teq_engine.number_of_tracks())
-				if track["type"] == "CV":
-					self.teq_engine.insert_cv_track(str(track["name"]), self.teq_engine.number_of_tracks())
-				if track["type"] == "MIDI":
-					self.teq_engine.insert_midi_track(str(track["name"]), self.teq_engine.number_of_tracks())
-	
-			pyteq.set_loop_range(self.teq_engine, json_object["loop-range-start-pattern"], json_object["loop-range-start-tick"], json_object["loop-range-end-pattern"], json_object["loop-range-end-tick"], json_object["loop-range-enabled"])
-			
-			self.cursor_pattern = json_object["cursor-position-pattern"]
-			self.cursor_tick = json_object["cursor-position-tick"]
-			self.cursor_track = json_object["cursor-position-track"]
-			
-			for pattern in json_object["patterns"]:
-				new_pattern = self.teq_engine.create_pattern(int(pattern[0]))
-				for track in xrange(self.teq_engine.number_of_tracks()):
-					for event in pattern[track + 1]:
-						if self.teq_engine.track_type(track) == teq.track_type.MIDI:
-							if event[1] == "ON":
-								new_pattern.set_midi_event(int(track), int(event[0]), teq.midi_event(teq.midi_event_type.ON, event[2], event[3]))
-							if event[1] == "OFF":
-								new_pattern.set_midi_event(int(track), int(event[0]), teq.midi_event(teq.midi_event_type.OFF, event[2], event[3]))
-							if event[1] == "CC":
-								new_pattern.set_midi_event(int(track), int(event[0]), teq.midi_event(teq.midi_event_type.CC, event[2], event[3]))
+		try:
+			print("loading " + self.filename)
+			with open(self.filename, "r") as textfile:
+				text = textfile.read()
+				json_object = json.loads(text)
+				
+				for track in json_object["tracks"]:
+					if track["type"] == "CONTROL":
+						self.teq_engine.insert_control_track(str(track["name"]), self.teq_engine.number_of_tracks())
+					if track["type"] == "CV":
+						self.teq_engine.insert_cv_track(str(track["name"]), self.teq_engine.number_of_tracks())
+					if track["type"] == "MIDI":
+						self.teq_engine.insert_midi_track(str(track["name"]), self.teq_engine.number_of_tracks())
+		
+				pyteq.set_loop_range(self.teq_engine, json_object["loop-range-start-pattern"], json_object["loop-range-start-tick"], json_object["loop-range-end-pattern"], json_object["loop-range-end-tick"], json_object["loop-range-enabled"])
+				
+				self.cursor_pattern = json_object["cursor-position-pattern"]
+				self.cursor_tick = json_object["cursor-position-tick"]
+				self.cursor_track = json_object["cursor-position-track"]
+				
+				for pattern in json_object["patterns"]:
+					new_pattern = self.teq_engine.create_pattern(int(pattern[0]))
+					for track in xrange(self.teq_engine.number_of_tracks()):
+						for event in pattern[track + 1]:
+							if self.teq_engine.track_type(track) == teq.track_type.MIDI:
+								if event[1] == "ON":
+									new_pattern.set_midi_event(int(track), int(event[0]), teq.midi_event(teq.midi_event_type.ON, event[2], event[3]))
+								if event[1] == "OFF":
+									new_pattern.set_midi_event(int(track), int(event[0]), teq.midi_event(teq.midi_event_type.OFF, event[2], event[3]))
+								if event[1] == "CC":
+									new_pattern.set_midi_event(int(track), int(event[0]), teq.midi_event(teq.midi_event_type.CC, event[2], event[3]))
 
-						if self.teq_engine.track_type(track) == teq.track_type.CONTROL:
-							if event[1] == "GLOBAL_TEMPO":
-								new_pattern.set_control_event(int(track), int(event[0]), teq.control_event(teq.control_event_type.GLOBAL_TEMPO, event[2]))
-							if event[1] == "RELATIVE_TEMPO":
-								new_pattern.set_control_event(int(track), int(event[0]), teq.control_event(teq.control_event_type.RELATIVE_TEMPO, event[2]))
+							if self.teq_engine.track_type(track) == teq.track_type.CONTROL:
+								if event[1] == "GLOBAL_TEMPO":
+									new_pattern.set_control_event(int(track), int(event[0]), teq.control_event(teq.control_event_type.GLOBAL_TEMPO, event[2]))
+								if event[1] == "RELATIVE_TEMPO":
+									new_pattern.set_control_event(int(track), int(event[0]), teq.control_event(teq.control_event_type.RELATIVE_TEMPO, event[2]))
+									
+							if self.teq_engine.track_type(track) == teq.track_type.CV:
+								if event[1] == "INTERVAL":
+									new_pattern.set_cv_event(int(track), int(event[0]), teq.control_event(teq.cv_event_type.INTERVAL, event[2], event[3]))
+								if event[1] == "CONSTANT":
+									new_pattern.set_cv_event(int(track), int(event[0]), teq.control_event(teq.cv_event_type.CONSTANT, event[2], event[3]))
 								
-						if self.teq_engine.track_type(track) == teq.track_type.CV:
-							if event[1] == "INTERVAL":
-								new_pattern.set_cv_event(int(track), int(event[0]), teq.control_event(teq.cv_event_type.INTERVAL, event[2], event[3]))
-							if event[1] == "CONSTANT":
-								new_pattern.set_cv_event(int(track), int(event[0]), teq.control_event(teq.cv_event_type.CONSTANT, event[2], event[3]))
-							
-				self.teq_engine.insert_pattern(self.teq_engine.number_of_patterns(), new_pattern)
+					self.teq_engine.insert_pattern(self.teq_engine.number_of_patterns(), new_pattern)
+		except IOError as e:
+			print(str(e))
 			
 	@handle_error
 	def save(self):
