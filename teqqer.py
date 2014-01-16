@@ -558,6 +558,9 @@ class main(urwid.Widget):
 		if self.info == None:
 			return False
 		
+		if cursor_pattern == self.info.loop_range.end.pattern and self.info.loop_range.end.tick == 0:
+			return False
+		
 		if cursor_pattern >= self.info.loop_range.start.pattern and cursor_pattern <= self.info.loop_range.end.pattern:
 			return True
 
@@ -572,21 +575,14 @@ class main(urwid.Widget):
 			return False
 		
 		if cursor_pattern == self.info.loop_range.start.pattern:
-			if cursor_tick >= self.info.loop_range.start.tick:
-				return True
-			else:
+			if cursor_tick < self.info.loop_range.start.tick:
 				return False
 			
 		if cursor_pattern == self.info.loop_range.end.pattern:
-			if cursor_tick < self.info.loop_range.end.tick:
-				return True
-			else:
+			if cursor_tick >= self.info.loop_range.end.tick:
 				return False
 
-		if cursor_pattern > self.info.loop_range.start.pattern and cursor_pattern <= self.info.loop_range.end.pattern:
-			return True
-
-		return False
+		return True
 	
 	def render_pattern(self):
 		pattern = self.teq_engine.get_pattern(self.cursor_pattern)
@@ -975,8 +971,6 @@ class main(urwid.Widget):
 		with open(self.filename, "w") as textfile:
 			textfile.write(json.dumps(json_object, indent=4, separators=(',', ': ')))
 
-teq_engine = teq.teq()
-
 def test_state():
 	teq_engine.insert_control_track("control",  teq_engine.number_of_tracks())
 	teq_engine.insert_midi_track("bd",  teq_engine.number_of_tracks())
@@ -1029,16 +1023,18 @@ def handle_alarm(main_loop,  the_main):
 	the_main.get_state_info_and_update()
 	main_loop.set_alarm_in(the_main.options["ui_update_interval"] - random.random() * 0.5 * the_main.options["ui_update_interval"],  handle_alarm,  the_main)
 
-the_main = main(teq_engine,  options, sys.argv[1])
-
-popup_launcher = PopUpLauncherThing(the_main)
-
-loop = urwid.MainLoop(popup_launcher,  options["palette"], pop_ups=True)
-
-loop.set_alarm_in(the_main.options["ui_update_interval"],  handle_alarm,  the_main)
-
 
 def do_stuff():
+	teq_engine = teq.teq()
+
+	the_main = main(teq_engine,  options, sys.argv[1])
+
+	popup_launcher = PopUpLauncherThing(the_main)
+
+	loop = urwid.MainLoop(popup_launcher,  options["palette"], pop_ups=True)
+
+	loop.set_alarm_in(the_main.options["ui_update_interval"],  handle_alarm,  the_main)
+
 	loop.run()
 
 do_stuff()
