@@ -848,9 +848,10 @@ class main(urwid.Widget):
 				self.cursor_track = json_object["cursor-position-track"]
 				
 				for pattern in json_object["patterns"]:
-					new_pattern = self.teq_engine.create_pattern(int(pattern[0]))
+					new_pattern = self.teq_engine.create_pattern(int(pattern[1]))
+					new_pattern.name = str(pattern[0])
 					for track in xrange(self.teq_engine.number_of_tracks()):
-						for event in pattern[track + 1]:
+						for event in pattern[track + 2]:
 							if self.teq_engine.track_type(track) == teq.track_type.MIDI:
 								if event[1] == "ON":
 									new_pattern.set_midi_event(int(track), int(event[0]), teq.midi_event(teq.midi_event_type.ON, event[2], event[3]))
@@ -913,6 +914,7 @@ class main(urwid.Widget):
 		for n in xrange(self.teq_engine.number_of_patterns()):
 			pattern_json_object = []
 			pattern = self.teq_engine.get_pattern(n)
+			pattern_json_object.append(pattern.name)
 			pattern_json_object.append(pattern.length())
 			for m in xrange(self.teq_engine.number_of_tracks()):
 				track_json_object = []
@@ -991,7 +993,7 @@ def test_state():
 	pyteq.set_transport_position(teq_engine,  0,  0)
 	pyteq.set_loop_range(teq_engine,  0,  8,  0,  16,  True)
 
-#test_state()
+# test_state()
 	
 
 # TODO: merge in user options
