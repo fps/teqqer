@@ -1,5 +1,5 @@
 {
-    "cursor-position-tick": 11,
+    "cursor-position-tick": 14,
     "loop-range-start-pattern": 0,
     "loop-range-end-tick": 16,
     "tracks": [
@@ -44,7 +44,7 @@
             "name": "snare4"
         }
     ],
-    "cursor-position-track": 7,
+    "cursor-position-track": 6,
     "loop-range-enabled": true,
     "loop-range-start-tick": 0,
     "loop-range-end-pattern": 0,
@@ -165,6 +165,18 @@
                     0,
                     "ON",
                     36,
+                    127
+                ],
+                [
+                    6,
+                    "ON",
+                    36,
+                    127
+                ],
+                [
+                    8,
+                    "ON",
+                    37,
                     127
                 ],
                 [
