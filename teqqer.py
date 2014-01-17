@@ -66,10 +66,26 @@ class TextPopup(urwid.WidgetWrap):
 	def keypress(self, size, key):
 		if key == 'esc':
 			self._emit('close')
-			return
+			return True
 		
 		self._w.keypress(size, key)
+
+class EditWithEnter(urwid.WidgetWrap):
+	def __init__(self, question):
+		self.history = []
+		self.edit = urwid.Edit(question)
+		help_list_box = urwid.ListBox(urwid.SimpleListWalker([self.edit]))
 		
+		self.__super.__init__(help_list_box)
+		urwid.register_signal(EditWithEnter, 'enter')
+
+	def keypress(self, size, key):
+		if key == 'enter':
+			self._emit('enter')
+			return True
+		
+		self._w.keypress(size, key)
+
 class PopUpLauncherThing(urwid.PopUpLauncher):
 	def __init__(self, original):
 		self.__super.__init__(original)
@@ -119,6 +135,17 @@ class PopUpLauncherThing(urwid.PopUpLauncher):
 		self.open_pop_up()
 		pass
 
+	def popup_line_entry(self, question, popup_parameters, callback):
+		self.callback = callback
+		self.popup_widget = EditWithEnter(question)
+		urwid.connect_signal(self.popup_widget, 'enter', lambda x: self.close_pop_up_line_entry())
+		self.popup_parameters = popup_parameters
+		self.open_pop_up()
+
+	def close_pop_up_line_entry(self):
+		self.callback()
+		self.close_pop_up()
+
 	def get_pop_up_parameters(self):
 		return self.popup_parameters
 	
@@ -131,6 +158,8 @@ class main(urwid.Widget):
 		self.__super.__init__()
 		
 		urwid.register_signal(main, ['popup_about', 'popup_license', 'popup_help'])
+		
+		self.popup_parameters = None
 		
 		self.filename = filename
 		self.options = options
@@ -172,12 +201,11 @@ class main(urwid.Widget):
 	
 	@handle_error
 	def evaluate(self):
-		raise Error()
-		pass
+		self.popup_launcher.popup_line_entry("Expression: ", {'left':0, 'top':0, 'overlay_width':200, 'overlay_height':1}, lambda: self.evaluate_string(self.popup_launcher.popup_widget.edit.edit_text))
 	
 	@handle_error
 	def evaluate_string(self, string):
-		self._emit("popup_help")
+		self.display_text(string)
 	
 	def fixup_menu(self, menu):
 		# print ("fixing up", menu)
