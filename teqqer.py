@@ -260,6 +260,12 @@ class main(urwid.Widget):
 	# Only the sign of amount is important
 	@handle_error
 	def change_cursor_tick_by_one(self, amount):
+		if not self.info:
+			return
+		
+		if self.info.transport_state == teq.transport_state.PLAYING:
+			return
+		
 		if 0 == amount:
 			return
 		
@@ -301,7 +307,12 @@ class main(urwid.Widget):
 	
 	@handle_error
 	def change_cursor_pattern(self, amount):
-		pass
+		if self.teq_engine.number_of_patterns() == 0:
+			return
+		
+		self.cursor_pattern += amount
+		
+		self.cursor_pattern = self.cursor_pattern % self.teq_engine.number_of_patterns()
 
 	@handle_error
 	def set_loop_start(self):

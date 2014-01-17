@@ -98,8 +98,8 @@ options = {
 		[">", "increase global tempo", lambda x: x.change_tempo(1.0/8.0)],
 		["<", "decrease global tempo", lambda x: x.change_tempo(-1.0/8.0)],
 
-		["home", "move one event up", lambda x: x.move_to_pattern_top()],
-		["end", "move one event down", lambda x: x.move_to_pattern_end()],
+		["home", "move cursor to the top of the paatern", lambda x: x.move_to_pattern_top()],
+		["end", "move cursor to the bottom of the paatern", lambda x: x.move_to_pattern_end()],
 		
 		["L", "set loop start", lambda x: x.set_loop_start()],
 		[":", "set loop end", lambda x: x.set_loop_end()],
