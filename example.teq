@@ -1,5 +1,5 @@
 {
-    "cursor-position-tick": 13,
+    "cursor-position-tick": 11,
     "loop-range-start-pattern": 0,
     "loop-range-end-tick": 16,
     "tracks": [
@@ -44,9 +44,9 @@
             "name": "snare4"
         }
     ],
-    "cursor-position-track": 0,
+    "cursor-position-track": 7,
     "loop-range-enabled": true,
-    "loop-range-start-tick": 2,
+    "loop-range-start-tick": 0,
     "loop-range-end-pattern": 0,
     "cursor-position-pattern": 0,
     "global-tempo": 8.0,
@@ -81,12 +81,131 @@
                     127
                 ]
             ],
+            [
+                [
+                    0,
+                    "ON",
+                    48,
+                    127
+                ],
+                [
+                    4,
+                    "OFF",
+                    0,
+                    127
+                ]
+            ],
+            [
+                [
+                    0,
+                    "ON",
+                    55,
+                    127
+                ],
+                [
+                    4,
+                    "OFF",
+                    0,
+                    127
+                ]
+            ],
+            [
+                [
+                    0,
+                    "ON",
+                    24,
+                    127
+                ],
+                [
+                    2,
+                    "ON",
+                    31,
+                    127
+                ],
+                [
+                    4,
+                    "ON",
+                    36,
+                    127
+                ],
+                [
+                    6,
+                    "ON",
+                    43,
+                    127
+                ],
+                [
+                    8,
+                    "ON",
+                    24,
+                    127
+                ],
+                [
+                    10,
+                    "ON",
+                    31,
+                    127
+                ],
+                [
+                    12,
+                    "ON",
+                    36,
+                    127
+                ],
+                [
+                    14,
+                    "ON",
+                    43,
+                    127
+                ]
+            ],
             [],
-            [],
-            [],
-            [],
-            [],
-            [],
+            [
+                [
+                    0,
+                    "ON",
+                    36,
+                    127
+                ],
+                [
+                    10,
+                    "ON",
+                    36,
+                    127
+                ],
+                [
+                    14,
+                    "ON",
+                    36,
+                    127
+                ]
+            ],
+            [
+                [
+                    0,
+                    "ON",
+                    42,
+                    127
+                ],
+                [
+                    2,
+                    "ON",
+                    46,
+                    127
+                ],
+                [
+                    8,
+                    "ON",
+                    42,
+                    127
+                ],
+                [
+                    10,
+                    "ON",
+                    46,
+                    127
+                ]
+            ],
             [],
             []
         ],
