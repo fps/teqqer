@@ -219,7 +219,7 @@ options = {
 	"cursor_wrap_mode": "song", 
 	
 	# How many ticks to skip down after editing an event
-	"edit_step": 1, 
+	"edit_step": 4, 
 	
 	# What key to press with the cursor keys to select stuff
 	"selection_modifier": "meta"
