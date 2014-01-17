@@ -931,6 +931,7 @@ class main(urwid.Widget):
 					self.teq_engine.insert_pattern(self.teq_engine.number_of_patterns(), new_pattern)
 		except Exception as e:
 			print(str(e))
+		print("done")
 			
 	@handle_error
 	def save(self):
@@ -1063,16 +1064,16 @@ def handle_alarm(main_loop,  the_main):
 	main_loop.set_alarm_in(the_main.options["ui_update_interval"] - random.random() * 0.5 * the_main.options["ui_update_interval"],  handle_alarm,  the_main)
 
 
-def do_stuff():
-	popup_launcher = PopUpLauncherThing(the_main)
 
-	loop = urwid.MainLoop(popup_launcher,  options["palette"], pop_ups=True)
+popup_launcher = PopUpLauncherThing(the_main)
 
-	loop.set_alarm_in(the_main.options["ui_update_interval"],  handle_alarm,  the_main)
+loop = urwid.MainLoop(popup_launcher,  options["palette"], pop_ups=True)
 
-	loop.run()
+loop.set_alarm_in(the_main.options["ui_update_interval"],  handle_alarm,  the_main)
 
-do_stuff()
+loop.run()
+
+teq_engine.deactivate()
 
 if 1 == 0:
 	import os
