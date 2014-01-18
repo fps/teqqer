@@ -143,8 +143,8 @@ class PopUpLauncherThing(urwid.PopUpLauncher):
 		self.open_pop_up()
 
 	def close_pop_up_line_entry(self):
-		#self.callback(self.popup_widget.edit.edit_text)
-		self.callback("foo")
+		self.callback(self.popup_widget.edit.edit_text)
+		#self.callback("foo")
 		self.close_pop_up()
 
 	def get_pop_up_parameters(self):
@@ -159,6 +159,8 @@ class main(urwid.Widget):
 		self.__super.__init__()
 		
 		urwid.register_signal(main, ['popup_about', 'popup_license', 'popup_help'])
+		
+		self.text_to_show = None
 		
 		self.popup_parameters = None
 		
@@ -196,9 +198,16 @@ class main(urwid.Widget):
 				args[0].exit_menu()
 		return g
 	
+	def handle_text_popups(self):
+		if self.text_to_show:
+			self.popup_launcher.popup_text(self.text_to_show)
+		self.text_to_show = None
+	
 	@handle_error
 	def display_text(self, text):
-		self.popup_launcher.popup_text(text)
+		# The handle_text_popups method will shot it the next time around
+		self.text_to_show = text
+		# self.popup_launcher.popup_text(text)
 	
 	@handle_error
 	def evaluate(self):
@@ -206,8 +215,7 @@ class main(urwid.Widget):
 	
 	@handle_error
 	def evaluate_string(self, string):
-		print("wtf")
-		# self.display_text(string)
+		self.display_text(string)
 	
 	def fixup_menu(self, menu):
 		# print ("fixing up", menu)
@@ -246,6 +254,8 @@ class main(urwid.Widget):
 			return True
 		
 	def get_state_info_and_update(self):
+		self.handle_text_popups()
+			
 		old_info = self.info
 		
 		try:
@@ -1105,9 +1115,4 @@ loop.run()
 
 teq_engine.deactivate()
 
-if 1 == 0:
-	import os
-
-	print("go away")
-	os._exit(1)
 
