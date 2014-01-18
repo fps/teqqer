@@ -143,7 +143,8 @@ class PopUpLauncherThing(urwid.PopUpLauncher):
 		self.open_pop_up()
 
 	def close_pop_up_line_entry(self):
-		self.callback()
+		#self.callback(self.popup_widget.edit.edit_text)
+		self.callback("foo")
 		self.close_pop_up()
 
 	def get_pop_up_parameters(self):
@@ -201,11 +202,12 @@ class main(urwid.Widget):
 	
 	@handle_error
 	def evaluate(self):
-		self.popup_launcher.popup_line_entry("Expression: ", {'left':0, 'top':0, 'overlay_width':200, 'overlay_height':1}, lambda: self.evaluate_string(self.popup_launcher.popup_widget.edit.edit_text))
+		self.popup_launcher.popup_line_entry("Expression: ", {'left':0, 'top':0, 'overlay_width':200, 'overlay_height':1}, lambda x: self.evaluate_string(x))
 	
 	@handle_error
 	def evaluate_string(self, string):
-		self.display_text(string)
+		print("wtf")
+		# self.display_text(string)
 	
 	def fixup_menu(self, menu):
 		# print ("fixing up", menu)
