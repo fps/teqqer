@@ -215,7 +215,8 @@ class main(urwid.Widget):
 	
 	@handle_error
 	def evaluate_string(self, string):
-		self.display_text(string)
+		eval(string, { "t": self })
+		#self.display_text(string)
 	
 	def fixup_menu(self, menu):
 		# print ("fixing up", menu)
