@@ -215,7 +215,8 @@ class main(urwid.Widget):
 	
 	@handle_error
 	def evaluate_string(self, string):
-		eval(string, { "t": self })
+		eval(string, { "ui": self, "teq": self.teq_engine })
+		self._invalidate()
 		#self.display_text(string)
 	
 	def fixup_menu(self, menu):
