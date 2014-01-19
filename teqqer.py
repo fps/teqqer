@@ -148,9 +148,13 @@ class main(urwid.Widget):
 	def __init__(self,  teq_engine,  options, filename):
 		self.__super.__init__()
 		
+		self.options = options
+
 		urwid.register_signal(main, ['popup_about', 'popup_license', 'popup_help'])
 		
 		self.text_to_show = None
+		
+		self.status_text = self.options["status_text_ok"]
 		
 		self.evaluation_history = []
 		self.pattern_length_history = []
@@ -160,7 +164,6 @@ class main(urwid.Widget):
 		self.popup_parameters = None
 		
 		self.filename = filename
-		self.options = options
 		self.teq_engine = teq_engine
 		
 		self._sizing = frozenset(['box'])
@@ -182,6 +185,16 @@ class main(urwid.Widget):
 			
 		self.load()
 	
+	def set_status(self, state):
+		if state:
+			self.status_text = self.options["status_text_ok"]
+		else:
+			self.status_text = self.options["status_text_error"]
+		self._invalidate()
+	
+	def set_status_text(self, text):
+		self.status_text = text
+	
 	def handle_error(f):
 		def g(*args, **kwargs):
 			try:
@@ -191,6 +204,10 @@ class main(urwid.Widget):
 			except Exception as e:
 				args[0].display_text(str(e) + "\n" + traceback.format_exc())
 				args[0].exit_menu()
+				args[0].set_status(False)
+			else:
+				args[0].set_status(True)
+				
 		return g
 	
 	def handle_text_popups(self):
@@ -758,6 +775,12 @@ class main(urwid.Widget):
 	def render_footer(self, size, default_style):
 		text = []
 		attr = []
+		
+		text.append(self.status_text)
+		if self.status_text == self.options["status_text_ok"]:
+			attr.append(("status-text-ok", len(text[-1])))
+		else:
+			attr.append(("status-text-error", len(text[-1])))
 		
 		if True == self.edit_mode:
 			text.append(self.options["edit_mode_indicator_enabled"])

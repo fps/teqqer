@@ -50,7 +50,10 @@ options = {
 		("cc-event-default", "white", "dark green"),
 		("cc-event-selected", "dark green", "white"),
 		
-		("line-entry", "black", "yellow")
+		("line-entry", "black", "yellow"),
+		
+		("status-text-ok", "black", "dark green"),
+		("status-text-error", "black", "dark red")
 	], 
 
 	# The names for the notes. Note that
@@ -61,6 +64,9 @@ options = {
 		"Ab",  "A ",  "Bb",  "B "
 	],
 	
+	"status_text_ok": "OK",
+	"status_text_error": "ERR",
+
 	"transport_indicator_stopped": "||",
 	"transport_indicator_playing": ">>",
 	
@@ -93,8 +99,8 @@ options = {
 		
 		[" ", "toggle playback (start/stop)", lambda x: x.toggle_playback()],
 		
-		["up", "move one event up", lambda x: x.change_cursor_tick(-1)],
-		["down", "move one event down", lambda x: x.change_cursor_tick(1)],
+		["up", "move one edit step up", lambda x: x.change_cursor_tick(-x.options["edit_step"])],
+		["down", "move one edit step down", lambda x: x.change_cursor_tick(x.options["edit_step"])],
 		
 		["ctrl up", "move one edit step up", lambda x: x.change_cursor_tick(-x.options["edit_step"])],
 		["ctrl down", "move one edit step down", lambda x: x.change_cursor_tick(x.options["edit_step"])],
