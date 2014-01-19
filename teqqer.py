@@ -33,8 +33,7 @@ class history:
 		# A list of tuples of lambdas where the first
 		# entry in each tuple is the action and the second
 		# is the action with the inverse effect.
-		self.actions = []
-		self.last = -1
+		self.reset()
 		
 	def add(self, action, inverse_action):		
 		if self.last > -1:
@@ -54,6 +53,11 @@ class history:
 		if self.last + 1 < len(self.actions):
 			self.actions[self.last + 1][0]()
 			self.last += 1
+			
+	def reset(self):
+		self.actions = []
+		self.last = -1
+
 
 class TextPopup(urwid.WidgetWrap):
 	def __init__(self, text):
@@ -297,6 +301,58 @@ class main(urwid.Widget):
 				
 				self._invalidate()
 	
+	@handle_error
+	def toggle_loop(self):
+		if self.info:
+			loop_range = self.info.loop_range
+			loop_range.enabled = not loop_range.enabled
+			self.teq_engine.set_loop_range(loop_range)
+	
+	@handle_error
+	def add_pattern(self):
+		self.popup_launcher.popup_line_entry("Patten Length (Ticks): ", {'left':0, 'top':self.render_size[1] - 1, 'overlay_width':200, 'overlay_height':1}, lambda x: self.add_pattern_with_length(x))
+	
+	@handle_error
+	def add_pattern_with_length(self, length_text):
+		length = int(length_text)
+		if self.teq_engine.number_of_patterns() == 0:
+			self.teq_engine.insert_pattern(0, self.teq_engine.create_pattern(length))
+		else:
+			self.teq_engine.insert_pattern(self.cursor_pattern + 1, self.teq_engine.create_pattern(length))
+		
+		self._invalidate()
+		
+	
+	@handle_error
+	def add_midi_track(self):
+		self.popup_launcher.popup_line_entry("Track Name: ", {'left':0, 'top':self.render_size[1] - 1, 'overlay_width':200, 'overlay_height':1}, lambda x: self.add_named_midi_track(x))
+
+	@handle_error
+	def add_named_midi_track(self, name):
+		self.teq_engine.insert_midi_track(name, self.teq_engine.number_of_tracks())
+		self.history.reset()
+		self._invalidate()
+		
+	@handle_error
+	def add_control_track(self):
+		self.popup_launcher.popup_line_entry("Track Name: ", {'left':0, 'top':self.render_size[1] - 1, 'overlay_width':200, 'overlay_height':1}, lambda x: self.add_named_control_track(x))
+
+	@handle_error
+	def add_named_control_track(self, name):
+		self.teq_engine.insert_control_track(name, self.teq_engine.number_of_tracks())
+		self.history.reset()
+		self._invalidate()
+		
+	@handle_error
+	def add_cv_track(self):
+		self.popup_launcher.popup_line_entry("Track Name: ", {'left':0, 'top':self.render_size[1] - 1, 'overlay_width':200, 'overlay_height':1}, lambda x: self.add_named_cv_track(x))
+
+	@handle_error
+	def add_named_cv_track(self, name):
+		self.teq_engine.insert_cv_track(name, self.teq_engine.number_of_tracks())
+		self.history.reset()
+		self._invalidate()
+		
 	@handle_error
 	def change_tempo(self, amount):
 		self.teq_engine.set_global_tempo(self.teq_engine.get_global_tempo() + amount)
@@ -793,6 +849,16 @@ class main(urwid.Widget):
 		attr.append((default_style, len(text[-1])))
 
 		if None != self.info:
+			if self.info.loop_range.enabled:
+				text.append(self.options["loop_indicator_enabled"])
+				attr.append(("loop-indicator-enabled", len(text[-1])))
+			else:
+				text.append(self.options["loop_indicator_disabled"])
+				attr.append(("loop-indicator-disabled", len(text[-1])))
+		
+			text.append(" ")
+			attr.append((default_style, len(text[-1])))
+
 			if self.info.transport_state == teq.transport_state.PLAYING:
 				text.append(self.options["transport_indicator_playing"])
 				attr.append(("transport-playing", len(text[-1])))

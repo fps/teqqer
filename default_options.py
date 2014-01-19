@@ -53,7 +53,10 @@ options = {
 		("line-entry", "black", "yellow"),
 		
 		("status-text-ok", "black", "dark green"),
-		("status-text-error", "black", "dark red")
+		("status-text-error", "black", "dark red"),
+		
+		("loop-indicator-enabled", "black", "dark blue"),
+		("loop-indicator-disabled", "black", "dark gray")
 	], 
 
 	# The names for the notes. Note that
@@ -63,6 +66,9 @@ options = {
 		"E ",  "F ",  "Gb",  "G ",  
 		"Ab",  "A ",  "Bb",  "B "
 	],
+
+	"loop_indicator_enabled": "LOOP",
+	"loop_indicator_disabled": "    ",
 	
 	"status_text_ok": "OK",
 	"status_text_error": "ERR",
@@ -195,11 +201,10 @@ options = {
 			]]
 		]],
 		["tools", "ctrl t", lambda x: x.change_menu(x.current_menu[3][3]), [
-			["generate", "g", lambda x: x.generate(), []],
-			["modify", "m", lambda x: x.modify(), []],
 			["eval", "e", lambda x: x.evaluate(), []]
 		]],
-		["help", "meta h", lambda x: x.change_menu(x.current_menu[4][3]), [
+		["loop", "ctrl l", lambda x: x.toggle_loop(), []],
+		["help", "meta h", lambda x: x.change_menu(x.current_menu[5][3]), [
 			["about", "a", lambda x: x._emit('popup_about'), []],
 			["license", "l", lambda x:x._emit('popup_license'), []],
 			["help", "h", lambda x: x._emit('popup_help'), []]
