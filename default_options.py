@@ -75,6 +75,19 @@ options = {
 	"global_keys": [
 		["N", "decrease the edit step by one", lambda x: x.change_edit_step(-1)],
 		["M", "increase the edit step by one", lambda x: x.change_edit_step(1)],
+		
+		["f1", "set edit step to 1", lambda x: x.set_edit_step(1)],
+		["f2", "set edit step to 2", lambda x: x.set_edit_step(2)],
+		["f3", "set edit step to 3", lambda x: x.set_edit_step(3)],
+		["f4", "set edit step to 4", lambda x: x.set_edit_step(4)],
+		["f5", "set edit step to 5", lambda x: x.set_edit_step(5)],
+		["f6", "set edit step to 6", lambda x: x.set_edit_step(6)],
+		["f7", "set edit step to 7", lambda x: x.set_edit_step(7)],
+		["f8", "set edit step to 8", lambda x: x.set_edit_step(8)],
+		["f9", "set edit step to 9", lambda x: x.set_edit_step(9)],
+		["f10", "set edit step to 10", lambda x: x.set_edit_step(10)],
+		["f11", "set edit step to 11", lambda x: x.set_edit_step(11)],
+		["f12", "set edit step to 12", lambda x: x.set_edit_step(12)],
 
 		["esc", "toggle the edit mode", lambda x: x.toggle_edit_mode()],
 		

@@ -296,6 +296,10 @@ class main(urwid.Widget):
 	def change_edit_step(self, amount):
 		self.options["edit_step"] += amount
 	
+	@handle_error
+	def set_edit_step(self, step):
+		self.options["edit_step"] = step
+	
 	# Only the sign of amount is important
 	@handle_error
 	def change_cursor_tick_by_one(self, amount):
