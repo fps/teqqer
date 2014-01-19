@@ -189,15 +189,6 @@ class main(urwid.Widget):
 			
 		self.load()
 	
-	def set_status(self, state):
-		if state:
-			self.status_text = self.options["status_text_ok"]
-		else:
-			self.status_text = self.options["status_text_error"]
-		self._invalidate()
-	
-	def set_status_text(self, text):
-		self.status_text = text
 	
 	def handle_error(f):
 		def g(*args, **kwargs):
@@ -214,6 +205,44 @@ class main(urwid.Widget):
 				
 		return g
 	
+	def get_state_info_and_update(self):
+		self.handle_text_popups()
+			
+		old_info = self.info
+		
+		try:
+			while True:
+				self.info = teq_engine.get_state_info()
+		except Exception as e:
+			pass
+		
+		if self.info == None:
+			
+			self._invalidate()
+			return
+		
+		if old_info == None and self.info != None:
+			self._invalidate()
+		
+		# Check if the transport position changed
+		if old_info and self.info:
+			if self.state_changed(old_info, self.info):
+				if self.options["follow_transport"] == True:
+					self.cursor_tick = self.info.transport_position.tick
+					self.cursor_pattern = self.info.transport_position.pattern
+				
+				self._invalidate()
+	
+	def set_status(self, state):
+		if state:
+			self.status_text = self.options["status_text_ok"]
+		else:
+			self.status_text = self.options["status_text_error"]
+		self._invalidate()
+	
+	def set_status_text(self, text):
+		self.status_text = text
+
 	def handle_text_popups(self):
 		if self.text_to_show:
 			self.popup_launcher.popup_text(self.text_to_show)
@@ -273,40 +302,13 @@ class main(urwid.Widget):
 		if not old_info.transport_state == self.info.transport_state:
 			return True
 		
-	def get_state_info_and_update(self):
-		self.handle_text_popups()
-			
-		old_info = self.info
-		
-		try:
-			while True:
-				self.info = teq_engine.get_state_info()
-		except Exception as e:
-			pass
-		
-		if self.info == None:
-			
-			self._invalidate()
-			return
-		
-		if old_info == None and self.info != None:
-			self._invalidate()
-		
-		# Check if the transport position changed
-		if old_info and self.info:
-			if self.state_changed(old_info, self.info):
-				if self.options["follow_transport"] == True:
-					self.cursor_tick = self.info.transport_position.tick
-					self.cursor_pattern = self.info.transport_position.pattern
-				
-				self._invalidate()
-	
 	@handle_error
 	def toggle_loop(self):
 		if self.info:
 			loop_range = self.info.loop_range
 			loop_range.enabled = not loop_range.enabled
 			self.teq_engine.set_loop_range(loop_range)
+			self._invalidate()
 	
 	@handle_error
 	def add_pattern(self):
@@ -895,12 +897,6 @@ class main(urwid.Widget):
 	
 	def render(self,  size,  focus):
 		self.render_size = size
-		if 1 == 0:
-			if self.info == None:
-				text = [" " * size[0]] * size[1]
-				t = urwid.TextCanvas(text) 
-
-				return t
 			
 		text = []
 		attr = []
@@ -977,7 +973,7 @@ class main(urwid.Widget):
 				attr.append(line_attr)	
 		else:
 			for n in xrange(0, event_rows):
-				text.append(" " * size[0])
+				text.append("~" * size[0])
 				attr.append([(None, len(text[-1]))])
 		
 		footer_style = None
@@ -992,7 +988,7 @@ class main(urwid.Widget):
 		attr.append(footer[1])
 		
 		# Sanity checks against small displays
-		if len(text[0]) > size[0] or 3 > size[1]:
+		if len(max(text, key=len)) > size[0] or 3 > size[1]:
 			text = []
 			attr = []
 			

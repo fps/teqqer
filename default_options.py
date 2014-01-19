@@ -67,11 +67,11 @@ options = {
 		"Ab",  "A ",  "Bb",  "B "
 	],
 
-	"loop_indicator_enabled": "LOOP",
-	"loop_indicator_disabled": "    ",
+	"loop_indicator_enabled": "L",
+	"loop_indicator_disabled": " ",
 	
-	"status_text_ok": "OK",
-	"status_text_error": "ERR",
+	"status_text_ok": "O",
+	"status_text_error": "E",
 
 	"transport_indicator_stopped": "||",
 	"transport_indicator_playing": ">>",
