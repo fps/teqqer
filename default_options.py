@@ -49,6 +49,8 @@ options = {
 		
 		("cc-event-default", "white", "dark green"),
 		("cc-event-selected", "dark green", "white"),
+		
+		("line-entry", "black", "yellow")
 	], 
 
 	# The names for the notes. Note that

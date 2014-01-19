@@ -98,26 +98,8 @@ class PopUpLauncherThing(urwid.PopUpLauncher):
 		urwid.connect_signal(original, 'popup_license', lambda x: self.popup_license())
 		urwid.connect_signal(original, 'popup_help', lambda x: self.popup_help())
 
-	def popup_license(self):
-		self.popup_widget = TextPopup(("medium", license.text))
-		
-		urwid.connect_signal(self.popup_widget, 'close', lambda x: self.close_pop_up())
-		
-		self.popup_parameters = {'left':0, 'top':0, 'overlay_width':200, 'overlay_height':200}
-		
-		self.open_pop_up()
-
 	def popup_help(self):
 		self.popup_widget = TextPopup(("medium", the_help.get_help_text(self.the_original.options)))
-		
-		urwid.connect_signal(self.popup_widget, 'close', lambda x: self.close_pop_up())
-		
-		self.popup_parameters = {'left':0, 'top':0, 'overlay_width':200, 'overlay_height':200}
-		
-		self.open_pop_up()
-
-	def popup_about(self):
-		self.popup_widget = TextPopup(("medium", about.text))
 		
 		urwid.connect_signal(self.popup_widget, 'close', lambda x: self.close_pop_up())
 		
@@ -135,9 +117,16 @@ class PopUpLauncherThing(urwid.PopUpLauncher):
 		self.open_pop_up()
 		pass
 
+	def popup_license(self):
+		self.popup_text(license.text)
+
+	def popup_about(self):
+		self.popup_text(about.text)
+		
 	def popup_line_entry(self, question, popup_parameters, callback):
 		self.callback = callback
-		self.popup_widget = EditWithEnter(question)
+		self.popup_widget = EditWithEnter(("line-entry", question))
+		attr_map = urwid.AttrMap(self.popup_widget, "line-entry")
 		urwid.connect_signal(self.popup_widget, 'enter', lambda x: self.close_pop_up_line_entry())
 		self.popup_parameters = popup_parameters
 		self.open_pop_up()
@@ -161,6 +150,11 @@ class main(urwid.Widget):
 		urwid.register_signal(main, ['popup_about', 'popup_license', 'popup_help'])
 		
 		self.text_to_show = None
+		
+		self.evaluation_history = []
+		self.pattern_length_history = []
+		self.cv_value_history = []
+		self.control_value_history = []
 		
 		self.popup_parameters = None
 		
@@ -205,16 +199,18 @@ class main(urwid.Widget):
 	
 	@handle_error
 	def display_text(self, text):
-		# The handle_text_popups method will shot it the next time around
+		# The handle_text_popups method will show it the next time the timer 
+		# fires up..
 		self.text_to_show = text
-		# self.popup_launcher.popup_text(text)
 	
 	@handle_error
 	def evaluate(self):
-		self.popup_launcher.popup_line_entry("Expression: ", {'left':0, 'top':0, 'overlay_width':200, 'overlay_height':1}, lambda x: self.evaluate_string(x))
+		self.popup_launcher.popup_line_entry("Expression: ", {'left':0, 'top':self.render_size[1] - 1, 'overlay_width':200, 'overlay_height':1}, lambda x: self.evaluate_string(x))
 	
 	@handle_error
 	def evaluate_string(self, string):
+		if self.evaluation_history.count(string) == 0:
+			self.evaluation_history.append(string)
 		eval(string, { "ui": self, "teq": self.teq_engine })
 		self._invalidate()
 		#self.display_text(string)
@@ -800,6 +796,7 @@ class main(urwid.Widget):
 		return (''.join(text), attr)
 	
 	def render(self,  size,  focus):
+		self.render_size = size
 		if 1 == 0:
 			if self.info == None:
 				text = [" " * size[0]] * size[1]
@@ -945,6 +942,8 @@ class main(urwid.Widget):
 				self.cursor_tick = json_object["cursor-position-tick"]
 				self.cursor_track = json_object["cursor-position-track"]
 				
+				self.options["edit_step"] = json_object["edit-step"]
+				
 				for pattern in json_object["patterns"]:
 					new_pattern = self.teq_engine.create_pattern(int(pattern[1]))
 					new_pattern.name = str(pattern[0])
@@ -993,7 +992,9 @@ class main(urwid.Widget):
 			
 			"cursor-position-pattern": self.cursor_pattern,
 			"cursor-position-tick": self.cursor_tick,
-			"cursor-position-track": self.cursor_track
+			"cursor-position-track": self.cursor_track,
+			
+			"edit-step": self.options["edit_step"]
 		}
 		
 		tracks_json_object = []
