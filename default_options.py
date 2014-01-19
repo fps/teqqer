@@ -180,10 +180,10 @@ options = {
 			["modify", "m", lambda x: x.modify(), []],
 			["eval", "e", lambda x: x.evaluate(), []]
 		]],
-		["help", "f1", lambda x: x.change_menu(x.current_menu[4][3]), [
+		["help", "meta h", lambda x: x.change_menu(x.current_menu[4][3]), [
 			["about", "a", lambda x: x._emit('popup_about'), []],
 			["license", "l", lambda x:x._emit('popup_license'), []],
-			["help", "f1", lambda x: x._emit('popup_help'), []]
+			["help", "h", lambda x: x._emit('popup_help'), []]
 		]]
 	],
 	

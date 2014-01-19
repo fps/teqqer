@@ -4,6 +4,7 @@ import math
 import random
 import json
 import traceback
+import string
 
 import teq
 import pyteq
@@ -501,8 +502,12 @@ class main(urwid.Widget):
 	def render_key(self,  key):
 		if key == " ":
 			return "space"
-		else:
-			return key
+		
+		ret = key
+		ret = string.replace(ret, "ctrl", "C")
+		ret = string.replace(ret, "meta", "M")
+		
+		return ret
 	
 	def render_note_on(self, value1, value2):
 		octave = math.floor(value1 / 12)
