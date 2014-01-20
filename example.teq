@@ -46,7 +46,7 @@
     ],
     "cursor-position-track": 8,
     "edit-step": 1,
-    "loop-range-enabled": true,
+    "loop-range-enabled": false,
     "loop-range-start-tick": 0,
     "loop-range-end-pattern": 0,
     "cursor-position-pattern": 0,

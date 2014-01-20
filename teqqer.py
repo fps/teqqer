@@ -744,7 +744,8 @@ class main(urwid.Widget):
 
 		return True
 	
-	def render_pattern(self):
+	# The size is the remaining size of the screen to fill
+	def render_pattern(self, size):
 		pattern = self.teq_engine.get_pattern(self.cursor_pattern)
 		
 		column_separator = self.options["column_separator"]
@@ -803,15 +804,16 @@ class main(urwid.Widget):
 				if tick_index % highlighted_rows == 0:
 					event_attr = ("event-highlight", len(event))
 
-				if self.info:
-					if self.cursor_track == track_index and not self.info.transport_position.tick == tick_index:
-						event_attr = ("track-events-highlight",  len(event))
+				if self.info and self.cursor_pattern == self.info.transport_position.pattern:
+					if self.info:
+						if self.cursor_track == track_index and not self.info.transport_position.tick == tick_index:
+							event_attr = ("track-events-highlight",  len(event))
+								
+						if not self.cursor_track == track_index and self.info.transport_position.tick == tick_index:
+							event_attr = ("cursor-row-highlight",  len(event))
 							
-					if not self.cursor_track == track_index and self.info.transport_position.tick == tick_index:
-						event_attr = ("cursor-row-highlight",  len(event))
-						
-				if self.cursor_track == track_index and self.cursor_tick == tick_index:
-					event_attr = ("event-selected",  len(event))
+					if self.cursor_track == track_index and self.cursor_tick == tick_index:
+						event_attr = ("event-selected",  len(event))
 					
 				event_attrs.append(event_attr)
 				
@@ -995,7 +997,7 @@ class main(urwid.Widget):
 				remainder = size[0] - len("".join(line))
 				if remainder > 0:
 					line.append(" " * remainder)
-					if self.info and displayed_tick == self.info.transport_position.tick:
+					if self.info and displayed_tick == self.info.transport_position.tick and displayed_pattern == self.info.transport_position.pattern:
 						line_attr.append(("cursor-row-highlight", remainder))
 					else:
 						line_attr.append((None, remainder))
