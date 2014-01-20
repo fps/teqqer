@@ -804,15 +804,15 @@ class main(urwid.Widget):
 					event_attr = ("event-highlight", len(event))
 
 				if self.info:
-					if self.cursor_track == track_index and self.info.transport_position.tick == tick_index:
-						event_attr = ("event-selected",  len(event))
-					
 					if self.cursor_track == track_index and not self.info.transport_position.tick == tick_index:
 						event_attr = ("track-events-highlight",  len(event))
 							
 					if not self.cursor_track == track_index and self.info.transport_position.tick == tick_index:
 						event_attr = ("cursor-row-highlight",  len(event))
 						
+				if self.cursor_track == track_index and self.cursor_tick == tick_index:
+					event_attr = ("event-selected",  len(event))
+					
 				event_attrs.append(event_attr)
 				
 			text.append(''.join(events))
@@ -983,7 +983,7 @@ class main(urwid.Widget):
 					line_attr.append((None, len(line[-1])))
 				
 				line.append(column_separator)
-				if displayed_pattern == self.cursor_pattern:
+				if self.info and displayed_pattern == self.info.transport_position.pattern:
 					line_attr.append(("cursor-row-highlight", len(line[-1])))
 				else:
 					line_attr.append((None, len(line[-1])))
@@ -995,7 +995,7 @@ class main(urwid.Widget):
 				remainder = size[0] - len("".join(line))
 				if remainder > 0:
 					line.append(" " * remainder)
-					if displayed_tick == self.cursor_tick:
+					if self.info and displayed_tick == self.info.transport_position.tick:
 						line_attr.append(("cursor-row-highlight", remainder))
 					else:
 						line_attr.append((None, remainder))
