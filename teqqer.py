@@ -763,7 +763,7 @@ class main(urwid.Widget):
 				event_attrs.append(("loop-range-indicator", len(events[-1])))
 			else:
 				events.append(" ")
-				if self.info and self.info.transport_position.tick == tick_index:
+				if self.info and self.info.transport_position.tick == tick_index and self.info.transport_position.pattern == self.cursor_pattern:
 					event_attrs.append(("cursor-row-highlight", len(events[-1])))
 				else:
 					event_attrs.append((None, len(events[-1])))
@@ -803,15 +803,16 @@ class main(urwid.Widget):
 				if tick_index % highlighted_rows == 0:
 					event_attr = ("event-highlight", len(event))
 
+				if self.cursor_track == track_index:
+					event_attr = ("track-events-highlight",  len(event))
+					
+				if self.cursor_track == track_index and self.cursor_tick == tick_index:
+					event_attr = ("event-selected",  len(event))
+
 				if self.info and self.cursor_pattern == self.info.transport_position.pattern:
-					if self.cursor_track == track_index and not self.info.transport_position.tick == tick_index:
-						event_attr = ("track-events-highlight",  len(event))
-							
 					if self.info.transport_position.tick == tick_index:
 						event_attr = ("cursor-row-highlight",  len(event))
 							
-					if self.cursor_track == track_index and self.cursor_tick == tick_index:
-						event_attr = ("event-selected",  len(event))
 					
 				event_attrs.append(event_attr)
 				
@@ -836,13 +837,16 @@ class main(urwid.Widget):
 
 			line.append(pattern_name)
 			
+			name_attr = ("pattern-list-entry-default", len(line[-1]))
 			if self.info:
 				if n == self.info.transport_position.pattern:
-					line_attr.append(("cursor-row-highlight", len(line[-1])))
+					name_attr = ("cursor-row-highlight", len(line[-1]))
 				else:
-					line_attr.append(("pattern-list-entry-default", len(line[-1])))
+					name_attr = ("pattern-list-entry-default", len(line[-1]))
 			else:
-				line_attr.append(("pattern-list-entry-default", len(line[-1])))
+				name_attr = ("pattern-list-entry-default", len(line[-1]))
+				
+			line_attr.append(name_attr)
 				
 			if self.cursor_pattern_in_loop_range(n):
 				line.append(self.options["loop_range_indicator_patterns"])
