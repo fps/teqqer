@@ -191,12 +191,13 @@ options = {
 					["control", "c", lambda x: x.add_control_track(), []],
 					["cv", "v", lambda x: x.add_cv_track(), []],
 				]],
-				["rename", "n", lambda x: x.rename_track(), []],
+				["name", "n", lambda x: x.rename_track(), []],
 				["remove", "r", lambda x: x.remove_track(), []]
 			]],
 			["pattern", "p", lambda x: x.change_menu(x.current_menu[1][3]), [
 				["add", "a", lambda x: x.add_pattern(), []],
 				["set length", "l", lambda x: x.set_pattern_length(), []],
+				["name", "n", lambda x: x.rename_pattern(), []],
 				["remove", "r", lambda x: x.remove_pattern(), []]
 			]]
 		]],

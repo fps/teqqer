@@ -311,6 +311,26 @@ class main(urwid.Widget):
 			self._invalidate()
 	
 	@handle_error
+	def rename_pattern(self):
+		self.popup_launcher.popup_line_entry("Pattern Name: ", {'left':0, 'top':self.render_size[1] - 1, 'overlay_width':200, 'overlay_height':1}, lambda x: self.rename_pattern_with_name(x))
+	
+	@handle_error
+	def rename_pattern_with_name(self, name):
+		p = self.teq_engine.get_pattern(self.cursor_pattern)
+		p.name = name
+		self.teq_engine.set_pattern(self.cursor_pattern, p)
+		self._invalidate()
+	
+	@handle_error
+	def rename_track(self):
+		self.popup_launcher.popup_line_entry("Track Name: ", {'left':0, 'top':self.render_size[1] - 1, 'overlay_width':200, 'overlay_height':1}, lambda x: self.rename_track_with_name(x))
+	
+	@handle_error
+	def rename_track_with_name(self, name):
+		self.teq_engine.rename_track(self.cursor_track, name)
+		self._invalidate()
+
+	@handle_error
 	def add_pattern(self):
 		self.popup_launcher.popup_line_entry("Patten Length (Ticks): ", {'left':0, 'top':self.render_size[1] - 1, 'overlay_width':200, 'overlay_height':1}, lambda x: self.add_pattern_with_length(x))
 	
