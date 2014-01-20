@@ -406,7 +406,7 @@ class main(urwid.Widget):
 		if not self.info:
 			return
 		
-		if self.info.transport_state == teq.transport_state.PLAYING:
+		if self.info.transport_state == teq.transport_state.PLAYING and self.options["follow_transport"]:
 			return
 		
 		if 0 == amount:
@@ -744,8 +744,7 @@ class main(urwid.Widget):
 
 		return True
 	
-	# The size is the remaining size of the screen to fill
-	def render_pattern(self, size):
+	def render_pattern(self):
 		pattern = self.teq_engine.get_pattern(self.cursor_pattern)
 		
 		column_separator = self.options["column_separator"]
@@ -880,9 +879,14 @@ class main(urwid.Widget):
 		
 		attr.append(("edit-mode-indicator", len(text[-1])))
 		
-		text.append(" ")
-		attr.append((default_style, len(text[-1])))
-
+		if self.options["follow_transport"]:
+			text.append(self.options["follow_transport_indicator_enabled"])
+			attr.append(("follow-transport-indicator-enabled", len(text[-1])))
+		else:
+			text.append(self.options["follow_transport_indicator_disabled"])
+			attr.append(("follow-transport-indicator-disabled", len(text[-1])))
+			
+		
 		if None != self.info:
 			if self.info.loop_range.enabled:
 				text.append(self.options["loop_indicator_enabled"])
@@ -891,9 +895,6 @@ class main(urwid.Widget):
 				text.append(self.options["loop_indicator_disabled"])
 				attr.append(("loop-indicator-disabled", len(text[-1])))
 		
-			text.append(" ")
-			attr.append((default_style, len(text[-1])))
-
 			if self.info.transport_state == teq.transport_state.PLAYING:
 				text.append(self.options["transport_indicator_playing"])
 				attr.append(("transport-playing", len(text[-1])))
@@ -966,9 +967,13 @@ class main(urwid.Widget):
 			
 			split = int(round(event_rows * self.options["center_line_fraction"]))
 			
-			rendered_pattern = self.render_pattern()
 			rendered_patterns_list = self.render_patterns_list()
 			
+			if len(rendered_patterns_list):
+				patterns_list_len = len(rendered_patterns_list[0][0])
+			
+			rendered_pattern = self.render_pattern()
+
 			for n in range(0,  event_rows):
 				displayed_tick = (self.cursor_tick + n) - split
 				displayed_pattern = (self.cursor_pattern + n) - split
@@ -985,22 +990,12 @@ class main(urwid.Widget):
 					line_attr.append((None, len(line[-1])))
 				
 				line.append(column_separator)
-				if self.info and displayed_pattern == self.info.transport_position.pattern:
-					line_attr.append(("cursor-row-highlight", len(line[-1])))
-				else:
-					line_attr.append((None, len(line[-1])))
+				line_attr.append((None, len(line[-1])))
 				
 				if displayed_tick >= 0 and displayed_tick < pattern.length():
 					line.append(rendered_pattern[0][displayed_tick])
 					line_attr.extend(rendered_pattern[1][displayed_tick])
 				
-				remainder = size[0] - len("".join(line))
-				if remainder > 0:
-					line.append(" " * remainder)
-					if self.info and displayed_tick == self.info.transport_position.tick and displayed_pattern == self.info.transport_position.pattern:
-						line_attr.append(("cursor-row-highlight", remainder))
-					else:
-						line_attr.append((None, remainder))
 					
 				text.append("".join(line))
 				attr.append(line_attr)	

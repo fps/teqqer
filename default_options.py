@@ -19,7 +19,7 @@ options = {
 		("footer-default", "white", "dark gray"),
 		("footer-editing", "white", "dark gray"),
 		
-		("edit-mode-indicator", "black", "white"),
+		("edit-mode-indicator", "black", "light gray"),
 
 		("menu-entry-default", "black", "white"),
 		("menu-entry-exit-menu", "light gray", "dark gray"),
@@ -55,8 +55,11 @@ options = {
 		("status-text-ok", "black", "dark green"),
 		("status-text-error", "black", "dark red"),
 		
-		("loop-indicator-enabled", "black", "dark blue"),
-		("loop-indicator-disabled", "black", "dark gray")
+		("loop-indicator-enabled", "black", "light gray"),
+		("loop-indicator-disabled", "black", "dark gray"),
+
+		("follow-transport-indicator-enabled", "black", "light gray"),
+		("follow-transport-indicator-disabled", "black", "dark gray")
 	], 
 
 	# The names for the notes. Note that
@@ -79,6 +82,9 @@ options = {
 	"edit_mode_indicator_enabled": "E",
 	"edit_mode_indicator_disabled": "V",
 	
+	"follow_transport_indicator_enabled": "F",
+	"follow_transport_indicator_disabled": " ",
+
 	"loop_range_indicator_events": "[",
 	"loop_range_indicator_patterns": "]",
 	
@@ -130,9 +136,9 @@ options = {
 		
 		["L", "set loop start", lambda x: x.set_loop_start()],
 		[":", "set loop end", lambda x: x.set_loop_end()],
-		["ctrl l", "toggle looping", lambda x: x.toggle_loop()],
+		["meta l", "toggle looping", lambda x: x.toggle_loop()],
 
-		["ctrl f", "toggle follow transport", lambda x: x.toggle_follow_transport()]
+		["meta f", "toggle follow transport", lambda x: x.toggle_follow_transport()]
 	],
 	
 	"midi_track_keys": [
