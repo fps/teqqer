@@ -303,6 +303,11 @@ class main(urwid.Widget):
 			return True
 		
 	@handle_error
+	def toggle_follow_transport(self):
+		self.options["follow_transport"] = not self.options["follow_transport"]
+		self._invalidate()
+
+	@handle_error
 	def toggle_loop(self):
 		if self.info:
 			loop_range = self.info.loop_range
@@ -462,6 +467,7 @@ class main(urwid.Widget):
 		loop_range.start.tick = self.cursor_tick
 		
 		self.teq_engine.set_loop_range(loop_range)
+		self._invalidate()
 
 	@handle_error
 	def set_loop_end(self):
@@ -473,6 +479,7 @@ class main(urwid.Widget):
 		loop_range.end.tick = self.cursor_tick
 		
 		self.teq_engine.set_loop_range(loop_range)
+		self._invalidate()
 
 	@handle_error
 	def move_to_pattern_top(self):
@@ -795,15 +802,16 @@ class main(urwid.Widget):
 				
 				if tick_index % highlighted_rows == 0:
 					event_attr = ("event-highlight", len(event))
-				
-				if self.cursor_track == track_index and self.cursor_tick == tick_index:
-					event_attr = ("event-selected",  len(event))
-				
-				if self.cursor_track == track_index and not self.cursor_tick == tick_index:
-					event_attr = ("track-events-highlight",  len(event))
-						
-				if not self.cursor_track == track_index and self.cursor_tick == tick_index:
-					event_attr = ("cursor-row-highlight",  len(event))
+
+				if self.info:
+					if self.cursor_track == track_index and self.info.transport_position.tick == tick_index:
+						event_attr = ("event-selected",  len(event))
+					
+					if self.cursor_track == track_index and not self.info.transport_position.tick == tick_index:
+						event_attr = ("track-events-highlight",  len(event))
+							
+					if not self.cursor_track == track_index and self.info.transport_position.tick == tick_index:
+						event_attr = ("cursor-row-highlight",  len(event))
 						
 				event_attrs.append(event_attr)
 				
@@ -828,11 +836,14 @@ class main(urwid.Widget):
 
 			line.append(pattern_name)
 			
-			if n == self.cursor_pattern:
-				line_attr.append(("cursor-row-highlight", len(line[-1])))
+			if self.info:
+				if n == self.info.transport_position.pattern:
+					line_attr.append(("cursor-row-highlight", len(line[-1])))
+				else:
+					line_attr.append(("pattern-list-entry-default", len(line[-1])))
 			else:
 				line_attr.append(("pattern-list-entry-default", len(line[-1])))
-			
+				
 			if self.cursor_pattern_in_loop_range(n):
 				line.append(self.options["loop_range_indicator_patterns"])
 				line_attr.append(("loop-range-indicator", len(line[-1])))

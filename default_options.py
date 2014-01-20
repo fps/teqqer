@@ -70,7 +70,7 @@ options = {
 	"loop_indicator_enabled": "L",
 	"loop_indicator_disabled": " ",
 	
-	"status_text_ok": "O",
+	"status_text_ok": "K",
 	"status_text_error": "E",
 
 	"transport_indicator_stopped": "||",
@@ -130,6 +130,9 @@ options = {
 		
 		["L", "set loop start", lambda x: x.set_loop_start()],
 		[":", "set loop end", lambda x: x.set_loop_end()],
+		["ctrl l", "toggle looping", lambda x: x.toggle_loop()],
+
+		["ctrl f", "toggle follow transport", lambda x: x.toggle_follow_transport()]
 	],
 	
 	"midi_track_keys": [
@@ -204,8 +207,7 @@ options = {
 		["tools", "ctrl t", lambda x: x.change_menu(x.current_menu[3][3]), [
 			["eval", "e", lambda x: x.evaluate(), []]
 		]],
-		["loop", "ctrl l", lambda x: x.toggle_loop(), []],
-		["help", "meta h", lambda x: x.change_menu(x.current_menu[5][3]), [
+		["help", "meta h", lambda x: x.change_menu(x.current_menu[4][3]), [
 			["about", "a", lambda x: x._emit('popup_about'), []],
 			["license", "l", lambda x:x._emit('popup_license'), []],
 			["help", "h", lambda x: x._emit('popup_help'), []]
