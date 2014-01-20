@@ -763,14 +763,14 @@ class main(urwid.Widget):
 				event_attrs.append(("loop-range-indicator", len(events[-1])))
 			else:
 				events.append(" ")
-				if self.cursor_tick == tick_index:
+				if self.info and self.info.transport_position.tick == tick_index:
 					event_attrs.append(("cursor-row-highlight", len(events[-1])))
 				else:
 					event_attrs.append((None, len(events[-1])))
 			
 			events.append("%0.4x" % tick_index)
 			
-			if tick_index == self.cursor_tick:
+			if self.info and tick_index == self.info.transport_position.tick and self.cursor_pattern == self.info.transport_position.pattern:
 					event_attrs.append(("cursor-row-highlight", len(events[-1])))			
 			else:
 				if 0 == tick_index % highlighted_rows:
@@ -782,7 +782,7 @@ class main(urwid.Widget):
 				events.append(column_separator)
 				
 				# Column separator
-				if self.cursor_tick == tick_index:
+				if self.info and self.info.transport_position.tick == tick_index and self.cursor_pattern == self.info.transport_position.pattern:
 					event_attrs.append(("cursor-row-highlight", column_separator_len))
 				else:
 					event_attrs.append((None, column_separator_len))
@@ -804,12 +804,11 @@ class main(urwid.Widget):
 					event_attr = ("event-highlight", len(event))
 
 				if self.info and self.cursor_pattern == self.info.transport_position.pattern:
-					if self.info:
-						if self.cursor_track == track_index and not self.info.transport_position.tick == tick_index:
-							event_attr = ("track-events-highlight",  len(event))
-								
-						if not self.cursor_track == track_index and self.info.transport_position.tick == tick_index:
-							event_attr = ("cursor-row-highlight",  len(event))
+					if self.cursor_track == track_index and not self.info.transport_position.tick == tick_index:
+						event_attr = ("track-events-highlight",  len(event))
+							
+					if self.info.transport_position.tick == tick_index:
+						event_attr = ("cursor-row-highlight",  len(event))
 							
 					if self.cursor_track == track_index and self.cursor_tick == tick_index:
 						event_attr = ("event-selected",  len(event))
