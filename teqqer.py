@@ -1064,6 +1064,7 @@ class main(urwid.Widget):
 				self.cursor_track = json_object["cursor-position-track"]
 				
 				self.options["edit_step"] = json_object["edit-step"]
+				self.options["follow_transport"] = json_object["follow-transport"]
 				
 				for pattern in json_object["patterns"]:
 					new_pattern = self.teq_engine.create_pattern(int(pattern[1]))
@@ -1114,6 +1115,8 @@ class main(urwid.Widget):
 			"cursor-position-pattern": self.cursor_pattern,
 			"cursor-position-tick": self.cursor_tick,
 			"cursor-position-track": self.cursor_track,
+			
+			"follow-transport": self.options["follow_transport"],
 			
 			"edit-step": self.options["edit_step"]
 		}
