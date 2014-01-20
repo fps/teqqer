@@ -853,11 +853,7 @@ class main(urwid.Widget):
 				line_attr.append(("loop-range-indicator", len(line[-1])))
 			else:
 				line.append(" ")
-
-				if n == self.cursor_pattern:
-					line_attr.append(("cursor-row-highlight", len(line[-1])))
-				else:
-					line_attr.append(("pattern-list-entry-default", len(line[-1])))
+				line_attr.append(("pattern-list-entry-default", len(line[-1])))
 				
 				
 			text.append("".join(line))
