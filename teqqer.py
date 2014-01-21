@@ -1058,6 +1058,7 @@ class main(urwid.Widget):
 				json_object = json.loads(text)
 				
 				for track in json_object["tracks"]:
+					print("track ", track["name"])
 					if track["type"] == "CONTROL":
 						self.teq_engine.insert_control_track(str(track["name"]), self.teq_engine.number_of_tracks())
 					if track["type"] == "CV":
@@ -1077,6 +1078,7 @@ class main(urwid.Widget):
 				self.teq_engine.set_global_tempo(json_object["global-tempo"])
 				
 				for pattern in json_object["patterns"]:
+					print("pattern ", str(pattern[0]))
 					new_pattern = self.teq_engine.create_pattern(int(pattern[1]))
 					new_pattern.name = str(pattern[0])
 					for track in xrange(self.teq_engine.number_of_tracks()):
