@@ -1048,7 +1048,8 @@ class main(urwid.Widget):
 		t = urwid.TextCanvas(text,  attr,  maxcol = size[0]) 
 
 		return t
-	
+
+	@handle_error	
 	def load(self):
 		try:
 			print("loading " + self.filename)

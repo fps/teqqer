@@ -2,6 +2,7 @@
     "cursor-position-tick": 10,
     "loop-range-start-pattern": 0,
     "loop-range-end-tick": 16,
+    "follow-transport": true,
     "tracks": [
         {
             "type": "CONTROL",
