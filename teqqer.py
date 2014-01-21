@@ -147,6 +147,11 @@ class PopUpLauncherThing(urwid.PopUpLauncher):
 	def create_pop_up(self):
 		return self.popup_widget
 	
+class cursor_position():
+	def __init__(self, track = 0, pattern = 0, tick = 0):
+		self.pattern = pattern
+		self.tick = tick
+		self.track = track
 
 class main(urwid.Widget):
 	def __init__(self,  teq_engine,  options, filename):
@@ -172,10 +177,9 @@ class main(urwid.Widget):
 		
 		self._sizing = frozenset(['box'])
 		
-		self.cursor_pattern = 0
-		self.cursor_tick = 0
-		self.cursor_track = 0
-		self.cursor_column = 0
+		self.cursor = cursor_position()
+		
+		self.selection_start = None
 		
 		self.history = history()
 
@@ -228,8 +232,8 @@ class main(urwid.Widget):
 		if old_info and self.info:
 			if self.state_changed(old_info, self.info):
 				if self.options["follow_transport"] == True:
-					self.cursor_tick = self.info.transport_position.tick
-					self.cursor_pattern = self.info.transport_position.pattern
+					self.cursor.tick = self.info.transport_position.tick
+					self.cursor.pattern = self.info.transport_position.pattern
 				
 				self._invalidate()
 	
@@ -321,9 +325,9 @@ class main(urwid.Widget):
 	
 	@handle_error
 	def rename_pattern_with_name(self, name):
-		p = self.teq_engine.get_pattern(self.cursor_pattern)
+		p = self.teq_engine.get_pattern(self.cursor.pattern)
 		p.name = name
-		self.teq_engine.set_pattern(self.cursor_pattern, p)
+		self.teq_engine.set_pattern(self.cursor.pattern, p)
 		self._invalidate()
 	
 	@handle_error
@@ -332,7 +336,7 @@ class main(urwid.Widget):
 	
 	@handle_error
 	def rename_track_with_name(self, name):
-		self.teq_engine.rename_track(self.cursor_track, name)
+		self.teq_engine.rename_track(self.cursor.track, name)
 		self._invalidate()
 
 	@handle_error
@@ -345,7 +349,7 @@ class main(urwid.Widget):
 		if self.teq_engine.number_of_patterns() == 0:
 			self.teq_engine.insert_pattern(0, self.teq_engine.create_pattern(length))
 		else:
-			self.teq_engine.insert_pattern(self.cursor_pattern + 1, self.teq_engine.create_pattern(length))
+			self.teq_engine.insert_pattern(self.cursor.pattern + 1, self.teq_engine.create_pattern(length))
 		
 		self._invalidate()
 		
@@ -413,30 +417,30 @@ class main(urwid.Widget):
 			return
 		
 		if amount > 0:
-			self.cursor_tick += 1
+			self.cursor.tick += 1
 		else:
-			self.cursor_tick -= 1
+			self.cursor.tick -= 1
 		
-		pattern = self.teq_engine.get_pattern(self.cursor_pattern)
+		pattern = self.teq_engine.get_pattern(self.cursor.pattern)
 		
-		if self.cursor_tick < 0:
+		if self.cursor.tick < 0:
 			if self.options["cursor_wrap_mode"] == "pattern":
-				self.cursor_tick = pattern.length() - 1
+				self.cursor.tick = pattern.length() - 1
 			if self.options["cursor_wrap_mode"] == "song":
-				self.cursor_pattern -= 1
-				if self.cursor_pattern < 0:
-					self.cursor_pattern = self.teq_engine.number_of_patterns() - 1
-				new_pattern = self.teq_engine.get_pattern(self.cursor_pattern)
-				self.cursor_tick = new_pattern.length() - 1
+				self.cursor.pattern -= 1
+				if self.cursor.pattern < 0:
+					self.cursor.pattern = self.teq_engine.number_of_patterns() - 1
+				new_pattern = self.teq_engine.get_pattern(self.cursor.pattern)
+				self.cursor.tick = new_pattern.length() - 1
 				
-		if self.cursor_tick >= pattern.length():
+		if self.cursor.tick >= pattern.length():
 			if self.options["cursor_wrap_mode"] == "pattern":
-				self.cursor_tick = 0
+				self.cursor.tick = 0
 			if self.options["cursor_wrap_mode"] == "song":
-				self.cursor_tick = 0
-				self.cursor_pattern += 1
-				if self.cursor_pattern >= self.teq_engine.number_of_patterns():
-					self.cursor_pattern = 0
+				self.cursor.tick = 0
+				self.cursor.pattern += 1
+				if self.cursor.pattern >= self.teq_engine.number_of_patterns():
+					self.cursor.pattern = 0
 	
 	@handle_error
 	def change_cursor_tick(self, amount):
@@ -445,17 +449,17 @@ class main(urwid.Widget):
 		
 	@handle_error
 	def change_cursor_track(self, amount):
-		self.cursor_track += amount
-		self.cursor_track = self.cursor_track % self.teq_engine.number_of_tracks()
+		self.cursor.track += amount
+		self.cursor.track = self.cursor.track % self.teq_engine.number_of_tracks()
 	
 	@handle_error
 	def change_cursor_pattern(self, amount):
 		if self.teq_engine.number_of_patterns() == 0:
 			return
 		
-		self.cursor_pattern += amount
+		self.cursor.pattern += amount
 		
-		self.cursor_pattern = self.cursor_pattern % self.teq_engine.number_of_patterns()
+		self.cursor.pattern = self.cursor.pattern % self.teq_engine.number_of_patterns()
 
 	@handle_error
 	def set_loop_start(self):
@@ -463,8 +467,8 @@ class main(urwid.Widget):
 			return
 		
 		loop_range = self.info.loop_range
-		loop_range.start.pattern = self.cursor_pattern
-		loop_range.start.tick = self.cursor_tick
+		loop_range.start.pattern = self.cursor.pattern
+		loop_range.start.tick = self.cursor.tick
 		
 		self.teq_engine.set_loop_range(loop_range)
 		self._invalidate()
@@ -475,27 +479,27 @@ class main(urwid.Widget):
 			return
 		
 		loop_range = self.info.loop_range
-		loop_range.end.pattern = self.cursor_pattern
-		loop_range.end.tick = self.cursor_tick
+		loop_range.end.pattern = self.cursor.pattern
+		loop_range.end.tick = self.cursor.tick
 		
 		self.teq_engine.set_loop_range(loop_range)
 		self._invalidate()
 
 	@handle_error
 	def move_to_pattern_top(self):
-		self.cursor_tick = 0
+		self.cursor.tick = 0
 	
 	@handle_error
 	def move_to_pattern_end(self):
-		pattern = self.teq_engine.get_pattern(self.cursor_pattern)
-		self.cursor_tick = pattern.length() - 1
+		pattern = self.teq_engine.get_pattern(self.cursor.pattern)
+		self.cursor.tick = pattern.length() - 1
 	
 	@handle_error
 	def delete_event(self):
 		if False == self.edit_mode:
 			return
 
-		self.set_midi_event_action(self.cursor_track, self.cursor_pattern, self.cursor_tick, teq.midi_event_type.NONE, 0, 127)
+		self.set_midi_event_action(self.cursor.track, self.cursor.pattern, self.cursor.tick, teq.midi_event_type.NONE, 0, 127)
 		self._invalidate()
 		return	
 	
@@ -519,7 +523,7 @@ class main(urwid.Widget):
 		if self.info.transport_state == teq.transport_state.PLAYING:
 			pyteq.stop(self.teq_engine)
 		else:
-			pyteq.set_transport_position(self.teq_engine,  self.cursor_pattern,  self.cursor_tick)
+			pyteq.set_transport_position(self.teq_engine,  self.cursor.pattern,  self.cursor.tick)
 			pyteq.play(self.teq_engine)
 		
 		self._invalidate()
@@ -531,7 +535,7 @@ class main(urwid.Widget):
 	def set_midi_event(self, track_index, pattern_index, tick_index, event_type, value1, value2):
 		pattern = self.teq_engine.get_pattern(pattern_index)
 		pattern.set_midi_event(track_index, tick_index, teq.midi_event(event_type, value1, value2))
-		self.teq_engine.set_pattern(self.cursor_pattern, pattern)
+		self.teq_engine.set_pattern(self.cursor.pattern, pattern)
 		self.teq_engine.gc()
 		
 	@handle_error
@@ -556,6 +560,9 @@ class main(urwid.Widget):
 	
 	@handle_error
 	def keypress(self,  size,  key):
+		#self.display_text(key)
+		#return
+	
 		# The menu MUST be processed first. This way even
 		# submenu entries without modifiers get priority.
 		for entry in self.current_menu:
@@ -575,7 +582,7 @@ class main(urwid.Widget):
 				self._invalidate()
 				return
 			
-		if self.teq_engine.track_type(self.cursor_track) == teq.track_type.MIDI:
+		if self.teq_engine.track_type(self.cursor.track) == teq.track_type.MIDI:
 			for k in self.options["midi_track_keys"]:
 				if k[0] == key:
 					k[2](self)
@@ -586,18 +593,18 @@ class main(urwid.Widget):
 
 		# If we are in the root menu we have to do some extra key
 		# processing
-		track_type = self.teq_engine.track_type(self.cursor_track)
+		track_type = self.teq_engine.track_type(self.cursor.track)
 		
 		if track_type == teq.track_type.MIDI:
 			if key == self.options["note_off_key"]:
 				if True == self.edit_mode:
-					self.set_midi_event_action(self.cursor_track, self.cursor_pattern, self.cursor_tick, teq.midi_event_type.OFF, 0, 127)
+					self.set_midi_event_action(self.cursor.track, self.cursor.pattern, self.cursor.tick, teq.midi_event_type.OFF, 0, 127)
 					self._invalidate()
 					return
 				
 			for k in self.options["note_keys"]:
 				if k[0] == key and True == self.edit_mode:
-					self.set_midi_event_action(self.cursor_track, self.cursor_pattern, self.cursor_tick, teq.midi_event_type.ON, self.options["note_edit_base"] + k[1], self.options["note_edit_velocity"])
+					self.set_midi_event_action(self.cursor.track, self.cursor.pattern, self.cursor.tick, teq.midi_event_type.ON, self.options["note_edit_base"] + k[1], self.options["note_edit_velocity"])
 					self.change_cursor_tick(self.options["edit_step"])
 					self._invalidate()
 					return
@@ -706,7 +713,7 @@ class main(urwid.Widget):
 			track_name = self.teq_engine.track_name(n)
 
 			text.append(self.render_name(track_name,  render_size))
-			if self.cursor_track == n:
+			if self.cursor.track == n:
 				attr.append(("track-name-highlight",  render_size))
 			else:
 				attr.append((default_style,  render_size))
@@ -745,7 +752,7 @@ class main(urwid.Widget):
 		return True
 	
 	def render_pattern(self):
-		pattern = self.teq_engine.get_pattern(self.cursor_pattern)
+		pattern = self.teq_engine.get_pattern(self.cursor.pattern)
 		
 		column_separator = self.options["column_separator"]
 		column_separator_len = len(column_separator)
@@ -758,19 +765,19 @@ class main(urwid.Widget):
 			events = []
 			event_attrs = []
 			
-			if self.cursor_in_loop_range(self.cursor_pattern, tick_index):
+			if self.cursor_in_loop_range(self.cursor.pattern, tick_index):
 				events.append(self.options["loop_range_indicator_events"])
 				event_attrs.append(("loop-range-indicator", len(events[-1])))
 			else:
 				events.append(" ")
-				if self.info and self.info.transport_position.tick == tick_index and self.info.transport_position.pattern == self.cursor_pattern:
+				if self.info and self.info.transport_position.tick == tick_index and self.info.transport_position.pattern == self.cursor.pattern:
 					event_attrs.append(("cursor-row-highlight", len(events[-1])))
 				else:
 					event_attrs.append((None, len(events[-1])))
 			
 			events.append("%0.4x" % tick_index)
 			
-			if self.info and tick_index == self.info.transport_position.tick and self.cursor_pattern == self.info.transport_position.pattern:
+			if self.info and tick_index == self.info.transport_position.tick and self.cursor.pattern == self.info.transport_position.pattern:
 					event_attrs.append(("cursor-row-highlight", len(events[-1])))			
 			else:
 				if 0 == tick_index % highlighted_rows:
@@ -782,7 +789,7 @@ class main(urwid.Widget):
 				events.append(column_separator)
 				
 				# Column separator
-				if self.info and self.info.transport_position.tick == tick_index and self.cursor_pattern == self.info.transport_position.pattern:
+				if self.info and self.info.transport_position.tick == tick_index and self.cursor.pattern == self.info.transport_position.pattern:
 					event_attrs.append(("cursor-row-highlight", column_separator_len))
 				else:
 					event_attrs.append((None, column_separator_len))
@@ -803,16 +810,16 @@ class main(urwid.Widget):
 				if tick_index % highlighted_rows == 0:
 					event_attr = ("event-highlight", len(event))
 
-				if self.cursor_track == track_index:
+				if self.cursor.track == track_index:
 					event_attr = ("track-events-highlight",  len(event))
 					
-				if self.cursor_track == track_index and self.cursor_tick == tick_index:
-					event_attr = ("event-selected",  len(event))
-
-				if self.info and self.cursor_pattern == self.info.transport_position.pattern:
+				if self.info and self.cursor.pattern == self.info.transport_position.pattern:
 					if self.info.transport_position.tick == tick_index:
 						event_attr = ("cursor-row-highlight",  len(event))
 							
+				if self.cursor.track == track_index and self.cursor.tick == tick_index:
+					event_attr = ("event-selected",  len(event))
+
 					
 				event_attrs.append(event_attr)
 				
@@ -961,8 +968,8 @@ class main(urwid.Widget):
 
 		event_rows = size[1] - 2
 
-		if self.cursor_pattern < self.teq_engine.number_of_patterns():
-			pattern = self.teq_engine.get_pattern(self.cursor_pattern)
+		if self.cursor.pattern < self.teq_engine.number_of_patterns():
+			pattern = self.teq_engine.get_pattern(self.cursor.pattern)
 			
 			split = int(round(event_rows * self.options["center_line_fraction"]))
 			
@@ -974,8 +981,8 @@ class main(urwid.Widget):
 			rendered_pattern = self.render_pattern()
 
 			for n in range(0,  event_rows):
-				displayed_tick = (self.cursor_tick + n) - split
-				displayed_pattern = (self.cursor_pattern + n) - split
+				displayed_tick = (self.cursor.tick + n) - split
+				displayed_pattern = (self.cursor.pattern + n) - split
 
 				# Initialize with an empty line and attributes
 				line = []
@@ -1059,12 +1066,14 @@ class main(urwid.Widget):
 		
 				pyteq.set_loop_range(self.teq_engine, json_object["loop-range-start-pattern"], json_object["loop-range-start-tick"], json_object["loop-range-end-pattern"], json_object["loop-range-end-tick"], json_object["loop-range-enabled"])
 				
-				self.cursor_pattern = json_object["cursor-position-pattern"]
-				self.cursor_tick = json_object["cursor-position-tick"]
-				self.cursor_track = json_object["cursor-position-track"]
+				self.cursor.pattern = json_object["cursor-position-pattern"]
+				self.cursor.tick = json_object["cursor-position-tick"]
+				self.cursor.track = json_object["cursor-position-track"]
 				
 				self.options["edit_step"] = json_object["edit-step"]
 				self.options["follow_transport"] = json_object["follow-transport"]
+				
+				self.teq_engine.set_global_tempo(json_object["global-tempo"])
 				
 				for pattern in json_object["patterns"]:
 					new_pattern = self.teq_engine.create_pattern(int(pattern[1]))
@@ -1112,13 +1121,13 @@ class main(urwid.Widget):
 			"loop-range-end-tick": self.info.loop_range.end.tick,
 			"loop-range-enabled": self.info.loop_range.enabled,
 			
-			"cursor-position-pattern": self.cursor_pattern,
-			"cursor-position-tick": self.cursor_tick,
-			"cursor-position-track": self.cursor_track,
+			"cursor-position-pattern": self.cursor.pattern,
+			"cursor-position-tick": self.cursor.tick,
+			"cursor-position-track": self.cursor.track,
 			
 			"follow-transport": self.options["follow_transport"],
 			
-			"edit-step": self.options["edit_step"]
+			"edit-step": self.options["edit_step"],
 		}
 		
 		tracks_json_object = []
