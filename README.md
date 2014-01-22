@@ -24,8 +24,8 @@ Then you can build teq:
 
 <pre>
 cd teq
-mkdir bld
-cd bld
+mkdir build
+cd build
 cmake ..
 make
 cd ../..
