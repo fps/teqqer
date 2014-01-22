@@ -52,9 +52,6 @@ options = {
 		
 		("line-entry", "black", "yellow"),
 		
-		("status-text-ok", "black", "dark green"),
-		("status-text-error", "black", "dark red"),
-		
 		("loop-indicator-enabled", "black", "light gray"),
 		("loop-indicator-disabled", "black", "dark gray"),
 
@@ -73,9 +70,6 @@ options = {
 	"loop_indicator_enabled": "L",
 	"loop_indicator_disabled": " ",
 	
-	"status_text_ok": "K",
-	"status_text_error": "E",
-
 	"transport_indicator_stopped": "||",
 	"transport_indicator_playing": ">>",
 	

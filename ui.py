@@ -5,6 +5,7 @@ import string
 import json
 import teq
 import pyteq
+import traceback
 
 class TextPopup(urwid.WidgetWrap):
 	def __init__(self, text):
@@ -105,8 +106,6 @@ class main_window(urwid.Widget):
 		
 		self.text_to_show = None
 		
-		self.status_text = self.options["status_text_ok"]
-		
 		self.evaluation_history = []
 		self.pattern_length_history = []
 		self.cv_value_history = []
@@ -145,30 +144,32 @@ class main_window(urwid.Widget):
 			except Exception as e:
 				args[0].display_text(str(e) + "\n" + traceback.format_exc())
 				args[0].exit_menu()
-				args[0].set_status(False)
-			else:
-				args[0].set_status(True)
 				
 		return g
 	
+	def state_changed(self, old_info, new_info):
+		if old_info.transport_position.tick != new_info.transport_position.tick:
+			return True
+		
+		if old_info.transport_position.pattern != new_info.transport_position.pattern:
+			return True
+		
+		if old_info.transport_state != self.info.transport_state:
+			return True
+		
+		return False
+		
 	def get_state_info_and_update(self):
 		self.handle_text_popups()
-			
 		old_info = self.info
 		
 		try:
-			while True:
-				self.info = teq_engine.get_state_info()
+			while self.teq_engine.has_state_info():
+				self.info = self.teq_engine.get_state_info()
+				#self.display_text("yay")
 		except Exception as e:
+			self.display_text(str(e))
 			pass
-		
-		if self.info == None:
-			
-			self._invalidate()
-			return
-		
-		if old_info == None and self.info != None:
-			self._invalidate()
 		
 		# Check if the transport position changed
 		if old_info and self.info:
@@ -177,18 +178,8 @@ class main_window(urwid.Widget):
 					self.cursor.tick = self.info.transport_position.tick
 					self.cursor.pattern = self.info.transport_position.pattern
 				
-				self._invalidate()
-	
-	def set_status(self, state):
-		if state:
-			self.status_text = self.options["status_text_ok"]
-		else:
-			self.status_text = self.options["status_text_error"]
 		self._invalidate()
 	
-	def set_status_text(self, text):
-		self.status_text = text
-
 	def handle_text_popups(self):
 		if self.text_to_show:
 			self.popup_launcher.popup_text(self.text_to_show)
@@ -240,14 +231,6 @@ class main_window(urwid.Widget):
 	def redo(self):
 		self.history.redo()
 	
-	def state_changed(self, old_info, new_info):
-		if not old_info.transport_position.tick == new_info.transport_position.tick:
-			return True
-		if not old_info.transport_position.pattern == new_info.transport_position.pattern:
-			return True
-		if not old_info.transport_state == self.info.transport_state:
-			return True
-		
 	@handle_error
 	def toggle_follow_transport(self):
 		self.options["follow_transport"] = not self.options["follow_transport"]
@@ -351,7 +334,7 @@ class main_window(urwid.Widget):
 	def change_cursor_tick_by_one(self, amount):
 		if not self.info:
 			return
-		
+
 		if self.info.transport_state == teq.transport_state.PLAYING and self.options["follow_transport"]:
 			return
 		
@@ -445,9 +428,6 @@ class main_window(urwid.Widget):
 		self._invalidate()
 		return	
 	
-	def show_help(self):
-		pass
-	
 	def quit(self):
 		raise urwid.ExitMainLoop()
 	
@@ -531,10 +511,6 @@ class main_window(urwid.Widget):
 					self._invalidate()
 					return
 			
-			
-
-		# If we are in the root menu we have to do some extra key
-		# processing
 		track_type = self.teq_engine.track_type(self.cursor.track)
 		
 		if track_type == teq.track_type.MIDI:
@@ -814,12 +790,6 @@ class main_window(urwid.Widget):
 		text = []
 		attr = []
 		
-		text.append(self.status_text)
-		if self.status_text == self.options["status_text_ok"]:
-			attr.append(("status-text-ok", len(text[-1])))
-		else:
-			attr.append(("status-text-error", len(text[-1])))
-		
 		if True == self.edit_mode:
 			text.append(self.options["edit_mode_indicator_enabled"])
 		else:
@@ -835,7 +805,7 @@ class main_window(urwid.Widget):
 			attr.append(("follow-transport-indicator-disabled", len(text[-1])))
 			
 		
-		if None != self.info:
+		if self.info:
 			if self.info.loop_range.enabled:
 				text.append(self.options["loop_indicator_enabled"])
 				attr.append(("loop-indicator-enabled", len(text[-1])))
@@ -922,7 +892,7 @@ class main_window(urwid.Widget):
 			
 			rendered_pattern = self.render_pattern()
 
-			for n in xrange( event_rows):
+			for n in xrange(event_rows):
 				displayed_tick = (self.cursor.tick + n) - split
 				displayed_pattern = (self.cursor.pattern + n) - split
 

@@ -1,19 +1,10 @@
 import sys
 import urwid
-import math
 import random
-import json
-import traceback
-import string
 
 import teq
-import pyteq
 
 import default_options
-import about
-import license
-import the_help
-import history
 import ui
 
 usage_text = """
@@ -30,9 +21,6 @@ if (len(sys.argv) != 2):
 	print(usage_text)
 	sys.exit()
 
-
-
-
 # TODO: merge in user options
 options = default_options.options
 
@@ -40,13 +28,11 @@ teq_engine = teq.teq()
 
 the_main = ui.main_window(teq_engine,  options, sys.argv[1])
 
-def handle_alarm(main_loop,  the_main):
+def handle_alarm(main_loop, the_main):
 	the_main.get_state_info_and_update()
 	main_loop.set_alarm_in(the_main.options["ui_update_interval"] - random.random() * 0.5 * the_main.options["ui_update_interval"],  handle_alarm,  the_main)
 
-
-
-popup_launcher = PopUpLauncherThing(the_main)
+popup_launcher = ui.PopUpLauncherThing(the_main)
 loop = urwid.MainLoop(popup_launcher,  options["palette"], pop_ups=True)
 loop.set_alarm_in(the_main.options["ui_update_interval"],  handle_alarm,  the_main)
 loop.run()
