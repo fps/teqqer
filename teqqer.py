@@ -28,6 +28,13 @@ if (len(sys.argv) != 2):
 	print(usage_text)
 	sys.exit()
 
+def string_replace(stri, what, rep):
+	if sys.version_info[0] == 2:
+		return string.replace(stri, what, rep)
+	
+	if sys.version_info[0] == 3:
+		return stri.replace(what, rep)
+
 class history:
 	def __init__(self):
 		# A list of tuples of lambdas where the first
@@ -617,8 +624,8 @@ class main(urwid.Widget):
 			return "space"
 		
 		ret = key
-		ret = string.replace(ret, "ctrl", "C")
-		ret = string.replace(ret, "meta", "M")
+		ret = string_replace(ret, "ctrl", "C")
+		ret = string_replace(ret, "meta", "M")
 		
 		return ret
 	
