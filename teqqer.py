@@ -13,6 +13,7 @@ import default_options
 import about
 import license
 import the_help
+import history
 
 usage_text = """
 Usage: teqqer [filename]
@@ -27,43 +28,6 @@ A naming convention is to use the extension .teq for teqqer files.
 if (len(sys.argv) != 2):
 	print(usage_text)
 	sys.exit()
-
-def string_replace(stri, what, rep):
-	if sys.version_info[0] == 2:
-		return string.replace(stri, what, rep)
-	
-	if sys.version_info[0] == 3:
-		return stri.replace(what, rep)
-
-class history:
-	def __init__(self):
-		# A list of tuples of lambdas where the first
-		# entry in each tuple is the action and the second
-		# is the action with the inverse effect.
-		self.reset()
-		
-	def add(self, action, inverse_action):		
-		if self.last > -1:
-			self.actions = self.actions[0:self.last+1]
-		
-		self.actions.append((action, inverse_action))
-		self.last += 1
-		
-		action()
-		
-	def undo(self):
-		if self.last > -1:
-			self.actions[self.last][1]()
-			self.last -= 1
-	
-	def redo(self):
-		if self.last + 1 < len(self.actions):
-			self.actions[self.last + 1][0]()
-			self.last += 1
-			
-	def reset(self):
-		self.actions = []
-		self.last = -1
 
 
 class TextPopup(urwid.WidgetWrap):
@@ -188,7 +152,7 @@ class main(urwid.Widget):
 		
 		self.selection_start = None
 		
-		self.history = history()
+		self.history = history.history()
 
 		self.info = None
 		
@@ -451,7 +415,7 @@ class main(urwid.Widget):
 	
 	@handle_error
 	def change_cursor_tick(self, amount):
-		for n in range(0, abs(amount)):
+		for n in xrange(abs(amount)):
 			self.change_cursor_tick_by_one(amount)
 		
 	@handle_error
@@ -624,8 +588,8 @@ class main(urwid.Widget):
 			return "space"
 		
 		ret = key
-		ret = string_replace(ret, "ctrl", "C")
-		ret = string_replace(ret, "meta", "M")
+		ret = string.replace(ret, "ctrl", "C")
+		ret = string.replace(ret, "meta", "M")
 		
 		return ret
 	
@@ -638,7 +602,7 @@ class main(urwid.Widget):
 		text = []
 		attr = []
 		
-		for n in range(0, len(self.current_menu)):
+		for n in xrange(len(self.current_menu)):
 			entry = self.current_menu[n]
 			text.append(self.render_key(entry[1]) + ":" + entry[0])
 			attr.append(("menu-entry-default", len(text[-1])))
@@ -704,7 +668,7 @@ class main(urwid.Widget):
 		
 		header = "patterns" + column_separator + "tick"
 		
-		for n in range(0, self.teq_engine.number_of_tracks()):
+		for n in xrange(self.teq_engine.number_of_tracks()):
 			text.append(column_separator)
 			attr.append((default_style,  column_separator_len))
 			
@@ -768,7 +732,7 @@ class main(urwid.Widget):
 		text = []
 		attr = []
 		
-		for tick_index in range(0, pattern.length()):
+		for tick_index in xrange(pattern.length()):
 			events = []
 			event_attrs = []
 			
@@ -792,7 +756,7 @@ class main(urwid.Widget):
 				else:
 					event_attrs.append(("event-default", len(events[-1])))
 			
-			for track_index in range(0, self.teq_engine.number_of_tracks()):
+			for track_index in xrange(self.teq_engine.number_of_tracks()):
 				events.append(column_separator)
 				
 				# Column separator
@@ -839,7 +803,7 @@ class main(urwid.Widget):
 		text = []
 		attr = []
 		
-		for n in range(0, self.teq_engine.number_of_patterns()):
+		for n in xrange(self.teq_engine.number_of_patterns()):
 			line = []
 			line_attr = []
 			
@@ -987,7 +951,7 @@ class main(urwid.Widget):
 			
 			rendered_pattern = self.render_pattern()
 
-			for n in range(0,  event_rows):
+			for n in xrange( event_rows):
 				displayed_tick = (self.cursor.tick + n) - split
 				displayed_pattern = (self.cursor.pattern + n) - split
 
@@ -1013,7 +977,7 @@ class main(urwid.Widget):
 				text.append("".join(line))
 				attr.append(line_attr)	
 		else:
-			for n in range(0, event_rows):
+			for n in xrange(event_rows):
 				text.append("~" * size[0])
 				attr.append([(None, len(text[-1]))])
 		
@@ -1033,7 +997,7 @@ class main(urwid.Widget):
 			text = []
 			attr = []
 			
-			for n in range(0, size[1]):
+			for n in xrange(size[1]):
 				text_line = []
 				line_attr = []
 				if n == 0:
@@ -1088,7 +1052,7 @@ class main(urwid.Widget):
 					print("pattern ", str(pattern[0]))
 					new_pattern = self.teq_engine.create_pattern(int(pattern[1]))
 					new_pattern.name = str(pattern[0])
-					for track in range(0, self.teq_engine.number_of_tracks()):
+					for track in xrange(self.teq_engine.number_of_tracks()):
 						for event in pattern[track + 2]:
 							if self.teq_engine.track_type(track) == teq.track_type.MIDI:
 								if event[1] == "ON":
@@ -1141,7 +1105,7 @@ class main(urwid.Widget):
 		}
 		
 		tracks_json_object = []
-		for n in range(0, self.teq_engine.number_of_tracks()):
+		for n in xrange(self.teq_engine.number_of_tracks()):
 			track_type_name = ""
 			if teq_engine.track_type(n) == teq.track_type.MIDI:
 				track_type_name = "MIDI"
@@ -1154,14 +1118,14 @@ class main(urwid.Widget):
 		json_object["tracks"] = tracks_json_object
 		
 		patterns_json_object = []
-		for n in range(0, self.teq_engine.number_of_patterns()):
+		for n in xrange(self.teq_engine.number_of_patterns()):
 			pattern_json_object = []
 			pattern = self.teq_engine.get_pattern(n)
 			pattern_json_object.append(pattern.name)
 			pattern_json_object.append(pattern.length())
-			for m in range(0, self.teq_engine.number_of_tracks()):
+			for m in xrange(self.teq_engine.number_of_tracks()):
 				track_json_object = []
-				for tick in range(0, pattern.length()):
+				for tick in xrange(pattern.length()):
 					if self.teq_engine.track_type(m) == teq.track_type.MIDI:
 						event = pattern.get_midi_event(m, tick)
 						if event.type == teq.midi_event_type.ON:
@@ -1206,7 +1170,7 @@ class main(urwid.Widget):
 		#teq_engine.insert_midi_track("bd4",  teq_engine.number_of_tracks())
 		#teq_engine.insert_midi_track("snare4",  teq_engine.number_of_tracks())
 
-	#for n in range(0, 4):
+	#for n in xrange(4):
 		#p = teq_engine.create_pattern(32)
 		#p.name = "part" + str(n)
 		#p.set_midi_event(1,  0,  teq.midi_event(teq.midi_event_type.ON,  63,  127))

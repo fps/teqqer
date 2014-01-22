@@ -1,8 +1,7 @@
 {
-    "cursor-position-tick": 10,
+    "cursor-position-tick": 8,
     "loop-range-start-pattern": 0,
     "loop-range-end-tick": 16,
-    "follow-transport": true,
     "tracks": [
         {
             "type": "CONTROL",
@@ -45,9 +44,9 @@
             "name": "snare4"
         }
     ],
-    "cursor-position-track": 8,
-    "edit-step": 1,
-    "loop-range-enabled": false,
+    "cursor-position-track": 4,
+    "edit-step": 2,
+    "loop-range-enabled": true,
     "loop-range-start-tick": 0,
     "loop-range-end-pattern": 0,
     "cursor-position-pattern": 0,
@@ -761,5 +760,6 @@
             [],
             []
         ]
-    ]
+    ],
+    "follow-transport": false
 }
