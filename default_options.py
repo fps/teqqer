@@ -159,7 +159,7 @@ options = {
 	
 	"control_track_keys": [
 		["g", "create a global tempo event at the cursor position", lambda x: x.create_control_event(teq.control_event_type.GLOBAL_TEMPO)],
-		["g", "create a relative tempo event at the cursor position", lambda x: x.create_control_event(teq.control_event_type.RELATIVE_TEMPO)]
+		["r", "create a relative tempo event at the cursor position", lambda x: x.create_control_event(teq.control_event_type.RELATIVE_TEMPO)]
 	],
 	
 	"global_mouse_events": [
@@ -253,7 +253,7 @@ options = {
 	"mouse_interaction": True, 
 	
 	# Reduce this time to make the UI more smooth at the expense of cpu power
-	"ui_update_interval": 0.2, 
+	"ui_update_interval": 0.1, 
 	
 	"note_edit_base": 48,
 	"note_edit_velocity": 127,

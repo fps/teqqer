@@ -58,11 +58,6 @@ To enter a note press on of the following keys (the numbers indicate the interva
 
 """)
 	
-	text.append("""
-To enter a note press on of the following keys (the numbers indicate the interval (in semitones) above the note_edit_base.:
-
-""")
-	
 	for k in options["note_keys"]:
 		text.append(k[0] + ": " + str(k[1]) + " ")
 		
