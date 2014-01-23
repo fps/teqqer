@@ -9,7 +9,7 @@ This project is not in a usable state yet. Check the issue tracker for open prob
 # Requirements
 
 * libteq and its python bindings - submodule, see below.
-* urwid (e.g. python-urwid on ubuntu 13.130)
+* urwid (e.g. python-urwid on ubuntu 13.10)
 
 # Building
 
