@@ -19,9 +19,23 @@ Sequences are arranged in patterns. All sequences in a pattern have the same len
 
 All patterns share the same number of sequences and also their types (being that of their corresponding tracks). 
 
+# Track Types
+
+## MIDI Tracks
+
+MIDI tracks can hold note-on, explicit note-off and CC events. Every MIDI track has an associated jack midi output port which is used to send the midi events. See the midi track key bindings below for help on how to edit events from the keyboard. 
+
+## CV Tracks
+
+CV tracks produce their output on a jack audio port. This can be used to e.g. automate parameters in instruments that expose control ports via jack audio ports. Every CV track has an associated jack audio output port. See the cv track key bindings below for help on how to edit events from the keyboard. 
+
+## Control Tracks
+
+Control tracks can be used to control the song playback. Event types include setting the global tempo or the relative tempo. Control tracks have no associated output ports. See the control track key bindings below for help on how to edit events from the keyboard. 
+
 # The Keyboard
 
-The primary means of editing note data is by using the computer's keyboard. Most of the keyboard is used up for this purpose.
+The primary means of editing data is by using the computer's keyboard. Most of the keyboard is used up for this purpose.
 
 Here's a list of the key global key bindings (note that uppercase characters imply pressing shift):
 
