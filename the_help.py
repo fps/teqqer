@@ -13,7 +13,7 @@ Tracks are layed out horizontally. Tracks can have one of three types:
 * CV
 * Control
 
-Events are presented such that time flows from the top of the screen to the bottom.I.e. musical data is arranged in columns (which we will also call "sequences").
+Events are presented such that time flows from the top of the screen to the bottom. I.e. musical data is arranged in columns (which we will also call "sequences").
 
 Sequences are arranged in patterns. All sequences in a pattern have the same length. 
 
@@ -37,6 +37,8 @@ Control tracks can be used to control the song playback. Event types include set
 
 The primary means of editing data is by using the computer's keyboard. Most of the keyboard is used up for this purpose.
 
+## Global Keys
+
 Here's a list of the key global key bindings (note that uppercase characters imply pressing shift):
 
 """)
@@ -45,6 +47,8 @@ Here's a list of the key global key bindings (note that uppercase characters imp
 		text.append(item[0] + ": " + item[1] + "\n")
 
 	text.append("""
+## MIDI Track Keys
+
 The key bindings for midi tracks:
 
 """)
@@ -62,6 +66,9 @@ To enter a note press on of the following keys (the numbers indicate the interva
 		text.append(k[0] + ": " + str(k[1]) + " ")
 		
 	text.append("""
+
+## Control Track Keys
+
 The key bindings for control tracks:
 
 """)
@@ -70,6 +77,8 @@ The key bindings for control tracks:
 		text.append(item[0] + ": " + item[1] + "\n")
 
 	text.append("""
+## CV Track Keys
+
 The key bindings for cv tracks:
 
 """)
