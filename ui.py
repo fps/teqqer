@@ -6,6 +6,9 @@ import json
 import teq
 import pyteq
 import traceback
+import the_help
+import about
+import license
 
 class TextPopup(urwid.WidgetWrap):
 	def __init__(self, text):
@@ -803,11 +806,8 @@ class main_window(urwid.Widget):
 			if self.info:
 				if n == self.info.transport_position.pattern:
 					name_attr = ("cursor-row-highlight", len(line[-1]))
-				else:
-					name_attr = ("pattern-list-entry-default", len(line[-1]))
-			else:
-				name_attr = ("pattern-list-entry-default", len(line[-1]))
-				
+				if n == self.cursor.pattern:
+					name_attr = ("event-selected", len(line[-1]))
 			line_attr.append(name_attr)
 				
 			if self.cursor_pattern_in_loop_range(n):
