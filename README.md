@@ -31,12 +31,18 @@ make
 cd ../..
 </pre>
 
+If you want to update the source tree of teqqer as well as the teq submodule, use the <code>git_pull.sh</code> script.
+
+<pre>
+./git_pull.sh
+</pre>
+
 # Running
 
 Run teqqer from the root of the source tree with the provided script <code>teqqer</code>:
 
 <pre>
-./teqqer foo.teq
+./teqqer example.teq
 </pre>
 
 # Installation
