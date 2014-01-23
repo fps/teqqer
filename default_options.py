@@ -152,6 +152,16 @@ options = {
 		["meta page down", "decrease base velocity by one", lambda x: x.change_note_velocity(-1)]
 	],
 	
+	"cv_track_keys": [
+		["c", "create a constant cv event at the cursor position", lambda x: x.create_cv_constant_event()],
+		["i", "create an interval cv event at the cursor position", lambda x: x.create_cv_interval_event()]
+	],
+	
+	"control_track_keys": [
+		["g", "create a global tempo event at the cursor position", lambda x: x.create_control_event(teq.control_event_type.GLOBAL_TEMPO)],
+		["g", "create a relative tempo event at the cursor position", lambda x: x.create_control_event(teq.control_event_type.RELATIVE_TEMPO)]
+	],
+	
 	"global_mouse_events": [
 		[("mouse press", 4), "move one event up", lambda x: x.change_cursor_tick(-1)],
 		[("mouse press", 5), "move one event down", lambda x: x.change_cursor_tick(1)]

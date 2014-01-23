@@ -454,6 +454,17 @@ class main_window(urwid.Widget):
 		return True
 	
 	@handle_error
+	def create_cv_constant_event(self):
+		if not self.edit_mode:
+			return
+		
+		pattern = self.teq_engine.get_pattern(self.cursor.pattern)
+		pattern.set_cv_event(self.cursor.track, self.cursor.tick, teq.cv_event(teq.cv_event_type.CONSTANT, 0, 0))
+		self.teq_engine.set_pattern(self.cursor.pattern, pattern)
+		self.teq_engine.gc()
+		
+	
+	@handle_error
 	def set_midi_event(self, track_index, pattern_index, tick_index, event_type, value1, value2):
 		pattern = self.teq_engine.get_pattern(pattern_index)
 		pattern.set_midi_event(track_index, tick_index, teq.midi_event(event_type, value1, value2))
@@ -506,6 +517,20 @@ class main_window(urwid.Widget):
 			
 		if self.teq_engine.track_type(self.cursor.track) == teq.track_type.MIDI:
 			for k in self.options["midi_track_keys"]:
+				if k[0] == key:
+					k[2](self)
+					self._invalidate()
+					return
+			
+		if self.teq_engine.track_type(self.cursor.track) == teq.track_type.CV:
+			for k in self.options["cv_track_keys"]:
+				if k[0] == key:
+					k[2](self)
+					self._invalidate()
+					return
+			
+		if self.teq_engine.track_type(self.cursor.track) == teq.track_type.CONTROL:
+			for k in self.options["control_track_keys"]:
 				if k[0] == key:
 					k[2](self)
 					self._invalidate()
@@ -568,7 +593,7 @@ class main_window(urwid.Widget):
 		return 2 + self.options["control_integer_precision"] + 1 + self.options["control_fraction_precision"]
 	
 	def cv_track_render_size(self):
-		return 2 + self.options["cv_integer_precision"] + 1 + self.options["cv_fraction_precision"]
+		return 3 + 2 * (self.options["cv_integer_precision"] + 1 + self.options["cv_fraction_precision"])
 		pass
 	
 	def render_midi_event(self,  event):
@@ -583,12 +608,24 @@ class main_window(urwid.Widget):
 		
 		return "--- --"
 	
+	def render_number(self, integer_precision, fractional_precision, number):
+		return ("{:" + str(integer_precision + 1 + fractional_precision) + "." + str(fractional_precision) + "f}").format(number)
+	
 	def render_cv_event(self,  event):
-		return "-" + " " + "-" * self.options["cv_integer_precision"] + "." + "-" * self.options["cv_fraction_precision"]
+		if event.type == teq.cv_event_type.CONSTANT:
+			return "C" + " " + self.render_number(self.options["control_integer_precision"], self.options["control_fraction_precision"], event.value1) + " " + "-" * self.options["cv_integer_precision"] + "." + "-" * self.options["cv_fraction_precision"]
+		if event.type == teq.cv_event_type.INTERVAL:
+			return "I" + " " + self.render_number(self.options["control_integer_precision"], self.options["control_fraction_precision"], event.value1) + " " + self.render_number(self.options["control_integer_precision"], self.options["control_fraction_precision"], event.value2)
+
+		return "-" + " " + "-" * self.options["cv_integer_precision"] + "." + "-" * self.options["cv_fraction_precision"] + " " + "-" * self.options["cv_integer_precision"] + "." + "-" * self.options["cv_fraction_precision"]
 	
 	def render_control_event(self,  event):
 		if event.type == teq.control_event_type.GLOBAL_TEMPO:
-			return "G" + " " + "-" * self.options["control_integer_precision"] + "." + "-" * self.options["control_fraction_precision"]
+			return "G" + " " + self.render_number(self.options["control_integer_precision"], self.options["control_fraction_precision"], event.value)
+		
+		if event.type == teq.control_event_type.RELATIVE_TEMPO:
+			return "R" + " " + self.render_number(self.options["control_integer_precision"], self.options["control_fraction_precision"], event.value)
+		
 		return "-" + " " + "-" * self.options["control_integer_precision"] + "." + "-" * self.options["control_fraction_precision"]
 	
 	def render_name(self,  name,  maxlength):
@@ -1048,11 +1085,11 @@ class main_window(urwid.Widget):
 		tracks_json_object = []
 		for n in xrange(self.teq_engine.number_of_tracks()):
 			track_type_name = ""
-			if teq_engine.track_type(n) == teq.track_type.MIDI:
+			if self.teq_engine.track_type(n) == teq.track_type.MIDI:
 				track_type_name = "MIDI"
-			if teq_engine.track_type(n) == teq.track_type.CV:
+			if self.teq_engine.track_type(n) == teq.track_type.CV:
 				track_type_name = "CV"
-			if teq_engine.track_type(n) == teq.track_type.CONTROL:
+			if self.teq_engine.track_type(n) == teq.track_type.CONTROL:
 				track_type_name = "CONTROL"
 			tracks_json_object.append({ "name": self.teq_engine.track_name(n), "type": track_type_name})
 			

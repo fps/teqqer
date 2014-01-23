@@ -44,7 +44,7 @@
             "name": "snare4"
         }
     ],
-    "cursor-position-track": 4,
+    "cursor-position-track": 0,
     "edit-step": 2,
     "loop-range-enabled": true,
     "loop-range-start-tick": 0,
@@ -160,7 +160,32 @@
                     127
                 ]
             ],
-            [],
+            [
+                [
+                    0,
+                    "CONSTANT",
+                    0.0,
+                    0.0
+                ],
+                [
+                    2,
+                    "CONSTANT",
+                    0.0,
+                    0.0
+                ],
+                [
+                    4,
+                    "CONSTANT",
+                    0.0,
+                    0.0
+                ],
+                [
+                    6,
+                    "CONSTANT",
+                    0.0,
+                    0.0
+                ]
+            ],
             [
                 [
                     0,
