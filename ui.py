@@ -1048,9 +1048,9 @@ class main_window(urwid.Widget):
 									
 							if self.teq_engine.track_type(track) == teq.track_type.CV:
 								if event[1] == "INTERVAL":
-									new_pattern.set_cv_event(int(track), int(event[0]), teq.control_event(teq.cv_event_type.INTERVAL, event[2], event[3]))
+									new_pattern.set_cv_event(int(track), int(event[0]), teq.cv_event(teq.cv_event_type.INTERVAL, event[2], event[3]))
 								if event[1] == "CONSTANT":
-									new_pattern.set_cv_event(int(track), int(event[0]), teq.control_event(teq.cv_event_type.CONSTANT, event[2], event[3]))
+									new_pattern.set_cv_event(int(track), int(event[0]), teq.cv_event(teq.cv_event_type.CONSTANT, event[2], event[3]))
 								
 					self.teq_engine.insert_pattern(self.teq_engine.number_of_patterns(), new_pattern)
 		except Exception as e:
