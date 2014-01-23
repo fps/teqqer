@@ -237,11 +237,11 @@ options = {
 	"highlighted_rows": 4, 
 	
 	# The number of digits used for displaying cv values (integer and fractional part)
-	"cv_fraction_precision": 3, 
+	"cv_fraction_precision": 2, 
 	"cv_integer_precision": 1, 
 	
 	# The number of digits used for displaying control values (integer and fractional part)
-	"control_fraction_precision": 3, 
+	"control_fraction_precision": 2, 
 	"control_integer_precision": 1, 
 	
 	"column_separator": "|", 
