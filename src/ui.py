@@ -612,7 +612,7 @@ class main_window(urwid.Widget):
 		return "--- --"
 	
 	def render_number(self, integer_precision, fractional_precision, number):
-		return ("{:" + str(integer_precision + 1 + fractional_precision) + "." + str(fractional_precision) + "f}").format(number)
+		return ("{0:" + str(integer_precision + 1 + fractional_precision) + "." + str(fractional_precision) + "f}").format(number)
 	
 	def render_cv_event(self,  event):
 		if event.type == teq.cv_event_type.CONSTANT:
