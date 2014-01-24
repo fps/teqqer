@@ -250,7 +250,7 @@ options = {
 	"follow_transport": True, 
 	
 	# Whether to allow some mouse interaction to move the cursor around,  etc..
-	"mouse_interaction": True, 
+	"mouse_interaction": False, 
 	
 	# Reduce this time to make the UI more smooth at the expense of cpu power
 	"ui_update_interval": 0.1, 
