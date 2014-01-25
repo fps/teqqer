@@ -49,7 +49,7 @@ Run teqqer from the root of the source tree with the provided script <code>teqqe
 
 # Getting Help
 
-The help menu is reachable in the app by pressing meta-h h (in the default configuration). On linux this amounts to pressing alt-h and then h again. This should display a help text with some general documentation and a list of the keybindings. 
+The help menu is reachable in the app by pressing <code>meta-h h</code> (in the default configuration). On linux this amounts to pressing <code>alt-h</code> and then <code>h</code> again. This should display a help text with some general documentation and a list of the keybindings. Also check out the menu at the bottom of the screen. It should display the keys to reach the different menus (including the help menu).
 
 # Installation
 
