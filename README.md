@@ -4,7 +4,7 @@ An ncurses/terminal based midi and CV signal tracker/sequencer.
 
 # Status
 
-This project is not in a usable state yet. Check the issue tracker for open problems :D
+This project is in a semi-usable state yet. Check the issue tracker for open problems :D
 
 # Requirements
 
