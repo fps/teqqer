@@ -9,9 +9,12 @@ import traceback
 import the_help
 import about
 import license
+import webbrowser
+import tempfile
 
 class TextPopup(urwid.WidgetWrap):
 	def __init__(self, text):
+		self.the_text = text
 		text = urwid.Text(text)
 		help_list_box = urwid.ListBox(urwid.SimpleListWalker([text]))
 
@@ -22,6 +25,13 @@ class TextPopup(urwid.WidgetWrap):
 	def keypress(self, size, key):
 		if key == 'esc':
 			self._emit('close')
+			return True
+		
+		if key == 'b':
+			t = tempfile.mktemp()
+			f = open(t, "w")
+			f.write(("<html><head></head><body>" + self.the_text[1] + "</body></html>").replace("\n", "<br>"))
+			webbrowser.open("file://" + t)
 			return True
 		
 		self._w.keypress(size, key)
@@ -54,17 +64,14 @@ class PopUpLauncherThing(urwid.PopUpLauncher):
 		urwid.connect_signal(original, 'popup_license', lambda x: self.popup_license())
 		urwid.connect_signal(original, 'popup_help', lambda x: self.popup_help())
 
-	def popup_help(self):
-		self.popup_widget = TextPopup(("medium", the_help.get_help_text(self.the_original.options)))
+	def popup_text(self, text):
+		self.popup_widget = TextPopup(("medium", "Press esc to leave this screen. Press b to open display this text in a webbrowser (python's webbrowser.open() will be used on a temp file)\n\n" + text))
 		urwid.connect_signal(self.popup_widget, 'close', lambda x: self.close_pop_up())
 		self.popup_parameters = {'left':0, 'top':0, 'overlay_width':200, 'overlay_height':200}
 		self.open_pop_up()
 
-	def popup_text(self, text):
-		self.popup_widget = TextPopup(("medium", "Press esc to leave this screen\n\n" + text))
-		urwid.connect_signal(self.popup_widget, 'close', lambda x: self.close_pop_up())
-		self.popup_parameters = {'left':0, 'top':0, 'overlay_width':200, 'overlay_height':200}
-		self.open_pop_up()
+	def popup_help(self):
+		self.popup_text(the_help.get_help_text(self.the_original.options))
 
 	def popup_license(self):
 		self.popup_text(license.text)
@@ -612,7 +619,7 @@ class main_window(urwid.Widget):
 		return "--- --"
 	
 	def render_number(self, integer_precision, fractional_precision, number):
-		return ("{:" + str(integer_precision + 1 + fractional_precision) + "." + str(fractional_precision) + "f}").format(number)
+		return ("{0:" + str(integer_precision + 1 + fractional_precision) + "." + str(fractional_precision) + "f}").format(number)
 	
 	def render_cv_event(self,  event):
 		if event.type == teq.cv_event_type.CONSTANT:
