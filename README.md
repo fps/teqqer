@@ -8,7 +8,7 @@ This project is not in a usable state yet. Check the issue tracker for open prob
 
 # Requirements
 
-* A compiler with decent C++-11 support
+* Check the requirements for teq: http://github.com/fps/teq
 * Python 2 (Python 3 support is not planned)
 * libteq and its python bindings - submodule, see below.
 * urwid (e.g. python-urwid on ubuntu 13.10)
