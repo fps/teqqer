@@ -230,10 +230,10 @@ options = {
 				["internal", "i", lambda x: x.set_transport_source("internal"), []]
 			]]
 		]],
-		["tools", "ctrl t", lambda x: x.change_menu(x.current_menu[2][3]), [
+		["tools", "ctrl t", lambda x: x.change_menu(x.current_menu[3][3]), [
 			["eval", "e", lambda x: x.evaluate(), []]
 		]],
-		["help", "meta h", lambda x: x.change_menu(x.current_menu[3][3]), [
+		["help", "meta h", lambda x: x.change_menu(x.current_menu[4][3]), [
 			["about", "a", lambda x: x._emit('popup_about'), []],
 			["license", "l", lambda x:x._emit('popup_license'), []],
 			["help", "h", lambda x: x._emit('popup_help'), []]

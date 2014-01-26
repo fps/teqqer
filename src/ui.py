@@ -295,7 +295,7 @@ class main_window(urwid.Widget):
 
 	@handle_error
 	def add_named_midi_track(self, name):
-		self.teq_engine.insert_midi_track(name, self.teq_engine.number_of_tracks())
+		self.teq_engine.insert_midi_track(str(name), self.teq_engine.number_of_tracks())
 		self.history.reset()
 		self._invalidate()
 		
