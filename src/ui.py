@@ -328,6 +328,13 @@ class main_window(urwid.Widget):
 		self.options["note_edit_base"] += amount
 	
 	@handle_error
+	def set_transport_source(self, source):
+		if source == "jack_transport":
+			self.teq_engine.set_transport_source(teq.transport_source.JACK_TRANSPORT)
+		if source == "internal":
+			self.teq_engine.set_transport_source(teq.transport_source.INTERNAL)
+	
+	@handle_error
 	def change_note_velocity(self, amount):
 		self.options["note_edit_velocity"] += amount
 	
@@ -841,6 +848,15 @@ class main_window(urwid.Widget):
 		
 		attr.append(("edit-mode-indicator", len(text[-1])))
 		
+		if self.teq_engine.get_transport_source() == teq.transport_source.JACK_TRANSPORT:
+			text.append(self.options["transport_source_indicator_jack_transport"])
+			attr.append(("transport-source-indicator", len(text[-1])))
+			
+		if self.teq_engine.get_transport_source() == teq.transport_source.INTERNAL:
+			text.append(self.options["transport_source_indicator_internal"])
+			attr.append(("transport-source-indicator", len(text[-1])))
+			
+		
 		if self.options["follow_transport"]:
 			text.append(self.options["follow_transport_indicator_enabled"])
 			attr.append(("follow-transport-indicator-enabled", len(text[-1])))
@@ -1032,6 +1048,13 @@ class main_window(urwid.Widget):
 			
 			self.teq_engine.set_global_tempo(json_object["global-tempo"])
 			
+			if "transport-source" in json_object:
+				if json_object["transport-source"] == "jack_transport":
+					self.set_transport_source("jack_transport")
+			
+				if json_object["transport-source"] == "internal":
+					self.set_transport_source("internal")
+			
 			for pattern in json_object["patterns"]:
 				print("pattern ", str(pattern[0]))
 				new_pattern = self.teq_engine.create_pattern(int(pattern[1]))
@@ -1064,7 +1087,7 @@ class main_window(urwid.Widget):
 	@handle_error
 	def save(self):
 		if self.info == None:
-			# TODO: display warning
+			self.display_text("Oh oh, couldn't save :( Try again later")
 			return
 		
 		loop_range = self
@@ -1085,6 +1108,12 @@ class main_window(urwid.Widget):
 			
 			"edit-step": self.options["edit_step"],
 		}
+		
+		if self.teq_engine.get_transport_source() == teq.transport_source.JACK_TRANSPORT:
+			json_object["transport-source"] = "jack_transport"
+		
+		if self.teq_engine.get_transport_source() == teq.transport_source.INTERNAL:
+			json_object["transport-source"] = "internal"
 		
 		tracks_json_object = []
 		for n in xrange(self.teq_engine.number_of_tracks()):

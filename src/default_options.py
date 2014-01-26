@@ -56,7 +56,10 @@ options = {
 		("loop-indicator-disabled", "black", "dark gray"),
 
 		("follow-transport-indicator-enabled", "black", "light gray"),
-		("follow-transport-indicator-disabled", "black", "dark gray")
+		("follow-transport-indicator-disabled", "black", "dark gray"),
+		
+		("transport-source-indicator", "black", "light gray")
+
 	], 
 
 	# The names for the notes. Note that
@@ -81,6 +84,9 @@ options = {
 
 	"loop_range_indicator_events": "[",
 	"loop_range_indicator_patterns": "]",
+	
+	"transport_source_indicator_jack_transport": "J",
+	"transport_source_indicator_internal": "I",
 	
 	# The parameter x will be bound to an instance of
 	# the class teqqer.main.
@@ -218,12 +224,16 @@ options = {
 				["set length", "l", lambda x: x.set_pattern_length(), []],
 				["name", "n", lambda x: x.rename_pattern(), []],
 				["remove", "r", lambda x: x.remove_pattern(), []]
+			]],
+			["transport", "r", lambda x: x.change_menu(x.current_menu[2][3]), [
+				["jack_transport", "j", lambda x: x.set_transport_source("jack_transport"), []],
+				["internal", "i", lambda x: x.set_transport_source("internal"), []]
 			]]
 		]],
-		["tools", "ctrl t", lambda x: x.change_menu(x.current_menu[3][3]), [
+		["tools", "ctrl t", lambda x: x.change_menu(x.current_menu[2][3]), [
 			["eval", "e", lambda x: x.evaluate(), []]
 		]],
-		["help", "meta h", lambda x: x.change_menu(x.current_menu[4][3]), [
+		["help", "meta h", lambda x: x.change_menu(x.current_menu[3][3]), [
 			["about", "a", lambda x: x._emit('popup_about'), []],
 			["license", "l", lambda x:x._emit('popup_license'), []],
 			["help", "h", lambda x: x._emit('popup_help'), []]

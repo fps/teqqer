@@ -25,6 +25,7 @@ if (len(sys.argv) != 2):
 options = default_options.options
 
 teq_engine = teq.teq()
+# teq_engine.set_transport_source(teq.transport_source.JACK_TRANSPORT)
 
 the_main = ui.main_window(teq_engine,  options, sys.argv[1])
 
