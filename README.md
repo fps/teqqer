@@ -33,6 +33,8 @@ make
 cd ../..
 </pre>
 
+If this fails, checkout the build instructions in the http://github.com/fps/teq repository.
+
 If you want to update the source tree of teqqer as well as the teq submodule, use the <code>git_pull.sh</code> script.
 
 <pre>
