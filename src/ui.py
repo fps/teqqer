@@ -261,7 +261,7 @@ class main_window(urwid.Widget):
 	@handle_error
 	def rename_pattern_with_name(self, name):
 		p = self.teq_engine.get_pattern(self.cursor.pattern)
-		p.name = name
+		p.name = str(name)
 		self.teq_engine.set_pattern(self.cursor.pattern, p)
 		self._invalidate()
 	
