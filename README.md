@@ -6,6 +6,10 @@ An ncurses/terminal based midi and CV signal tracker/sequencer.
 
 This project is in a semi-usable state. Check the issue tracker for open problems :D
 
+# Known Limitations
+
+* Checkout the README.md of the teq project at http://github.com/fps/teq especially regarding jack_transport support
+
 # Requirements
 
 * Check the requirements for teq: http://github.com/fps/teq
