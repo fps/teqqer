@@ -1,5 +1,6 @@
 import sys
 import urwid
+import urwid.curses_display
 import random
 
 import teq
@@ -34,7 +35,7 @@ def handle_alarm(main_loop, the_main):
 	main_loop.set_alarm_in(the_main.options["ui_update_interval"] - random.random() * 0.5 * the_main.options["ui_update_interval"],  handle_alarm,  the_main)
 
 popup_launcher = ui.PopUpLauncherThing(the_main)
-loop = urwid.MainLoop(popup_launcher,  options["palette"], pop_ups = True, handle_mouse = options["mouse_interaction"])
+loop = urwid.MainLoop(popup_launcher,  options["palette"], pop_ups = True, handle_mouse = options["mouse_interaction"], screen = urwid.curses_display.Screen())
 loop.set_alarm_in(the_main.options["ui_update_interval"],  handle_alarm,  the_main)
 loop.run()
 
