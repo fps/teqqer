@@ -612,7 +612,18 @@ class main_window(urwid.Widget):
 	
 	def cv_track_render_size(self):
 		return 3 + 2 * (self.options["cv_integer_precision"] + 1 + self.options["cv_fraction_precision"])
-		pass
+	
+	def track_render_size(self, track_index):
+		if self.teq_engine.track_type(track_index) == teq.track_type.MIDI:
+			return self.midi_track_render_size()
+		
+		if self.teq_engine.track_type(track_index) == teq.track_type.CV:
+			return self.cv_track_render_size()
+		
+		if self.teq_engine.track_type(track_index) == teq.track_type.CONTROL:
+			return self.control_track_render_size()
+		
+		return 0
 	
 	def render_midi_event(self,  event):
 		if event.type == teq.midi_event_type.ON:
@@ -667,9 +678,7 @@ class main_window(urwid.Widget):
 		
 		text.append(" tick")
 		attr.append((default_style,  len(" tick")))
-		
-		header = "patterns" + column_separator + "tick"
-		
+				
 		for n in xrange(self.teq_engine.number_of_tracks()):
 			text.append(column_separator)
 			attr.append((default_style,  column_separator_len))
@@ -941,10 +950,11 @@ class main_window(urwid.Widget):
 
 		event_rows = size[1] - 2
 
+		split = int(round(event_rows * self.options["center_line_fraction"]))
+		
 		if self.cursor.pattern < self.teq_engine.number_of_patterns():
 			pattern = self.teq_engine.get_pattern(self.cursor.pattern)
 			
-			split = int(round(event_rows * self.options["center_line_fraction"]))
 			
 			rendered_patterns_list = self.render_patterns_list()
 			
@@ -1018,9 +1028,30 @@ class main_window(urwid.Widget):
 				attr.append(line_attr)
 			
 		
-		t = urwid.TextCanvas(text,  attr,  maxcol = size[0]) 
+		cursor = self.get_cursor_coords(size)
+		
+		t = urwid.TextCanvas(text,  attr,  maxcol = size[0], cursor = self.get_cursor_coords(size)) 
 
 		return t
+
+	def get_split(self, size):
+		event_rows = size[1] - 2
+		return int(round(event_rows * self.options["center_line_fraction"]))
+		
+	def get_cursor_coords(self, size):
+		return (int(self.cursor_x_pos(self.cursor.track)), self.get_split(size) + 1)
+
+	@handle_error
+	def cursor_x_pos(self, track_index):
+		column_separator = self.options["column_separator"]
+		x_pos = len("patterns " + column_separator + " tick" + column_separator)
+
+		for n in range(0, self.cursor.track):
+			x_pos += self.track_render_size(n)
+			x_pos += len(column_separator)
+
+		return int(x_pos)
+		
 
 	@handle_error	
 	def load(self):
