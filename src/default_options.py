@@ -111,8 +111,8 @@ options = {
 		
 		[" ", "toggle playback (start/stop)", lambda x: x.toggle_playback()],
 		
-		["meta up", "move one event up", lambda x: x.change_cursor_tick(-x.options["edit_step"])],
-		["meta down", "move one event  down", lambda x: x.change_cursor_tick(x.options["edit_step"])],
+		["meta up", "move one event up", lambda x: x.change_cursor_tick(-1)],
+		["meta down", "move one event  down", lambda x: x.change_cursor_tick(1)],
 		
 		["left", "move to previous track", lambda x: x.change_cursor_track(-1)],
 		["right", "move to next track", lambda x: x.change_cursor_track(1)],
