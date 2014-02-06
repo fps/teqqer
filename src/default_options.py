@@ -11,13 +11,13 @@ options = {
 		("transport-indicator-stopped", "light gray", "black"),
 		("transport-indicator-playing", "dark green", "black"),
 
-		("header-default", "white", "dark gray"),
-		("header-editing", "white", "dark red"),
+		("header-default", "white,bold", "dark gray"),
+		("header-editing", "white,bold", "dark red"),
 		
-		("track-name-highlight", "black", "light gray"),
+		("track-name-highlight", "black,bold,underline", "light gray"),
 
-		("footer-default", "white", "dark gray"),
-		("footer-editing", "white", "dark gray"),
+		("footer-default", "white,bold", "dark gray"),
+		("footer-editing", "white,bold", "dark gray"),
 		
 		("edit-mode-indicator", "black", "light gray"),
 
@@ -29,23 +29,23 @@ options = {
 		
 		("song-properties", "black", "light gray"),
 		
-		("pattern-list-entry-default", "light gray", "black"),
+		("pattern-list-entry-default", "light gray,bold", "black"),
 		
-		("cursor-row-highlight", "white", "dark gray"),
+		("cursor-row-highlight", "white,bold,underline", "dark gray"),
 		
-		("track-events-highlight", "white", "black"),
+		("track-events-highlight", "white,bold", "black"),
 		
-		("loop-range-indicator", "black", "light gray"),
+		("loop-range-indicator", "black,bold", "light gray"),
 		
 		("event-default", "dark gray", "black"),
-		("event-highlight", "light gray", "black"),
-		("event-selected", "black", "white"),
+		("event-highlight", "light gray,bold", "black"),
+		("event-selected", "black,bold", "white"),
 		
-		("note-on-event-default", "white", "dark green"),
-		("note-on-event-selected", "dark green", "white"),
+		("note-on-event-default", "white,bold", "dark green"),
+		("note-on-event-selected", "dark green,bold", "white"),
 		
-		("note-off-event-default", "white", "dark green"),
-		("note-off-event-selected", "dark green", "white"),
+		("note-off-event-default", "white,bold", "dark green"),
+		("note-off-event-selected", "dark green,bold", "white"),
 		
 		("cc-event-default", "white", "dark green"),
 		("cc-event-selected", "dark green", "white"),
