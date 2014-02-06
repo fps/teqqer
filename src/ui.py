@@ -11,6 +11,7 @@ import about
 import license
 import webbrowser
 import tempfile
+import errno
 
 class TextPopup(urwid.WidgetWrap):
 	def __init__(self, text):
@@ -1085,7 +1086,7 @@ class main_window(urwid.Widget):
 					self.teq_engine.insert_pattern(self.teq_engine.number_of_patterns(), new_pattern)
 			print("done")
 		except IOError as e:
-			if e.errno == 2:
+			if e.errno == errno.ENOENT:
 				pass
 			else:
 				raise e
