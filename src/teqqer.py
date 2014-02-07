@@ -35,10 +35,10 @@ def handle_alarm(main_loop, the_main):
 	main_loop.set_alarm_in(the_main.options["ui_update_interval"] - random.random() * 0.5 * the_main.options["ui_update_interval"],  handle_alarm,  the_main)
 
 screen = urwid.curses_display.Screen()
-screen.register_palette(options["palette"])
+screen.register_palette(options["curses_palette"])
 
 popup_launcher = ui.PopUpLauncherThing(the_main)
-loop = urwid.MainLoop(popup_launcher,  options["palette"], pop_ups = True, handle_mouse = options["mouse_interaction"], screen = screen)
+loop = urwid.MainLoop(popup_launcher, pop_ups = True, handle_mouse = options["mouse_interaction"], screen = screen)
 loop.set_alarm_in(the_main.options["ui_update_interval"],  handle_alarm,  the_main)
 loop.run()
 

@@ -1,68 +1,126 @@
 # These are the default options that can be overriden by a user's config
 # file and/or specific settings in a song [not implemented yet]
 options = {
+	"palette": "curses_palette",
+	
 	# The color palette (see urwid documentation for color
 	# codes,  etc.)
-	"palette": [
-		(None,  "dark gray",  "black"), 
-		
+	"raw_palette": [
+		(None, "dark gray", "black"),
+
 		("help-text-default", "white", "black"),
 
 		("transport-indicator-stopped", "light gray", "black"),
 		("transport-indicator-playing", "dark green", "black"),
 
-		("header-default", "white,bold", "dark gray"),
-		("header-editing", "white,bold", "dark red"),
-		
-		("track-name-highlight", "black,bold,underline", "light gray"),
+		("header-default", "white", "dark gray"),
+		("header-editing", "white", "dark red"),
 
-		("footer-default", "white,bold", "dark gray"),
-		("footer-editing", "white,bold", "dark gray"),
-		
+		("track-name-highlight", "black", "light gray"),
+
+		("footer-default", "white", "dark gray"),
+		("footer-editing", "white", "dark gray"),
+
 		("edit-mode-indicator", "black", "light gray"),
 
 		("menu-entry-default", "black", "white"),
 		("menu-entry-exit-menu", "light gray", "dark gray"),
-		
+
 		("note-edit-base", "black", "light gray"),
 		("cc-edit-base", "black", "light gray"),
-		
+
 		("song-properties", "black", "light gray"),
-		
-		("pattern-list-entry-default", "light gray,bold", "black"),
-		
-		("cursor-row-highlight", "white,bold,underline", "dark gray"),
-		
-		("track-events-highlight", "white,bold", "black"),
-		
-		("loop-range-indicator", "black,bold", "light gray"),
-		
+
+		("pattern-list-entry-default", "light gray", "black"),
+
+		("cursor-row-highlight", "white", "dark gray"),
+
+		("track-events-highlight", "white", "black"),
+
+		("loop-range-indicator", "black", "light gray"),
+
 		("event-default", "dark gray", "black"),
-		("event-highlight", "light gray,bold", "black"),
-		("event-selected", "black,bold", "white"),
-		
-		("note-on-event-default", "white,bold", "dark green"),
-		("note-on-event-selected", "dark green,bold", "white"),
-		
-		("note-off-event-default", "white,bold", "dark green"),
-		("note-off-event-selected", "dark green,bold", "white"),
-		
+		("event-highlight", "light gray", "black"),
+		("event-selected", "black", "white"),
+
+		("note-on-event-default", "white", "dark green"),
+		("note-on-event-selected", "dark green", "white"),
+
+		("note-off-event-default", "white", "dark green"),
+		("note-off-event-selected", "dark green", "white"),
+
 		("cc-event-default", "white", "dark green"),
 		("cc-event-selected", "dark green", "white"),
-		
+
 		("line-entry", "black", "yellow"),
-		
+
 		("loop-indicator-enabled", "black", "light gray"),
 		("loop-indicator-disabled", "black", "dark gray"),
 
 		("follow-transport-indicator-enabled", "black", "light gray"),
 		("follow-transport-indicator-disabled", "black", "dark gray"),
-		
+
 		("transport-source-indicator", "black", "light gray")
-
 	], 
+	
+	"curses_palette": [
+		(None, "white", "black"),
 
-	# The names for the notes. Note that
+		#("help-text-default", "white", "black"),
+
+		#("transport-indicator-stopped", "light gray", "black"),
+		#("transport-indicator-playing", "dark green", "black"),
+
+		("header-default", "white", "dark blue"),
+		("header-editing", "white", "dark red"),
+
+		("track-name-highlight", "white,bold", "dark blue"),
+
+		("footer-default", "white", "dark blue"),
+		("footer-editing", "white", "dark red"),
+
+		#("edit-mode-indicator", "black", "light gray"),
+
+		("menu-entry-default", "white", "dark blue"),
+		("menu-entry-exit-menu", "white,bold,underline", "dark blue"),
+
+		#("note-edit-base", "black", "light gray"),
+		#("cc-edit-base", "black", "light gray"),
+
+		#("song-properties", "black", "light gray"),
+
+		("pattern-list-entry-default", "light gray", "black"),
+
+		("cursor-row-highlight", "white,underline", "dark blue"),
+
+		("track-events-highlight", "white,bold", "black"),
+
+		#("loop-range-indicator", "black", "light gray"),
+
+		("event-default", "dark gray", "black"),
+		("event-highlight", "white, bold", "black"),
+		("event-selected", "white, bold, underline", "black"),
+
+		#("note-on-event-default", "white", "dark green"),
+		#("note-on-event-selected", "dark green", "white"),
+
+		#("note-off-event-default", "white", "dark green"),
+		#("note-off-event-selected", "dark green", "white"),
+
+		#("cc-event-default", "white", "dark green"),
+		#("cc-event-selected", "dark green", "white"),
+
+		#("line-entry", "black", "yellow"),
+
+		#("loop-indicator-enabled", "black", "light gray"),
+		#("loop-indicator-disabled", "black", "dark gray"),
+
+		#("follow-transport-indicator-enabled", "black", "light gray"),
+		#("follow-transport-indicator-disabled", "black", "dark gray"),
+
+		#("transport-source-indicator", "black", "light gray")
+	],  
+	#The names for the notes. Note that
 	# each string is TWO chars long
 	"note_names": [
 		"C ",  "Db",  "D ", "Eb", 
