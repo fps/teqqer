@@ -1,0 +1,53 @@
+Pattern view:
+
+The focus: These are the main states for the focus:
+
+* Pattern list
+* Track list
+* Tick list
+* Pattern data
+
+The focus is changed by hitting TAB or SHIFT-TAB. This is visibly reflected by the terminal's cursor moving to the first letter of the list entry that has the editing cursor (scrolling the display if nessecary). Note the editing cursor being different than the terminal's cursor.
+
+Global state: 
+
+* The editing cursor position
+* The pattern selection
+* The pattern data selection
+
+The cursor is used to change the selection. The selection is used to change pattern data. The selection is constrained to lie within a single pattern. The selection is represented as a (pattern, track_start, track_end, tick_start, tick_end) 5-tuple, where the start ranges are inclusive and the end ranges exclusive.
+
+Edit mode:
+                                                                                *
+  pattern  tick  [  kick closed_hh[open_hh]  snare   clap
+
+>[intro ]<       ---------------- intro -----------------
+  intro   [0000] [C 3 FF    C 3 FF       .]      .      .
+  intro   [0001] [     .    C 3 FF       .]      .      .
+  intro   [0002] [     .         .  C_3_FF]      .      .
+  verse    0003        .         .       .       .      .
+  verse    0004 > C 3 FF         .       .  C 3 FF C 3 FF<
+  bridge   0005        .         .       .       .      .
+           0006        .         .       .       .      .
+           0007        .         .       .       .      .
+                 ---------------- intro -----------------
+           0000]  C 3 FF    C 3 FF       .       .      .
+           0001        .    C 3 FF       .       .      .
+           0002        .         .[ C 3 FF]      .      .
+           0003        .         .       .       .      .
+           0004   C 3 FF         .       .  C 3 FF C 3 FF
+           0005        .         .       .       .      .
+           0006        .         .       .       .      .
+           0007        .         .       .       .      .
+
+state: 0:0004 +play +edit -loop +follow 
+ESC: edit F1: help F2: pattern F3: instruments F4: mixer
+                                                                                *
+
+Menu mode:
+
+States:
+
+EDIT ON:
+  
+EDIT OFF:
