@@ -7,11 +7,11 @@ The focus: These are the main states for the focus:
 * Tick list
 * Pattern data
 
-The focus is changed by hitting TAB or SHIFT-TAB. This is visibly reflected by the terminal's cursor moving to the first letter of the list entry that has the editing cursor (scrolling the display if nessecary). Note the editing cursor being different than the terminal's cursor.
+The focus is changed by hitting TAB or SHIFT-TAB. This is visibly reflected by the terminal's cursor moving to the first letter of the list entry that has the editing cursor (scrolling the display if nessecary). Note the editing cursor being different than the terminal's cursor. The editing cursor refers to the internal application cursor.
 
 Global state: 
 
-* The editing cursor position
+* The editing cursor
 * The pattern selection
 * The pattern data selection
 
@@ -19,7 +19,7 @@ The cursor is used to change the selection. The selection is used to change patt
 
 Edit mode:
                                                                                 *
-  pattern  tick  [  kick closed_hh[open_hh]  snare   clap
+  pattern  tick  [  kick closed_hh open_hh]  snare   clap
 
 >[intro ]<       ---------------- intro -----------------
   intro   [0000] [C 3 FF    C 3 FF       .]      .      .
@@ -40,7 +40,7 @@ Edit mode:
            0006        .         .       .       .      .
            0007        .         .       .       .      .
 
-state: 0:0004 +play +edit -loop +follow 
+state: 0:0004 data +play +edit -loop +follow
 ESC: edit F1: help F2: pattern F3: instruments F4: mixer
                                                                                 *
 
