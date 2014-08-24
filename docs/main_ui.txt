@@ -1,6 +1,87 @@
-Pattern view:
+# Introduction
 
-The focus: These are the main states for the focus:
+This document describes the console ui of teqqer. Its main purpose is to lay down the basics of how the user interacts with the program through key presses and (optional - all features are accessible by keyboard alone, too) mouse actions.
+
+This is a "screenshot" of the application using standard key bindings:
+                                                                                *
+   F1: Help  F2: Menu [F3: Pattern] F4: Instrument  F5: Mixer
+
+   Pattern    Tick  [  kick closed_hh open_hh]  snare   clap
+
+l>[intro  0]<        --------------- intro -----------------
+l  .      0  [0000] [C 3 FF    C 3 FF       .]      .      .
+l  .      0  [0001] [     .    C 3 FF       .]      .      .
+l  .         [0002] [     .         .  C_3_FF]      .      .
+   verse  1   0003        .         .       .       .      .
+   .      1   0004 > C 3 FF         .       .  C 3 FF C 3 FF <
+   bridge 2   0005        .         .       .       .      .
+   .      2   0006        .         .       .       .      .
+              0007        .         .       .       .      .
+                     --------------- intro -----------------
+              0000]  C 3 FF    C 3 FF       .       .      .
+              0001        .    C 3 FF       .       .      .
+              0002        .         .[ C 3 FF]      .      .
+              0003        .         .       .       .      .
+              0004   C 3 FF         .       .  C 3 FF C 3 FF
+              0005        .         .       .       .      .
+              0006        .         .       .       .      .
+              0007        .         .       .       .      .
+
+   State: 0:0004 Data +Play +Edit -Loop +Follow 
+                                                                                *
+The space visible between the header, the track names, the pattern data and the status line is configurable. 
+
+# Screens
+
+The top level of the ui consists of several screens:
+
+* Help - this screen :)
+* Pattern Editor
+* Instrument Editor
+* Mixer
+
+What screen the application is currently displaying is displayed at the first line of the screen (Note: this can be toggled via the menu). And it should look something like this:
+
+
+given that you have not changed the default key bindings.
+
+All screens have a menu and the different menus share some common entries that make sense everywhere in teqqer:
+
+* Help
+  * Manual
+    * Introduction
+    * Pattern Editor
+    * Instrument Editor
+    * Mixer
+  * About
+  * License
+* File
+  * New
+  * Open
+  * Close
+  * Save
+  * Save as
+
+To switch between the different screens use the KEY_PATTERN_EDITOR, KEY_INSTRUMENT_EDITOR and KEY_MIXER keys. These keys are available everywhere in the application.
+
+## Help
+
+### Focus Model
+
+Focus is extremely limited. There is only a global set of keys:
+
+* KEY_DOWN
+* KEY_UP
+* KEY_PAGE_DOWN
+* KEY_PAGE_UP
+
+The terminal cursor is always placed at the beginning of the first line of visible text in the help document.
+
+## Pattern Editor
+
+### Focus Model
+
+These are the main states for the focus:
 
 * Pattern list
 * Track list
@@ -9,7 +90,7 @@ The focus: These are the main states for the focus:
 
 The focus is changed by hitting TAB or SHIFT-TAB. This is visibly reflected by the terminal's cursor moving to the first letter of the list entry that has the editing cursor (scrolling the display if nessecary). Note the editing cursor being different than the terminal's cursor. The editing cursor refers to the internal application cursor.
 
-Global state: 
+### Global state: 
 
 * The editing cursor
 * The pattern selection
@@ -41,7 +122,7 @@ Edit mode:
            0007        .         .       .       .      .
 
 state: 0:0004 data +play +edit -loop +follow
-ESC: edit F1: help F2: pattern F3: instruments F4: mixer
+ESC: edit F1: help F2: patterns F3: instruments F4: mixer
                                                                                 *
 
 Menu mode:
