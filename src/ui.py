@@ -387,7 +387,7 @@ class main_window(urwid.Widget):
 	
 	@handle_error
 	def change_cursor_tick(self, amount):
-		for n in xrange(abs(amount)):
+		for n in range(abs(amount)):
 			self.change_cursor_tick_by_one(amount)
 		
 	@handle_error
@@ -573,13 +573,13 @@ class main_window(urwid.Widget):
 	def fill_line(self,  line,  n):
 		return (line + " " * n)[0:n]
 	
-	def render_key(self,  key):
+	def render_key(self, key):
 		if key == " ":
 			return "space"
 		
 		ret = key
-		ret = string.replace(ret, "ctrl", "C")
-		ret = string.replace(ret, "meta", "M")
+		ret = ret.replace("ctrl", "C")
+		ret = ret.replace("meta", "M")
 		
 		return ret
 	
@@ -592,7 +592,7 @@ class main_window(urwid.Widget):
 		text = []
 		attr = []
 		
-		for n in xrange(len(self.current_menu)):
+		for n in range(len(self.current_menu)):
 			entry = self.current_menu[n]
 			text.append(self.render_key(entry[1]) + ":" + entry[0])
 			attr.append(("menu-entry-default", len(text[-1])))
@@ -679,7 +679,7 @@ class main_window(urwid.Widget):
 		text.append(" tick")
 		attr.append((default_style,  len(" tick")))
 				
-		for n in xrange(self.teq_engine.number_of_tracks()):
+		for n in range(self.teq_engine.number_of_tracks()):
 			text.append(column_separator)
 			attr.append((default_style,  column_separator_len))
 			
@@ -743,7 +743,7 @@ class main_window(urwid.Widget):
 		text = []
 		attr = []
 		
-		for tick_index in xrange(pattern.length()):
+		for tick_index in range(pattern.length()):
 			events = []
 			event_attrs = []
 			
@@ -767,7 +767,7 @@ class main_window(urwid.Widget):
 				else:
 					event_attrs.append(("event-default", len(events[-1])))
 			
-			for track_index in xrange(self.teq_engine.number_of_tracks()):
+			for track_index in range(self.teq_engine.number_of_tracks()):
 				events.append(column_separator)
 				
 				# Column separator
@@ -814,7 +814,7 @@ class main_window(urwid.Widget):
 		text = []
 		attr = []
 		
-		for n in xrange(self.teq_engine.number_of_patterns()):
+		for n in range(self.teq_engine.number_of_patterns()):
 			line = []
 			line_attr = []
 			
@@ -963,7 +963,7 @@ class main_window(urwid.Widget):
 			
 			rendered_pattern = self.render_pattern()
 
-			for n in xrange(event_rows):
+			for n in range(event_rows):
 				displayed_tick = (self.cursor.tick + n) - split
 				displayed_pattern = (self.cursor.pattern + n) - split
 
@@ -989,7 +989,7 @@ class main_window(urwid.Widget):
 				text.append("".join(line))
 				attr.append(line_attr)	
 		else:
-			for n in xrange(event_rows):
+			for n in range(event_rows):
 				text.append("~" * size[0])
 				attr.append([(None, len(text[-1]))])
 		
@@ -1009,7 +1009,7 @@ class main_window(urwid.Widget):
 			text = []
 			attr = []
 			
-			for n in xrange(size[1]):
+			for n in range(size[1]):
 				text_line = []
 				line_attr = []
 				if n == 0:
@@ -1030,7 +1030,7 @@ class main_window(urwid.Widget):
 		
 		cursor = self.get_cursor_coords(size)
 		
-		t = urwid.TextCanvas(text,  attr,  maxcol = size[0], cursor = self.get_cursor_coords(size)) 
+		t = urwid.TextCanvas(list(map(lambda x: x.encode(), text)),  attr,  maxcol = size[0], cursor = self.get_cursor_coords(size)) 
 
 		return t
 
@@ -1092,7 +1092,7 @@ class main_window(urwid.Widget):
 					print("pattern ", str(pattern[0]))
 					new_pattern = self.teq_engine.create_pattern(int(pattern[1]))
 					new_pattern.name = str(pattern[0])
-					for track in xrange(self.teq_engine.number_of_tracks()):
+					for track in range(self.teq_engine.number_of_tracks()):
 						for event in pattern[track + 2]:
 							if self.teq_engine.track_type(track) == teq.track_type.MIDI:
 								if event[1] == "ON":
@@ -1154,7 +1154,7 @@ class main_window(urwid.Widget):
 			json_object["transport-source"] = "internal"
 		
 		tracks_json_object = []
-		for n in xrange(self.teq_engine.number_of_tracks()):
+		for n in range(self.teq_engine.number_of_tracks()):
 			track_type_name = ""
 			if self.teq_engine.track_type(n) == teq.track_type.MIDI:
 				track_type_name = "MIDI"
@@ -1167,14 +1167,14 @@ class main_window(urwid.Widget):
 		json_object["tracks"] = tracks_json_object
 		
 		patterns_json_object = []
-		for n in xrange(self.teq_engine.number_of_patterns()):
+		for n in range(self.teq_engine.number_of_patterns()):
 			pattern_json_object = []
 			pattern = self.teq_engine.get_pattern(n)
 			pattern_json_object.append(pattern.name)
 			pattern_json_object.append(pattern.length())
-			for m in xrange(self.teq_engine.number_of_tracks()):
+			for m in range(self.teq_engine.number_of_tracks()):
 				track_json_object = []
-				for tick in xrange(pattern.length()):
+				for tick in range(pattern.length()):
 					if self.teq_engine.track_type(m) == teq.track_type.MIDI:
 						event = pattern.get_midi_event(m, tick)
 						if event.type == teq.midi_event_type.ON:
